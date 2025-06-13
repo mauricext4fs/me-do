@@ -21,11 +21,11 @@ func (repo *SQLiteRepository) Migrate() error {
 	
 	CREATE TABLE IF NOT EXISTS tasks (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		name text NOT NULL,
-		status text DEFAULT 'Not started',
-		priority text DEFAULT '',
-		created_at TEXT DEFAULT (CURRENT_TIMESTAMP),
-		updated_at text
+		name TEXT NOT NULL,
+		status TEXT DEFAULT 'Not started',
+		priority TEXT DEFAULT '',
+		created_at INTEGER DEFAULT (CURRENT_TIMESTAMP),
+		updated_at TEXT
 	);
 
 
