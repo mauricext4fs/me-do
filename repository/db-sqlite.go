@@ -18,6 +18,17 @@ func NewSQLiteRepository(db *sql.DB) *SQLiteRepository {
 
 func (repo *SQLiteRepository) Migrate() error {
 	query := `
+	
+	CREATE TABLE IF NOT EXISTS tasks (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		name text NOT NULL,
+		status text DEFAULT 'Not started',
+		priority text DEFAULT '',
+		created_at TEXT DEFAULT (CURRENT_TIMESTAMP),
+		updated_at text
+	);
+
+
 	CREATE TABLE IF NOT EXISTS activities (
 		id integer primary key autoincrement,
 		activity_type int not null
