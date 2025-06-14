@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"me-do/repository"
 	"os"
@@ -25,7 +24,6 @@ func main() {
 	var td TODO
 	a := app.NewWithID("ch.mauricext4fs.medo")
 	td.App = a
-	fmt.Println("vlad!")
 
 	sqlDB, err := td.connectSQL()
 	if err != nil {
@@ -33,6 +31,14 @@ func main() {
 	}
 
 	td.setupDB(sqlDB)
+
+	// Window
+	td.MainWindow = a.NewWindow("Me Do")
+	td.MainWindow.Resize(fyne.Size{Width: 610, Height: 550})
+	td.MainWindow.CenterOnScreen()
+	td.MainWindow.SetMaster()
+
+	td.MainWindow.ShowAndRun()
 }
 
 func (p *TODO) connectSQL() (*sql.DB, error) {
