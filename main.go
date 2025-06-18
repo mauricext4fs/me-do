@@ -10,6 +10,7 @@ import (
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
+	"fyne.io/fyne/v2/container"
 
 	_ "github.com/glebarez/go-sqlite"
 )
@@ -43,9 +44,12 @@ func main() {
 
 	// Window
 	td.MainWindow = a.NewWindow("Me Do")
-	td.MainWindow.Resize(fyne.Size{Width: 610, Height: 550})
+	td.MainWindow.Resize(fyne.Size{Width: 1200, Height: 1400})
 	td.MainWindow.CenterOnScreen()
 	td.MainWindow.SetMaster()
+
+	c := container.NewStack()
+	c.Add(td.Show(c))
 
 	td.MainWindow.ShowAndRun()
 }
@@ -84,7 +88,7 @@ func (td *TODO) Reset(win fyne.Window, newTitle string) {
 	time.Sleep(1 * time.Second)
 	td.Countdown.Minute = 24
 	td.Countdown.Second = 59
-	td.UIElements.CountDownText.UpdateText("25 Minutes")
+	//td.UIElements.CountDownText.UpdateText("25 Minutes")
 
 	td.UpdateStartStopButton("Start Task", false)
 	if win != nil && newTitle != "" {
