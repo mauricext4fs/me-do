@@ -49,8 +49,10 @@ func main() {
 	td.MainWindow.SetMaster()
 
 	c := container.NewStack()
+	c.Add(td.ShowTaskForm())
 	c.Add(td.Show(c))
 
+	td.MainWindow.SetContent(c)
 	td.MainWindow.ShowAndRun()
 }
 
