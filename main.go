@@ -11,6 +11,7 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/layout"
 
 	_ "github.com/glebarez/go-sqlite"
 )
@@ -44,15 +45,26 @@ func main() {
 
 	// Window
 	td.MainWindow = a.NewWindow("Me Do")
-	td.MainWindow.Resize(fyne.Size{Width: 1200, Height: 1400})
+	//td.MainWindow.Resize(fyne.Size{Width: 1200, Height: 1400})
 	td.MainWindow.CenterOnScreen()
 	td.MainWindow.SetMaster()
 
-	c := container.NewStack()
-	c.Add(td.ShowTaskForm())
-	c.Add(td.Show(c))
+	//c := container.NewStack()
+	//c.Resize(fyne.Size{Width: 1000, Height: 20})
 
-	td.MainWindow.SetContent(c)
+	vb := container.NewVBox()
+	vb.Add(td.ShowTaskRow())
+	vb.Add(layout.NewSpacer())
+	vb.Add(td.ShowTaskRow())
+	vb.Add(layout.NewSpacer())
+
+	vb.Add(td.ShowTaskForm())
+	vb.Add(layout.NewSpacer())
+
+	//c.Add(vb)
+	//c.Add(td.Show(c))
+
+	td.MainWindow.SetContent(vb)
 	td.MainWindow.ShowAndRun()
 }
 
