@@ -21,31 +21,34 @@ func (repo *SQLiteRepository) Migrate() error {
 	
 	CREATE TABLE IF NOT EXISTS tasks (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		name TEXT NOT NULL,
+		'order' INTEGER,
+		title TEXT NOT NULL,
 		status TEXT DEFAULT 'Not started',
 		priority TEXT DEFAULT '',
 		created_at INTEGER DEFAULT (CURRENT_TIMESTAMP),
-		updated_at TEXT
+		updated_at INTEGER DEFAULT 0
 	);
 
 
-	CREATE TABLE IF NOT EXISTS activities (
-		id integer primary key autoincrement,
-		activity_type int not null
-	);
-	
-	CREATE TABLE IF NOT EXISTS activity_events (
-		id integer primary key autoincrement,
-		activity_id int not null,
-		start_timestamp integer not null,
-		end_timestamp integer DEFAULT 0
+	CREATE TABLE IF NOT EXISTS task_timers (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		task_id INTEGER NOT NULL,
+		start_timestamp INTEGER DEFAULT (CURRENT_TIMESTAMP),
+		end_timestamp INTEGER DEFAULT 0
 	);
 	
 
-	CREATE TABLE IF NOT EXISTS activity_type (
-		id integer primary key autoincrement,
-		title text not null,
-		type text not null
+	CREATE TABLE IF NOT EXISTS labels (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		'order' INTEGER DEFAULT 1000,
+		title TEXT NOT NULL,
+		color TEXT NOT NULL
+	);
+	
+	CREATE TABLE IF NOT EXISTS task_labels (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		'order' INTEGER DEFAULT 1000,
+		task_id INTEGER NOT NULL
 	);
 	
 `
@@ -53,10 +56,10 @@ func (repo *SQLiteRepository) Migrate() error {
 	return err
 }
 
-func (repo *SQLiteRepository) StartActivity(activities Activities) (*Activities, error) {
-	stmt := "INSERT INTO Activities (activity_type) values (?)"
+func (repo *SQLiteRepository) StartTask(tasks Tasks) (*Tasks, error) {
+	stmt := "INSERT INTO Tasks (title) values (?)"
 
-	res, err := repo.Conn.Exec(stmt, activities.ActivityType)
+	res, err := repo.Conn.Exec(stmt, tasks.Title)
 	if err != nil {
 		return nil, err
 	}
@@ -66,27 +69,27 @@ func (repo *SQLiteRepository) StartActivity(activities Activities) (*Activities,
 		return nil, err
 	}
 
-	activities.ID = id
+	tasks.ID = id
 
-	return &activities, nil
+	return &tasks, nil
 }
 
-func (repo *SQLiteRepository) AllActivities() ([]Activities, error) {
-	query := "SELECT id, activity_type, start_timestamp, end_timestamp FROM activities ORDER BY id DESC"
+func (repo *SQLiteRepository) AllTasks() ([]Tasks, error) {
+	query := "SELECT id, title, created_at, updated_at FROM tasks ORDER BY order DESC"
 	rows, err := repo.Conn.Query(query)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	var all []Activities
+	var all []Tasks
 	for rows.Next() {
-		var a Activities
+		var a Tasks
 		var startUnixTime int64
 		var endUnixTime int64
 		err := rows.Scan(
 			&a.ID,
-			&a.ActivityType,
+			&a.Title,
 			&startUnixTime,
 			&endUnixTime,
 		)
@@ -101,40 +104,15 @@ func (repo *SQLiteRepository) AllActivities() ([]Activities, error) {
 	return all, nil
 }
 
-func (repo *SQLiteRepository) AllActivityType() ([]ActivityType, error) {
-	query := "SELECT id, title, type FROM activity_type ORDER BY id ASC"
-	rows, err := repo.Conn.Query(query)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
+func (repo *SQLiteRepository) GetTaskByID(id int) (*Tasks, error) {
+	row := repo.Conn.QueryRow("SELECT id, title, created_at, updated_at FROM tasks WHERE id = ?", id)
 
-	var all []ActivityType
-	for rows.Next() {
-		var a ActivityType
-		err := rows.Scan(
-			&a.ID,
-			&a.Title,
-			&a.Type,
-		)
-		if err != nil {
-			return nil, err
-		}
-		all = append(all, a)
-	}
-
-	return all, nil
-}
-
-func (repo *SQLiteRepository) GetActivityByID(id int) (*Activities, error) {
-	row := repo.Conn.QueryRow("SELECT id, activity_type, start_timestamp, end_timestamp FROM activities WHERE id = ?", id)
-
-	var a Activities
+	var a Tasks
 	var startUnixTime int64
 	var endUnixTime int64
 	err := row.Scan(
 		&a.ID,
-		&a.ActivityType,
+		&a.Title,
 		&startUnixTime,
 		&endUnixTime,
 	)
@@ -149,12 +127,12 @@ func (repo *SQLiteRepository) GetActivityByID(id int) (*Activities, error) {
 	return &a, nil
 }
 
-func (repo *SQLiteRepository) UpdateActivity(id int64, updated Activities) error {
+func (repo *SQLiteRepository) UpdateTask(id int64, updated Tasks) error {
 	if id == 0 {
 		return errors.New("Invalid Updated ID")
 	}
 
-	stmt := "UPDATE activities SET end_timestamp = ? WHERE id = ?"
+	stmt := "UPDATE tasks SET updated_at = ? WHERE id = ?"
 	res, err := repo.Conn.Exec(stmt, updated.EndTimestamp.Unix(), id)
 
 	if err != nil {
@@ -174,8 +152,8 @@ func (repo *SQLiteRepository) UpdateActivity(id int64, updated Activities) error
 
 }
 
-func (repo *SQLiteRepository) DeleteActivity(id int64) error {
-	res, err := repo.Conn.Exec("DELETE FROM activities WHERE id = ?", id)
+func (repo *SQLiteRepository) DeleteTask(id int64) error {
+	res, err := repo.Conn.Exec("DELETE FROM tasks WHERE id = ?", id)
 	if err != nil {
 		return err
 

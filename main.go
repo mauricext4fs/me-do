@@ -45,11 +45,11 @@ func main() {
 
 	// Window
 	td.MainWindow = a.NewWindow("Me Do")
-	//td.MainWindow.Resize(fyne.Size{Width: 1200, Height: 1400})
+	td.MainWindow.Resize(fyne.Size{Width: 1200, Height: 1400})
 	td.MainWindow.CenterOnScreen()
 	td.MainWindow.SetMaster()
 
-	//c := container.NewStack()
+	c := container.NewStack()
 	//c.Resize(fyne.Size{Width: 1000, Height: 20})
 
 	vb := container.NewVBox()
@@ -61,10 +61,10 @@ func main() {
 	vb.Add(td.ShowTaskForm())
 	vb.Add(layout.NewSpacer())
 
-	//c.Add(vb)
+	c.Add(vb)
 	//c.Add(td.Show(c))
 
-	td.MainWindow.SetContent(vb)
+	td.MainWindow.SetContent(c)
 	td.MainWindow.ShowAndRun()
 }
 
@@ -78,7 +78,7 @@ func (td *TODO) Animate(co fyne.CanvasObject, win fyne.Window) {
 			td.UIElements.CountDownText.UpdateText(fmt.Sprintf("%d : %d", td.Countdown.Minute, td.Countdown.Second))
 		}
 		if td.Countdown.Minute == 0 && td.Countdown.Second == 0 {
-			err := td.DB.UpdateActivity(td.ID, repository.Activities{ID: td.ID, EndTimestamp: time.Now()})
+			err := td.DB.UpdateTask(td.ID, repository.Tasks{ID: td.ID, EndTimestamp: time.Now()})
 			if err != nil {
 				log.Fatal("Error updating activity to sqlite DB: ", err)
 			}

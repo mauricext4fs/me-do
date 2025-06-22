@@ -54,7 +54,7 @@ func (td *TODO) Show(stack *fyne.Container) fyne.CanvasObject {
 
 	td.UIElements.StartStopButton = widget.NewButton("Start ", func() {
 		if td.Stop {
-			result, err := td.DB.StartActivity(repository.Activities{ActivityType: 100, StartTimestamp: time.Now()})
+			result, err := td.DB.StartTask(repository.Tasks{Title: "Task Title", StartTimestamp: time.Now()})
 			if err != nil {
 				log.Fatal("Error adding activity to sqlite DB: ", err)
 			}
