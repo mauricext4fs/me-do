@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"me-do/repository"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -33,6 +34,13 @@ func (td *TODO) ShowTaskForm() fyne.CanvasObject {
 
 	s := widget.NewButton("Save", func() {
 		log.Println("Content was: ", nt.Title.Text)
+		_, err := td.DB.InsertTask(repository.Tasks{
+			Title: nt.Title.Text,
+		})
+		if err != nil {
+			log.Println(err)
+		}
+
 	})
 
 	hbox.Add(nt.Title)
