@@ -21,7 +21,7 @@ func (repo *SQLiteRepository) Migrate() error {
 	
 	CREATE TABLE IF NOT EXISTS tasks (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		'order' INTEGER,
+		position INTEGER DEFAULT 214748365,
 		title TEXT NOT NULL,
 		status TEXT DEFAULT 'Not started',
 		priority TEXT DEFAULT '',
@@ -40,14 +40,14 @@ func (repo *SQLiteRepository) Migrate() error {
 
 	CREATE TABLE IF NOT EXISTS labels (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		'order' INTEGER DEFAULT 1000,
+		position INTEGER DEFAULT 214748365,
 		title TEXT NOT NULL,
 		color TEXT NOT NULL
 	);
 	
 	CREATE TABLE IF NOT EXISTS task_labels (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		'order' INTEGER DEFAULT 1000,
+		position INTEGER DEFAULT 214748365,
 		task_id INTEGER NOT NULL
 	);
 	
@@ -56,7 +56,7 @@ func (repo *SQLiteRepository) Migrate() error {
 	return err
 }
 
-func (repo *SQLiteRepository) StartTask(tasks Tasks) (*Tasks, error) {
+func (repo *SQLiteRepository) InsertTask(tasks Tasks) (*Tasks, error) {
 	stmt := "INSERT INTO Tasks (title) values (?)"
 
 	res, err := repo.Conn.Exec(stmt, tasks.Title)

@@ -12,7 +12,7 @@ var (
 
 type Repository interface {
 	Migrate() error
-	StartTask(a Tasks) (*Tasks, error)
+	InsertTask(a Tasks) (*Tasks, error)
 	AllTasks() ([]Tasks, error)
 	GetTaskByID(id int) (*Tasks, error)
 	UpdateTask(id int64, updated Tasks) error
