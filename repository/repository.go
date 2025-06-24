@@ -20,10 +20,13 @@ type Repository interface {
 }
 
 type Tasks struct {
-	ID             int64     `json:"id"`
-	Title          string    `json:"title"`
-	StartTimestamp time.Time `json:"start_timestamp"`
-	EndTimestamp   time.Time `json:"end_timestamp"`
+	ID        int64     `json:"id"`
+	Position  int64     `json:"position"`
+	Title     string    `json:"title"`
+	Status    string    `json:"status"`
+	Priority  string    `json:"priority"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 type Count struct {
@@ -31,7 +34,8 @@ type Count struct {
 }
 
 type TaskLabel struct {
-	ID    int64  `json:"id"`
-	Title string `json:"title"`
-	Type  string `json:"type"`
+	ID       int64  `json:"id"`
+	Position int64  `json:"position"`
+	Title    string `json:"title"`
+	Type     string `json:"type"`
 }

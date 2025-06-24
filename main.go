@@ -78,7 +78,7 @@ func (td *TODO) Animate(co fyne.CanvasObject, win fyne.Window) {
 			td.UIElements.CountDownText.UpdateText(fmt.Sprintf("%d : %d", td.Countdown.Minute, td.Countdown.Second))
 		}
 		if td.Countdown.Minute == 0 && td.Countdown.Second == 0 {
-			err := td.DB.UpdateTask(td.ID, repository.Tasks{ID: td.ID, EndTimestamp: time.Now()})
+			err := td.DB.UpdateTask(td.ID, repository.Tasks{ID: td.ID, UpdatedAt: time.Now()})
 			if err != nil {
 				log.Fatal("Error updating activity to sqlite DB: ", err)
 			}

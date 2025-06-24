@@ -85,19 +85,19 @@ func (repo *SQLiteRepository) AllTasks() ([]Tasks, error) {
 	var all []Tasks
 	for rows.Next() {
 		var a Tasks
-		var startUnixTime int64
-		var endUnixTime int64
+		var cA int64
+		var uA int64
 		err := rows.Scan(
 			&a.ID,
 			&a.Title,
-			&startUnixTime,
-			&endUnixTime,
+			&cA,
+			&uA,
 		)
 		if err != nil {
 			return nil, err
 		}
-		a.StartTimestamp = time.Unix(startUnixTime, 0)
-		a.EndTimestamp = time.Unix(endUnixTime, 0)
+		a.CreatedAt = time.Unix(cA, 0)
+		a.UpdatedAt = time.Unix(uA, 0)
 		all = append(all, a)
 	}
 
@@ -121,8 +121,8 @@ func (repo *SQLiteRepository) GetTaskByID(id int) (*Tasks, error) {
 		return nil, err
 	}
 
-	a.StartTimestamp = time.Unix(startUnixTime, 0)
-	a.EndTimestamp = time.Unix(endUnixTime, 0)
+	a.CreatedAt = time.Unix(startUnixTime, 0)
+	a.UpdatedAt = time.Unix(endUnixTime, 0)
 
 	return &a, nil
 }
@@ -133,7 +133,7 @@ func (repo *SQLiteRepository) UpdateTask(id int64, updated Tasks) error {
 	}
 
 	stmt := "UPDATE tasks SET updated_at = ? WHERE id = ?"
-	res, err := repo.Conn.Exec(stmt, updated.EndTimestamp.Unix(), id)
+	res, err := repo.Conn.Exec(stmt, updated.UpdatedAt.Unix(), id)
 
 	if err != nil {
 		return err
