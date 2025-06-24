@@ -48,6 +48,22 @@ func (t *CustomText) UpdateText(text string) {
 	t.Text.Refresh()
 }
 
+func (td *TODO) AddTaskRow(t repository.Tasks) fyne.CanvasObject {
+	hbox := container.NewHBox()
+	var tr = &TaskForm{}
+	tr.Title = widget.NewLabelWithStyle(t.Title, fyne.TextAlignCenter, fyne.TextStyle{Bold: true})
+	tr.Status = widget.NewLabel("Status")
+	tr.Priority = widget.NewLabel("Priority")
+	tr.LastUpdate = widget.NewLabel("Last update")
+
+	hbox.Add(tr.Title)
+	hbox.Add(tr.Status)
+	hbox.Add(tr.Priority)
+	hbox.Add(tr.LastUpdate)
+
+	return hbox
+}
+
 func (td *TODO) Show(stack *fyne.Container) fyne.CanvasObject {
 
 	content := container.NewVBox()
