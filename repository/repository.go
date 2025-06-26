@@ -16,6 +16,7 @@ type Repository interface {
 	AllTasks() ([]Tasks, error)
 	GetTaskByID(id int) (*Tasks, error)
 	UpdateTask(id int64, updated Tasks) error
+	UpdateStatus(id int64, status string) error
 	DeleteTask(id int64) error
 }
 

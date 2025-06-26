@@ -130,6 +130,31 @@ func (repo *SQLiteRepository) GetTaskByID(id int) (*Tasks, error) {
 	return &a, nil
 }
 
+func (repo *SQLiteRepository) UpdateStatus(id int64, status string) error {
+	if id == 0 {
+		return errors.New("Invalid Updated ID")
+	}
+
+	stmt := "UPDATE tasks SET status = ?, updated_at = ? WHERE id = ?"
+	res, err := repo.Conn.Exec(stmt, status, time.Now().Unix(), id)
+
+	if err != nil {
+		return err
+	}
+
+	rowAffected, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowAffected == 0 {
+		return errUpdateFailed
+	}
+
+	return nil
+
+}
+
 func (repo *SQLiteRepository) UpdateTask(id int64, updated Tasks) error {
 	if id == 0 {
 		return errors.New("Invalid Updated ID")

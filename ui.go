@@ -54,6 +54,8 @@ func (td *TODO) AddTaskRow(t repository.Tasks) fyne.CanvasObject {
 	tr.Title = widget.NewLabelWithStyle(t.Title, fyne.TextAlignCenter, fyne.TextStyle{Bold: true})
 	tr.Status = widget.NewSelect([]string{"Not started", "In Progress", "Paused", "Stuck", "Done"}, func(value string) {
 		log.Println("Select set to ", value)
+		log.Println(t.ID)
+		td.DB.UpdateStatus(t.ID, value)
 	})
 	tr.Status.SetSelected((t.Status))
 
