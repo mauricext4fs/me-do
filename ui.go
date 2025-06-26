@@ -52,9 +52,9 @@ func (td *TODO) AddTaskRow(t repository.Tasks) fyne.CanvasObject {
 	hbox := container.NewHBox()
 	var tr = &TaskForm{}
 	tr.Title = widget.NewLabelWithStyle(t.Title, fyne.TextAlignCenter, fyne.TextStyle{Bold: true})
-	tr.Status = widget.NewLabel("Status")
-	tr.Priority = widget.NewLabel("Priority")
-	tr.LastUpdate = widget.NewLabel("Last update")
+	tr.Status = widget.NewLabel(t.Status)
+	tr.Priority = widget.NewLabel(t.Priority)
+	tr.LastUpdate = widget.NewLabel(t.UpdatedAt.Format("2006-01-02 15:04:05 MST"))
 
 	hbox.Add(tr.Title)
 	hbox.Add(tr.Status)
