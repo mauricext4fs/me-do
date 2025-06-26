@@ -11,7 +11,7 @@ import (
 
 type TaskForm struct {
 	Title      *widget.Label
-	Status     *widget.Label
+	Status     *widget.Select
 	Priority   *widget.Select
 	LastUpdate *widget.Label
 }
@@ -23,7 +23,9 @@ type NewTask struct {
 func (td *TODO) ShowTaskForm() fyne.CanvasObject {
 	hbox := container.NewHBox()
 	var tr = &TaskForm{}
-	tr.Status = widget.NewLabel("Status")
+	tr.Status = widget.NewSelect([]string{"Not started", "In Progress", "Paused", "Stuck", "Done"}, func(value string) {
+		log.Println("Select set to ", value)
+	})
 	tr.Priority = widget.NewSelect([]string{"", "Critical"}, func(value string) {
 		log.Println("Select set to ", value)
 	})
@@ -59,7 +61,9 @@ func (td *TODO) ShowTaskRow() fyne.CanvasObject {
 	hbox := container.NewHBox()
 	var tr = &TaskForm{}
 	tr.Title = widget.NewLabelWithStyle("Task title", fyne.TextAlignCenter, fyne.TextStyle{Bold: true})
-	tr.Status = widget.NewLabel("Status")
+	tr.Status = widget.NewSelect([]string{"Not started", "In Progress", "Paused", "Stuck", "Done"}, func(value string) {
+		log.Println("Select set to ", value)
+	})
 	tr.Priority = widget.NewSelect([]string{"", "Critical"}, func(value string) {
 		log.Println("Select set to ", value)
 	})
