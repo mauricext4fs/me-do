@@ -25,7 +25,7 @@ func (repo *SQLiteRepository) Migrate() error {
 		title TEXT NOT NULL,
 		status TEXT DEFAULT 'Not started',
 		priority TEXT DEFAULT '',
-		created_at INTEGER DEFAULT (CURRENT_TIMESTAMP),
+		created_at INTEGER DEFAULT 0,
 		updated_at INTEGER DEFAULT 0
 	);
 
@@ -33,7 +33,7 @@ func (repo *SQLiteRepository) Migrate() error {
 	CREATE TABLE IF NOT EXISTS task_timers (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		task_id INTEGER NOT NULL,
-		start_timestamp INTEGER DEFAULT (CURRENT_TIMESTAMP),
+		start_timestamp INTEGER DEFAULT 0,
 		end_timestamp INTEGER DEFAULT 0
 	);
 	
@@ -57,9 +57,9 @@ func (repo *SQLiteRepository) Migrate() error {
 }
 
 func (repo *SQLiteRepository) InsertTask(tasks Tasks) (*Tasks, error) {
-	stmt := "INSERT INTO Tasks (title) values (?)"
+	stmt := "INSERT INTO Tasks (title, created_at, updated_at) values (?, ?, ?)"
 
-	res, err := repo.Conn.Exec(stmt, tasks.Title)
+	res, err := repo.Conn.Exec(stmt, tasks.Title, time.Now().Unix(), time.Now().Unix())
 	if err != nil {
 		return nil, err
 	}
@@ -75,7 +75,7 @@ func (repo *SQLiteRepository) InsertTask(tasks Tasks) (*Tasks, error) {
 }
 
 func (repo *SQLiteRepository) AllTasks() ([]Tasks, error) {
-	query := "SELECT id, title, position, status, priority FROM tasks ORDER BY position DESC, id ASC"
+	query := "SELECT id, title, position, status, priority, created_at, updated_at FROM tasks ORDER BY position DESC, id DESC"
 	rows, err := repo.Conn.Query(query)
 	if err != nil {
 		return nil, err
@@ -85,18 +85,22 @@ func (repo *SQLiteRepository) AllTasks() ([]Tasks, error) {
 	var all []Tasks
 	for rows.Next() {
 		var a Tasks
+		var cA int64
+		var uA int64
 		err := rows.Scan(
 			&a.ID,
 			&a.Title,
 			&a.Position,
 			&a.Status,
 			&a.Priority,
+			&cA,
+			&uA,
 		)
 		if err != nil {
 			return nil, err
 		}
-		//a.CreatedAt = time.Unix(cA, 0)
-		//a.UpdatedAt = time.Unix(uA, 0)
+		a.CreatedAt = time.Unix(cA, 0)
+		a.UpdatedAt = time.Unix(uA, 0)
 		all = append(all, a)
 	}
 
