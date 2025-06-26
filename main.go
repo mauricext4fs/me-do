@@ -68,11 +68,6 @@ func main() {
 		vb.Add(layout.NewSpacer())
 	}
 
-	vb.Add(td.ShowTaskRow())
-	vb.Add(layout.NewSpacer())
-	vb.Add(td.ShowTaskRow())
-	vb.Add(layout.NewSpacer())
-
 	vb.Add(td.ShowTaskForm())
 	vb.Add(layout.NewSpacer())
 
