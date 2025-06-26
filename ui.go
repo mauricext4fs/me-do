@@ -57,6 +57,7 @@ func (td *TODO) AddTaskRow(t repository.Tasks) fyne.CanvasObject {
 	tr.Priority = widget.NewSelect([]string{"", "Critical"}, func(value string) {
 		log.Println("Select set to ", value)
 	})
+	tr.Priority.SetSelected(t.Priority)
 
 	tr.LastUpdate = widget.NewLabel(t.UpdatedAt.Format("2006-01-02 15:04:25"))
 
