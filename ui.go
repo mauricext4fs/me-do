@@ -26,7 +26,8 @@ type UIElements struct {
 	NotificationSliderLabel *widget.Label
 	NotificationSlider      *widget.Slider
 
-	TaskContainer *fyne.Container
+	TaskListContainer *fyne.Container
+	TaskFormContainer *fyne.Container
 }
 
 type CustomText struct {
@@ -56,8 +57,8 @@ func (td *TODO) LoadTasks() {
 		log.Println(err)
 	}
 	for _, x := range tasks {
-		td.UIElements.TaskContainer.Add(td.AddTaskRow(x))
-		td.UIElements.TaskContainer.Add(layout.NewSpacer())
+		td.UIElements.TaskListContainer.Add(td.AddTaskRow(x))
+		td.UIElements.TaskListContainer.Add(layout.NewSpacer())
 	}
 
 }
@@ -75,7 +76,7 @@ func (td *TODO) AddTaskRow(t repository.Tasks) fyne.CanvasObject {
 		td.DB.UpdatePosition(t.ID, newPos)
 		log.Println("Set position to: ", newPos, " from Position: ", t.Position)
 		t.Position = newPos
-		td.UIElements.TaskContainer.RemoveAll()
+		td.UIElements.TaskListContainer.RemoveAll()
 		td.LoadTasks()
 	})
 	tr.Title = widget.NewLabelWithStyle(t.Title, fyne.TextAlignCenter, fyne.TextStyle{Bold: true})

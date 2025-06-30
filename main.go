@@ -11,7 +11,6 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/layout"
 
 	_ "github.com/glebarez/go-sqlite"
 )
@@ -51,14 +50,17 @@ func main() {
 
 	c := container.NewStack()
 	//c.Resize(fyne.Size{Width: 1000, Height: 20})
+	grid := container.NewGridWithRows(2)
 
-	td.UIElements.TaskContainer = container.NewVBox()
+	td.UIElements.TaskFormContainer = container.NewVBox()
+	td.UIElements.TaskFormContainer.Add(td.ShowTaskForm())
+	grid.Add(td.UIElements.TaskFormContainer)
+
+	td.UIElements.TaskListContainer = container.NewVBox()
 	td.LoadTasks()
 
-	td.UIElements.TaskContainer.Add(td.ShowTaskForm())
-	td.UIElements.TaskContainer.Add(layout.NewSpacer())
-
-	c.Add(td.UIElements.TaskContainer)
+	grid.Add(td.UIElements.TaskListContainer)
+	c.Add(grid)
 	//c.Add(td.Show(c))
 
 	td.MainWindow.SetContent(c)

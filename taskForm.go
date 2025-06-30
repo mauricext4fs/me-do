@@ -43,6 +43,8 @@ func (td *TODO) ShowTaskForm() fyne.CanvasObject {
 			Title:    nt.Title.Text,
 			Priority: tr.Priority.Selected,
 		})
+		td.UIElements.TaskListContainer.RemoveAll()
+		td.LoadTasks()
 		if err != nil {
 			log.Println(err)
 		}
