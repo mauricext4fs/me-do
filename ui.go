@@ -48,9 +48,24 @@ func (t *CustomText) UpdateText(text string) {
 	t.Text.Refresh()
 }
 
+func (td *TODO) LoadTasks(vb *fyne.Container) {
+	tasks, err := td.DB.AllTasks()
+	if err != nil {
+		log.Println(err)
+	}
+	for _, x := range tasks {
+		vb.Add(td.AddTaskRow(x))
+		vb.Add(layout.NewSpacer())
+	}
+
+}
+
 func (td *TODO) AddTaskRow(t repository.Tasks) fyne.CanvasObject {
 	hbox := container.NewHBox()
 	var tr = &TaskForm{}
+	tr.Position = widget.NewSelect([]string{"Up", "Down"}, func(value string) {
+		log.Println("Select set to ", value)
+	})
 	tr.Title = widget.NewLabelWithStyle(t.Title, fyne.TextAlignCenter, fyne.TextStyle{Bold: true})
 	tr.Status = widget.NewSelect([]string{"Not started", "In Progress", "Paused", "Stuck", "Done"}, func(value string) {
 		log.Println("Select set to ", value)
@@ -66,6 +81,7 @@ func (td *TODO) AddTaskRow(t repository.Tasks) fyne.CanvasObject {
 
 	tr.LastUpdate = widget.NewLabel(t.UpdatedAt.Format("2006-01-02 15:04:25"))
 
+	hbox.Add(tr.Position)
 	hbox.Add(tr.Title)
 	hbox.Add(tr.Status)
 	hbox.Add(tr.Priority)

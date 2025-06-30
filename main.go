@@ -6,7 +6,6 @@ import (
 	"log"
 	"me-do/repository"
 	"os"
-	"strconv"
 	"time"
 
 	"fyne.io/fyne/v2"
@@ -54,19 +53,7 @@ func main() {
 	//c.Resize(fyne.Size{Width: 1000, Height: 20})
 
 	vb := container.NewVBox()
-
-	tasks, err := td.DB.AllTasks()
-	if err != nil {
-		log.Println(err)
-	}
-	for _, x := range tasks {
-		var currentRow []interface{}
-
-		currentRow = append(currentRow, strconv.FormatInt(x.ID, 10))
-
-		vb.Add(td.AddTaskRow(x))
-		vb.Add(layout.NewSpacer())
-	}
+	td.LoadTasks(vb)
 
 	vb.Add(td.ShowTaskForm())
 	vb.Add(layout.NewSpacer())

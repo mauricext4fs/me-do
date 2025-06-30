@@ -11,6 +11,7 @@ import (
 
 type TaskForm struct {
 	Title      *widget.Label
+	Position   *widget.Select
 	Status     *widget.Select
 	Priority   *widget.Select
 	LastUpdate *widget.Label
@@ -60,6 +61,7 @@ func (td *TODO) ShowTaskForm() fyne.CanvasObject {
 func (td *TODO) ShowTaskRow() fyne.CanvasObject {
 	hbox := container.NewHBox()
 	var tr = &TaskForm{}
+
 	tr.Title = widget.NewLabelWithStyle("Task title", fyne.TextAlignCenter, fyne.TextStyle{Bold: true})
 	tr.Status = widget.NewSelect([]string{"Not started", "In Progress", "Paused", "Stuck", "Done"}, func(value string) {
 		log.Println("Select set to ", value)
@@ -70,6 +72,7 @@ func (td *TODO) ShowTaskRow() fyne.CanvasObject {
 
 	tr.LastUpdate = widget.NewLabel("Last update")
 
+	hbox.Add(tr.Position)
 	hbox.Add(tr.Title)
 	hbox.Add(tr.Status)
 	hbox.Add(tr.Priority)
