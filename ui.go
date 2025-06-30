@@ -25,6 +25,8 @@ type UIElements struct {
 	SoundSlider             *widget.Slider
 	NotificationSliderLabel *widget.Label
 	NotificationSlider      *widget.Slider
+
+	TaskContainer *fyne.Container
 }
 
 type CustomText struct {
@@ -48,14 +50,14 @@ func (t *CustomText) UpdateText(text string) {
 	t.Text.Refresh()
 }
 
-func (td *TODO) LoadTasks(vb *fyne.Container) {
+func (td *TODO) LoadTasks() {
 	tasks, err := td.DB.AllTasks()
 	if err != nil {
 		log.Println(err)
 	}
 	for _, x := range tasks {
-		vb.Add(td.AddTaskRow(x))
-		vb.Add(layout.NewSpacer())
+		td.UIElements.TaskContainer.Add(td.AddTaskRow(x))
+		td.UIElements.TaskContainer.Add(layout.NewSpacer())
 	}
 
 }

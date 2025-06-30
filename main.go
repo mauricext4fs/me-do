@@ -46,19 +46,19 @@ func main() {
 	// Window
 	td.MainWindow = a.NewWindow("Me Do")
 	td.MainWindow.Resize(fyne.Size{Width: 1200, Height: 1400})
-	td.MainWindow.CenterOnScreen()
+	//td.MainWindow.CenterOnScreen()
 	td.MainWindow.SetMaster()
 
 	c := container.NewStack()
 	//c.Resize(fyne.Size{Width: 1000, Height: 20})
 
-	vb := container.NewVBox()
-	td.LoadTasks(vb)
+	td.UIElements.TaskContainer = container.NewVBox()
+	td.LoadTasks()
 
-	vb.Add(td.ShowTaskForm())
-	vb.Add(layout.NewSpacer())
+	td.UIElements.TaskContainer.Add(td.ShowTaskForm())
+	td.UIElements.TaskContainer.Add(layout.NewSpacer())
 
-	c.Add(vb)
+	c.Add(td.UIElements.TaskContainer)
 	//c.Add(td.Show(c))
 
 	td.MainWindow.SetContent(c)
