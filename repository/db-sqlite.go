@@ -21,7 +21,7 @@ func (repo *SQLiteRepository) Migrate() error {
 	
 	CREATE TABLE IF NOT EXISTS tasks (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		position INTEGER DEFAULT 214748365,
+		position INTEGER DEFAULT 0,
 		title TEXT NOT NULL,
 		status TEXT DEFAULT 'Not started',
 		priority TEXT DEFAULT '',
@@ -40,14 +40,14 @@ func (repo *SQLiteRepository) Migrate() error {
 
 	CREATE TABLE IF NOT EXISTS labels (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		position INTEGER DEFAULT 214748365,
+		position INTEGER DEFAULT 0,
 		title TEXT NOT NULL,
 		color TEXT NOT NULL
 	);
 	
 	CREATE TABLE IF NOT EXISTS task_labels (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		position INTEGER DEFAULT 214748365,
+		position INTEGER DEFAULT 0,
 		task_id INTEGER NOT NULL
 	);
 	
@@ -57,7 +57,7 @@ func (repo *SQLiteRepository) Migrate() error {
 }
 
 func (repo *SQLiteRepository) InsertTask(tasks Tasks) (*Tasks, error) {
-	stmt := "INSERT INTO Tasks (title, priority, created_at, updated_at) values (?, ?, ?, ?)"
+	stmt := "INSERT INTO Tasks (position, title, priority, created_at, updated_at) values (MAX(position), ?, ?, ?, ?)"
 
 	res, err := repo.Conn.Exec(stmt, tasks.Title, tasks.Priority, time.Now().Unix(), time.Now().Unix())
 	if err != nil {
@@ -128,6 +128,31 @@ func (repo *SQLiteRepository) GetTaskByID(id int) (*Tasks, error) {
 	a.UpdatedAt = time.Unix(endUnixTime, 0)
 
 	return &a, nil
+}
+
+func (repo *SQLiteRepository) UpdatePosition(id int64, newPos int64) error {
+	if id == 0 {
+		return errors.New("Invalid Updated ID")
+	}
+
+	stmt := "UPDATE tasks SET position = ?, updated_at = ? WHERE id = ?"
+	res, err := repo.Conn.Exec(stmt, newPos, time.Now().Unix(), id)
+
+	if err != nil {
+		return err
+	}
+
+	rowAffected, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowAffected == 0 {
+		return errUpdateFailed
+	}
+
+	return nil
+
 }
 
 func (repo *SQLiteRepository) UpdateStatus(id int64, status string) error {
