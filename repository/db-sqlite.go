@@ -57,7 +57,7 @@ func (repo *SQLiteRepository) Migrate() error {
 }
 
 func (repo *SQLiteRepository) InsertTask(tasks Tasks) (*Tasks, error) {
-	stmt := "INSERT INTO Tasks (position, title, priority, created_at, updated_at) values (MAX(position), ?, ?, ?, ?)"
+	stmt := "INSERT INTO Tasks (position, title, priority, created_at, updated_at) values ((SELECT MAX(position) +1 FROM tasks), ?, ?, ?, ?)"
 
 	res, err := repo.Conn.Exec(stmt, tasks.Title, tasks.Priority, time.Now().Unix(), time.Now().Unix())
 	if err != nil {
