@@ -75,7 +75,14 @@ func (repo *SQLiteRepository) InsertTask(tasks Tasks) (*Tasks, error) {
 }
 
 func (repo *SQLiteRepository) AllTasks() ([]Tasks, error) {
-	query := "SELECT id, title, position, status, priority, created_at, updated_at FROM tasks ORDER BY position DESC, id DESC"
+	query := `
+		SELECT
+			id, title, position, status, priority, created_at, updated_at
+		FROM tasks
+		WHERE
+			status != 'Done'
+		ORDER BY position DESC, id DESC
+	`
 	rows, err := repo.Conn.Query(query)
 	if err != nil {
 		return nil, err
