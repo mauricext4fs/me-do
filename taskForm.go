@@ -24,9 +24,6 @@ type NewTask struct {
 func (td *TODO) ShowTaskForm() fyne.CanvasObject {
 	hbox := container.NewHBox()
 	var tr = &TaskForm{}
-	tr.Status = widget.NewSelect([]string{"Not started", "In Progress", "Paused", "Stuck", "Done"}, func(value string) {
-		log.Println("Select set to ", value)
-	})
 	tr.Priority = widget.NewSelect([]string{"", "Critical"}, func(value string) {
 		log.Println("Select set to ", value)
 	})
@@ -37,7 +34,7 @@ func (td *TODO) ShowTaskForm() fyne.CanvasObject {
 	nt.Title = widget.NewEntry()
 	nt.Title.SetPlaceHolder("Enter Task name...")
 
-	s := widget.NewButton("Save", func() {
+	s := widget.NewButton("Add new Task", func() {
 		log.Println("Content was: ", nt.Title.Text)
 		_, err := td.DB.InsertTask(repository.Tasks{
 			Title:    nt.Title.Text,
@@ -52,9 +49,7 @@ func (td *TODO) ShowTaskForm() fyne.CanvasObject {
 	})
 
 	hbox.Add(nt.Title)
-	hbox.Add(tr.Status)
 	hbox.Add(tr.Priority)
-	hbox.Add(tr.LastUpdate)
 	hbox.Add(s)
 
 	return hbox
