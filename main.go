@@ -44,7 +44,7 @@ func main() {
 
 	// Window
 	td.MainWindow = a.NewWindow("Me Do")
-	td.MainWindow.Resize(fyne.Size{Width: 1200, Height: 1400})
+	//td.MainWindow.Resize(fyne.Size{Width: 600, Height: 200})
 	//td.MainWindow.CenterOnScreen()
 	td.MainWindow.SetMaster()
 
@@ -58,6 +58,7 @@ func main() {
 
 	td.UIElements.TaskListContainer = container.NewVBox()
 	td.LoadTasks()
+	td.UIElements.TaskListAdaptiveContainer = container.NewAdaptiveGrid(1, td.UIElements.TaskListContainer)
 
 	grid.Add(td.UIElements.TaskListContainer)
 	c.Add(grid)

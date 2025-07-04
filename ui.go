@@ -26,8 +26,9 @@ type UIElements struct {
 	NotificationSliderLabel *widget.Label
 	NotificationSlider      *widget.Slider
 
-	TaskListContainer *fyne.Container
-	TaskFormContainer *fyne.Container
+	TaskListAdaptiveContainer *fyne.Container
+	TaskListContainer         *fyne.Container
+	TaskFormContainer         *fyne.Container
 }
 
 type CustomText struct {
