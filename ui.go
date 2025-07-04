@@ -86,6 +86,10 @@ func (td *TODO) AddTaskRow(t repository.Tasks) fyne.CanvasObject {
 		log.Println("Select set to ", value)
 		log.Println(t.ID)
 		td.DB.UpdateStatus(t.ID, value)
+		if value == "Done" {
+			td.UIElements.TaskListContainer.RemoveAll()
+			td.LoadTasks()
+		}
 	})
 	tr.Status.SetSelected((t.Status))
 
