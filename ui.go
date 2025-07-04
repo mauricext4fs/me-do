@@ -34,6 +34,8 @@ type CustomText struct {
 	canvas.Text
 }
 
+var taskPriority = []string{"", "Critical", "Very High", "High", "Medium", "Low"}
+
 var _ fyne.CanvasObject = (*CustomText)(nil)
 
 func NewCustomText(text string, c color.Color) *CustomText {
@@ -87,7 +89,7 @@ func (td *TODO) AddTaskRow(t repository.Tasks) fyne.CanvasObject {
 	})
 	tr.Status.SetSelected((t.Status))
 
-	tr.Priority = widget.NewSelect([]string{"", "Critical"}, func(value string) {
+	tr.Priority = widget.NewSelect(taskPriority, func(value string) {
 		log.Println("Select set to ", value)
 	})
 	tr.Priority.SetSelected(t.Priority)

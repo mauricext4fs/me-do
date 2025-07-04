@@ -24,7 +24,7 @@ type NewTask struct {
 func (td *TODO) ShowTaskForm() fyne.CanvasObject {
 	hbox := container.NewHBox()
 	var tr = &TaskForm{}
-	tr.Priority = widget.NewSelect([]string{"", "Critical"}, func(value string) {
+	tr.Priority = widget.NewSelect(taskPriority, func(value string) {
 		log.Println("Select set to ", value)
 	})
 
