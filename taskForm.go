@@ -54,26 +54,3 @@ func (td *TODO) ShowTaskForm() fyne.CanvasObject {
 
 	return hbox
 }
-
-func (td *TODO) ShowTaskRow() fyne.CanvasObject {
-	hbox := container.NewHBox()
-	var tr = &TaskForm{}
-
-	tr.Title = widget.NewLabelWithStyle("Task title", fyne.TextAlignCenter, fyne.TextStyle{Bold: true})
-	tr.Status = widget.NewSelect([]string{"Not started", "In Progress", "Paused", "Stuck", "Done"}, func(value string) {
-		log.Println("Select set to ", value)
-	})
-	tr.Priority = widget.NewSelect([]string{"", "Critical"}, func(value string) {
-		log.Println("Select set to ", value)
-	})
-
-	tr.LastUpdate = widget.NewLabel("Last update")
-
-	hbox.Add(tr.Position)
-	hbox.Add(tr.Title)
-	hbox.Add(tr.Status)
-	hbox.Add(tr.Priority)
-	hbox.Add(tr.LastUpdate)
-
-	return hbox
-}
