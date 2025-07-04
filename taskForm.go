@@ -40,12 +40,18 @@ func (td *TODO) ShowTaskForm() fyne.CanvasObject {
 			Title:    nt.Title.Text,
 			Priority: tr.Priority.Selected,
 		})
-		td.UIElements.TaskListContainer.RemoveAll()
-		td.LoadTasks()
 		if err != nil {
 			log.Println(err)
 		}
 
+		td.UIElements.TaskListContainer.RemoveAll()
+		td.LoadTasks()
+
+		//Clear up existing field value
+		nt.Title.Text = ""
+		nt.Title.Refresh()
+
+		tr.Priority.ClearSelected()
 	})
 
 	hbox.Add(nt.Title)
