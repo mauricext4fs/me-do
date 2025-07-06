@@ -22,7 +22,6 @@ type NewTask struct {
 }
 
 func (td *TODO) ShowTaskForm() fyne.CanvasObject {
-	hbox := container.NewHBox()
 	var tr = &TaskForm{}
 	tr.Priority = widget.NewSelect(taskPriority, func(value string) {
 		log.Println("Select set to ", value)
@@ -54,9 +53,11 @@ func (td *TODO) ShowTaskForm() fyne.CanvasObject {
 		tr.Priority.ClearSelected()
 	})
 
-	hbox.Add(nt.Title)
-	hbox.Add(tr.Priority)
-	hbox.Add(s)
+	taskForm := container.NewGridWithColumns(3,
+		nt.Title,
+		tr.Priority,
+		s,
+	)
 
-	return hbox
+	return taskForm
 }
