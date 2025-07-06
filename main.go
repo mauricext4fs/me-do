@@ -44,25 +44,23 @@ func main() {
 
 	// Window
 	td.MainWindow = a.NewWindow("Me Do")
-	//td.MainWindow.Resize(fyne.Size{Width: 600, Height: 200})
+	td.MainWindow.Resize(fyne.NewSize(600, 410))
+	td.MainWindow.SetFixedSize(true)
 	//td.MainWindow.CenterOnScreen()
 	td.MainWindow.SetMaster()
 
-	c := container.NewStack()
+	c := container.NewVBox()
 	//c.Resize(fyne.Size{Width: 1000, Height: 20})
-	grid := container.NewGridWithRows(2)
 
 	td.UIElements.TaskFormContainer = container.NewVBox()
 	td.UIElements.TaskFormContainer.Add(td.ShowTaskForm())
-	grid.Add(td.UIElements.TaskFormContainer)
+	c.Add(td.UIElements.TaskFormContainer)
 
 	td.UIElements.TaskListContainer = container.NewVBox()
 	td.LoadTasks()
 	td.UIElements.TaskListAdaptiveContainer = container.NewAdaptiveGrid(1, td.UIElements.TaskListContainer)
 
-	grid.Add(td.UIElements.TaskListContainer)
-	c.Add(grid)
-	//c.Add(td.Show(c))
+	c.Add(td.UIElements.TaskListContainer)
 
 	td.MainWindow.SetContent(c)
 	td.MainWindow.ShowAndRun()
