@@ -50,6 +50,9 @@ func (repo *SQLiteRepository) Migrate() error {
 		position INTEGER DEFAULT 0,
 		task_id INTEGER NOT NULL
 	);
+
+
+INSERT INTO Tasks (position, title) VALUES (0, "Sample task")
 	
 `
 	_, err := repo.Conn.Exec(query)
