@@ -9,6 +9,7 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/widget"
 
 	_ "github.com/glebarez/go-sqlite"
 )
@@ -19,6 +20,9 @@ type TODO struct {
 	MainWindow fyne.Window
 	UIElements UIElements
 	ID         int64
+
+	Tasks     [][]interface{}
+	TaskTable *widget.Table
 }
 
 func main() {
@@ -35,25 +39,31 @@ func main() {
 
 	// Window
 	td.MainWindow = a.NewWindow("Me Do")
-	td.MainWindow.Resize(fyne.NewSize(600, 410))
-	//	td.MainWindow.SetFixedSize(true)
+	//td.MainWindow.Resize(fyne.NewSize(710, 410))
+	//td.MainWindow.SetFixedSize(true)
 	//td.MainWindow.CenterOnScreen()
 	td.MainWindow.SetMaster()
 
-	c := container.NewVBox()
-	//c.Resize(fyne.Size{Width: 1000, Height: 20})
-
 	td.UIElements.TaskFormContainer = container.NewVBox()
 	td.UIElements.TaskFormContainer.Add(td.ShowTaskForm())
-	c.Add(td.UIElements.TaskFormContainer)
 
-	td.UIElements.TaskListContainer = container.NewVBox()
-	td.LoadTasks()
-	td.UIElements.TaskListAdaptiveContainer = container.NewAdaptiveGrid(1, td.UIElements.TaskListContainer)
+	//td.UIElements.TaskListContainer = container.NewVBox()
+	//td.LoadTasks()
+	//td.UIElements.TaskListAdaptiveContainer = container.NewAdaptiveGrid(1, td.UIElements.TaskListContainer)
+	//c.Add(td.UIElements.TaskListContainer)
 
-	c.Add(td.UIElements.TaskListContainer)
+	todoTab := td.todoTab()
+	tabs := container.NewAppTabs(
+		container.NewTabItem("TODO", todoTab),
+		container.NewTabItem("PlaceHolder", td.getPlaceHolderFixedImage()),
+	)
+	//tabs.Refresh()
+	tabs.SetTabLocation(container.TabLocationTop)
+	//c.Add(tabs)
 
-	td.MainWindow.SetContent(c)
+	finalContent := container.NewVBox(td.ShowTaskForm(), tabs)
+
+	td.MainWindow.SetContent(finalContent)
 	td.MainWindow.ShowAndRun()
 }
 
