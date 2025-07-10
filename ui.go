@@ -5,6 +5,7 @@ import (
 	"me-do/repository"
 
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
@@ -72,4 +73,12 @@ func (td *TODO) AddTaskRow(t repository.Tasks) fyne.CanvasObject {
 	hbox.Add(tr.LastUpdate)
 
 	return hbox
+}
+
+func (td *TODO) getPlaceHolderFixedImage() *canvas.Image {
+	img := canvas.NewImageFromFile("blueblue.png")
+
+	img.FillMode = canvas.ImageFillOriginal
+
+	return img
 }
