@@ -53,7 +53,7 @@ func (td *TODO) getTasksTable() *widget.Table {
 func (td *TODO) getTasksSlice() [][]interface{} {
 	var slice [][]interface{}
 
-	tasks, err := td.currentTasks()
+	tasks, err := td.currentTODOTasks()
 	if err != nil {
 		log.Println("err: ", err)
 	}
@@ -73,8 +73,8 @@ func (td *TODO) getTasksSlice() [][]interface{} {
 	return slice
 }
 
-func (td *TODO) currentTasks() ([]repository.Tasks, error) {
-	tasks, err := td.DB.AllTasks()
+func (td *TODO) currentTODOTasks() ([]repository.Tasks, error) {
+	tasks, err := td.DB.AllTODOTasks()
 	if err != nil {
 		log.Println("Error: ", err)
 		return nil, err

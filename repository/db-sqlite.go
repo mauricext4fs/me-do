@@ -60,7 +60,7 @@ INSERT INTO Tasks (position, title) VALUES (0, "Sample task")
 }
 
 func (repo *SQLiteRepository) InsertTask(tasks Tasks) (*Tasks, error) {
-	stmt := "INSERT INTO Tasks (position, title, priority, created_at, updated_at) values ((SELECT MAX(position) +1 FROM tasks), ?, ?, ?, ?)"
+	stmt := "INSERT INTO Tasks (position, title, priority, created_at, updated_at) VALUES ((SELECT MAX(position) +1 FROM tasks), ?, ?, ?, ?)"
 
 	res, err := repo.Conn.Exec(stmt, tasks.Title, tasks.Priority, time.Now().Unix(), time.Now().Unix())
 	if err != nil {
@@ -77,7 +77,7 @@ func (repo *SQLiteRepository) InsertTask(tasks Tasks) (*Tasks, error) {
 	return &tasks, nil
 }
 
-func (repo *SQLiteRepository) AllTasks() ([]Tasks, error) {
+func (repo *SQLiteRepository) AllTODOTasks() ([]Tasks, error) {
 	query := `
 		SELECT
 			id, title, position, status, priority, created_at, updated_at

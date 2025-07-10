@@ -20,7 +20,7 @@ type UIElements struct {
 var taskPriority = []string{"", "Critical", "Very High", "High", "Medium", "Low"}
 
 func (td *TODO) LoadTasks() {
-	tasks, err := td.DB.AllTasks()
+	tasks, err := td.DB.AllTODOTasks()
 	if err != nil {
 		log.Println(err)
 	}
