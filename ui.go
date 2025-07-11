@@ -18,6 +18,7 @@ type UIElements struct {
 }
 
 var taskPriority = []string{"", "Critical", "Very High", "High", "Medium", "Low"}
+var taskStatus = []string{"Not started", "In Progress", "Paused", "Stuck", "Done"}
 
 func (td *TODO) LoadTasks() {
 	tasks, err := td.DB.AllTODOTasks()
@@ -48,7 +49,7 @@ func (td *TODO) AddTaskRow(t repository.Tasks) fyne.CanvasObject {
 		td.LoadTasks()
 	})
 	tr.Title = widget.NewLabelWithStyle(t.Title, fyne.TextAlignCenter, fyne.TextStyle{Bold: true})
-	tr.Status = widget.NewSelect([]string{"Not started", "In Progress", "Paused", "Stuck", "Done"}, func(value string) {
+	tr.Status = widget.NewSelect(taskStatus, func(value string) {
 		log.Println("Select set to ", value)
 		log.Println(t.ID)
 		td.DB.UpdateStatus(t.ID, value)

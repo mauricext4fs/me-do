@@ -37,12 +37,31 @@ func (td *TODO) getTasksTable() *widget.Table {
 			return ctr
 		},
 		func(i widget.TableCellID, o fyne.CanvasObject) {
-			o.(*fyne.Container).Objects = []fyne.CanvasObject{
-				widget.NewLabel(td.Tasks[i.Row][i.Col].(string)),
+			if i.Col == 0 {
+				// ID
+			} else if i.Col == 3 {
+				// Status
+				s := widget.NewSelect(taskStatus, func(value string) {
+					log.Println("Select set to ", value)
+					id, _ := strconv.Atoi(td.Tasks[i.Row][0].(string))
+					log.Println(id)
+					td.DB.UpdateStatus(int64(id), value)
+					if value == "Done" {
+						//td.UIElements.TaskListContainer.RemoveAll()
+						//td.LoadTasks()
+					}
+				})
+				o.(*fyne.Container).Objects = []fyne.CanvasObject{
+					s,
+				}
+			} else {
+				o.(*fyne.Container).Objects = []fyne.CanvasObject{
+					widget.NewLabel(td.Tasks[i.Row][i.Col].(string)),
+				}
 			}
 		})
 
-	colWidths := []float32{70, 700, 70}
+	colWidths := []float32{1, 70, 700, 70, 70}
 	for i := 0; i < len(colWidths); i++ {
 		t.SetColumnWidth(i, colWidths[i])
 	}
@@ -58,14 +77,16 @@ func (td *TODO) getTasksSlice() [][]interface{} {
 		log.Println("err: ", err)
 	}
 
-	slice = append(slice, []interface{}{"Position", "Title", "Priority"})
+	slice = append(slice, []interface{}{"ID", "Position", "Title", "Priority", "Status"})
 
 	for _, x := range tasks {
 		var currentRow []interface{}
 
 		currentRow = append(currentRow, strconv.FormatInt(x.ID, 10))
+		currentRow = append(currentRow, strconv.FormatInt(x.Position, 10))
 		currentRow = append(currentRow, fmt.Sprintf("%s", x.Title))
 		currentRow = append(currentRow, fmt.Sprintf("%s", x.Priority))
+		currentRow = append(currentRow, fmt.Sprintf("%s", x.Status))
 
 		slice = append(slice, currentRow)
 	}
