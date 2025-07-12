@@ -2,6 +2,8 @@ package repository
 
 import (
 	"errors"
+	"fmt"
+	"strconv"
 	"time"
 )
 
@@ -40,4 +42,22 @@ type TaskLabel struct {
 	Position int64  `json:"position"`
 	Title    string `json:"title"`
 	Type     string `json:"type"`
+}
+
+func (t *Tasks) GetValueByName(name string) (value string) {
+	switch name {
+	case "ID":
+		return strconv.FormatInt(t.ID, 10)
+	case "Position":
+		return strconv.FormatInt(t.ID, 10)
+	case "Title":
+		return fmt.Sprintf("%s", t.Title)
+	case "Status":
+		return fmt.Sprintf("%s", t.Status)
+	case "Priority":
+		return fmt.Sprintf("%s", t.Priority)
+	default:
+		return ""
+	}
+
 }
