@@ -1,8 +1,6 @@
 # TODO
 
-- (/) Refactor task grid for auto-refresh when changing position
-- (/) Add all Priority dropdown values
-- (/)Find a way to "enlarge" the titiel field in new task form
+- Delete task?
 - Limit the length of the Title field
 - Get the scrollbar to work in task list (convert to Table??)
 - Add event on changing status to "done" to update position (update task set posistion = position -1)
@@ -13,4 +11,9 @@
 - Add comments / update
 
 
+# DONE
+
+- (/) Refactor task grid for auto-refresh when changing position
+- (/) Add all Priority dropdown values
+- (/)Find a way to "enlarge" the titiel field in new task form
 
