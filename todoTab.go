@@ -12,7 +12,7 @@ import (
 )
 
 func (td *TODO) todoTab() *fyne.Container {
-	//td.LoadTasks()
+	td.LoadTasks()
 	td.Tasks = td.getTasksSlice()
 	td.TaskTable = td.getTasksTable()
 
@@ -30,20 +30,39 @@ func (td *TODO) todoTab() *fyne.Container {
 func (td *TODO) getTasksTable() *widget.Table {
 	t := widget.NewTable(
 		func() (int, int) {
-			return len(td.Tasks), len(td.Tasks[0])
+			//return len(td.Tasks), len(td.Tasks[0])
+			return len(td.UIElements.TODOTasks), 5 // Column numbers
 		},
 		func() fyne.CanvasObject {
 			ctr := container.NewVBox(widget.NewLabel(""))
 			return ctr
 		},
 		func(i widget.TableCellID, o fyne.CanvasObject) {
-			if i.Col == 0 {
-				// ID
-			} else if i.Col == 3 {
+			taskRow := td.UIElements.TODOTasks[i.Row]
+			id := taskRow.ID
+
+			log.Println("Drawing row with ID: ", id, " Row ID: ", i.Row, " Col ID: ", i.Col)
+
+			colName := TODOColums[i.Col]
+			log.Println("Column: ", colName, " value: ", taskRow.GetValueByName(colName))
+
+			switch colName {
+			case "Position":
+				o.(*fyne.Container).Objects = []fyne.CanvasObject{
+					widget.NewLabel(strconv.FormatInt(taskRow.Position, 10)),
+				}
+			case "Title":
+				o.(*fyne.Container).Objects = []fyne.CanvasObject{
+					widget.NewLabel(taskRow.Title),
+				}
+			case "Priority":
+				o.(*fyne.Container).Objects = []fyne.CanvasObject{
+					widget.NewLabel(taskRow.Priority),
+				}
+			case "Status":
 				// Status
 				s := widget.NewSelect(taskStatus, func(value string) {
 					log.Println("Select set to ", value)
-					id, _ := strconv.Atoi(td.Tasks[i.Row][0].(string))
 					log.Println(id)
 					td.DB.UpdateStatus(int64(id), value)
 					if value == "Done" {
@@ -51,17 +70,20 @@ func (td *TODO) getTasksTable() *widget.Table {
 						//td.LoadTasks()
 					}
 				})
+				s.SetSelected(td.UIElements.TODOTasks[i.Row].Status)
 				o.(*fyne.Container).Objects = []fyne.CanvasObject{
 					s,
 				}
-			} else {
+			default:
+				// Default is empty
 				o.(*fyne.Container).Objects = []fyne.CanvasObject{
-					widget.NewLabel(td.Tasks[i.Row][i.Col].(string)),
+					widget.NewLabel(""),
 				}
 			}
+
 		})
 
-	colWidths := []float32{1, 70, 700, 70, 70}
+	colWidths := []float32{1, 70, 600, 210, 70}
 	for i := 0; i < len(colWidths); i++ {
 		t.SetColumnWidth(i, colWidths[i])
 	}
