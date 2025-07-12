@@ -15,21 +15,23 @@ type UIElements struct {
 	TaskListAdaptiveContainer *fyne.Container
 	TaskListContainer         *fyne.Container
 	TaskFormContainer         *fyne.Container
+	TODOTasks                 []repository.Tasks
 }
-
-var taskPriority = []string{"", "Critical", "Very High", "High", "Medium", "Low"}
-var taskStatus = []string{"Not started", "In Progress", "Paused", "Stuck", "Done"}
 
 func (td *TODO) LoadTasks() {
 	tasks, err := td.DB.AllTODOTasks()
+	td.UIElements.TODOTasks = tasks
 	if err != nil {
 		log.Println(err)
 	}
-	for _, x := range tasks {
+
+}
+
+func (td *TODO) drawTaskRows() {
+	for _, x := range td.UIElements.TODOTasks {
 		td.UIElements.TaskListContainer.Add(td.AddTaskRow(x))
 		td.UIElements.TaskListContainer.Add(layout.NewSpacer())
 	}
-
 }
 
 func (td *TODO) AddTaskRow(t repository.Tasks) fyne.CanvasObject {
