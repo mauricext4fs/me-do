@@ -52,7 +52,14 @@ func (repo *SQLiteRepository) Migrate() error {
 	);
 
 
-INSERT INTO Tasks (position, title) VALUES (0, "Sample task")
+INSERT INTO
+Tasks
+	(id, position, title)
+SELECT
+	1, 1, "Sample task"
+WHERE NOT EXISTS(
+	SELECT 1 FROM Tasks WHERE id = 1
+);
 	
 `
 	_, err := repo.Conn.Exec(query)
