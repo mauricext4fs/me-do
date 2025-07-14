@@ -62,8 +62,8 @@ func (td *TODO) getTasksTable() *widget.Table {
 					log.Println(id)
 					td.DB.UpdateStatus(int64(id), value)
 					if value == "Done" {
-						//td.UIElements.TaskListContainer.RemoveAll()
-						//td.LoadTasks()
+						td.LoadTasks()
+						td.TaskTable.Refresh()
 					}
 				})
 				s.SetSelected(td.UIElements.TODOTasks[i.Row].Status)
