@@ -1,9 +1,7 @@
 package main
 
 import (
-	"fmt"
 	"log"
-	"me-do/repository"
 	"strconv"
 
 	"fyne.io/fyne/v2"
@@ -13,7 +11,6 @@ import (
 
 func (td *TODO) todoTab() *fyne.Container {
 	td.LoadTasks()
-	td.Tasks = td.getTasksSlice()
 	td.TaskTable = td.getTasksTable()
 
 	tasksTableContainer := container.NewBorder(
@@ -30,8 +27,7 @@ func (td *TODO) todoTab() *fyne.Container {
 func (td *TODO) getTasksTable() *widget.Table {
 	t := widget.NewTable(
 		func() (int, int) {
-			//return len(td.Tasks), len(td.Tasks[0])
-			return len(td.UIElements.TODOTasks), 5 // Column numbers
+			return len(td.UIElements.TODOTasks), len(TODOColums) // Column numbers
 		},
 		func() fyne.CanvasObject {
 			ctr := container.NewVBox(widget.NewLabel(""))
@@ -89,39 +85,4 @@ func (td *TODO) getTasksTable() *widget.Table {
 	}
 
 	return t
-}
-
-func (td *TODO) getTasksSlice() [][]interface{} {
-	var slice [][]interface{}
-
-	tasks, err := td.currentTODOTasks()
-	if err != nil {
-		log.Println("err: ", err)
-	}
-
-	slice = append(slice, []interface{}{"ID", "Position", "Title", "Priority", "Status"})
-
-	for _, x := range tasks {
-		var currentRow []interface{}
-
-		currentRow = append(currentRow, strconv.FormatInt(x.ID, 10))
-		currentRow = append(currentRow, strconv.FormatInt(x.Position, 10))
-		currentRow = append(currentRow, fmt.Sprintf("%s", x.Title))
-		currentRow = append(currentRow, fmt.Sprintf("%s", x.Priority))
-		currentRow = append(currentRow, fmt.Sprintf("%s", x.Status))
-
-		slice = append(slice, currentRow)
-	}
-
-	return slice
-}
-
-func (td *TODO) currentTODOTasks() ([]repository.Tasks, error) {
-	tasks, err := td.DB.AllTODOTasks()
-	if err != nil {
-		log.Println("Error: ", err)
-		return nil, err
-	}
-
-	return tasks, nil
 }
