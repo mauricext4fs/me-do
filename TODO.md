@@ -1,7 +1,5 @@
 # TODO
 
-- Adding a task now crash the App
-- Update UI table after new task is being added to DB
 - Delete task?
 - Limit the length of the Title field
 - Get the scrollbar to work in task list (convert to Table??)
@@ -15,6 +13,8 @@
 
 # DONE
 
+- (/) Update UI table after new task is being added to DB
+- (/) Adding a task now crash the App
 - (/) 'Sample task' are being add automatically even if the table is not empty. That should not happen.
 - (/) Refactor task grid for auto-refresh when changing position
 - (/) Add all Priority dropdown values

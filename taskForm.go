@@ -43,8 +43,9 @@ func (td *TODO) ShowTaskForm() fyne.CanvasObject {
 			log.Println(err)
 		}
 
-		td.UIElements.TaskListContainer.RemoveAll()
+		// Reload the TODO Table
 		td.LoadTasks()
+		td.TaskTable.Refresh()
 
 		//Clear up existing field value
 		nt.Title.Text = ""
