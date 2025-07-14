@@ -27,7 +27,7 @@ func (td *TODO) todoTab() *fyne.Container {
 func (td *TODO) getTasksTable() *widget.Table {
 	t := widget.NewTable(
 		func() (int, int) {
-			return len(td.UIElements.TODOTasks), len(TODOColums) // Column numbers
+			return len(td.UIElements.TODOTasks), len(TODOColumns) // Column numbers
 		},
 		func() fyne.CanvasObject {
 			ctr := container.NewVBox(widget.NewLabel(""))
@@ -39,7 +39,7 @@ func (td *TODO) getTasksTable() *widget.Table {
 
 			log.Println("Drawing row with ID: ", id, " Row ID: ", i.Row, " Col ID: ", i.Col)
 
-			colName := TODOColums[i.Col]
+			colName := TODOColumns[i.Col]
 			log.Println("Column: ", colName, " value: ", taskRow.GetValueByName(colName))
 
 			switch colName {
@@ -79,9 +79,8 @@ func (td *TODO) getTasksTable() *widget.Table {
 
 		})
 
-	colWidths := []float32{1, 70, 600, 210, 70}
-	for i := 0; i < len(colWidths); i++ {
-		t.SetColumnWidth(i, colWidths[i])
+	for i := 0; i < len(TODOColumnsSize); i++ {
+		t.SetColumnWidth(i, TODOColumnsSize[i])
 	}
 
 	return t

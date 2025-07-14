@@ -2,7 +2,6 @@
 
 - Delete task?
 - Limit the length of the Title field
-- Get the scrollbar to work in task list (convert to Table??)
 - Add event on changing status to "done" to update position (update task set posistion = position -1)
 - Add event on changing "done" status to reorder position (update task set position = position + 1), update task set position = 1 where id = xxx
 - Split view for "Done" vs not done tasks
@@ -13,6 +12,7 @@
 
 # DONE
 
+- (/) Get the scrollbar to work in task list (convert to Table??)
 - (/) Update UI table after new task is being added to DB
 - (/) Adding a task now crash the App
 - (/) 'Sample task' are being add automatically even if the table is not empty. That should not happen.
