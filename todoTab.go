@@ -57,15 +57,7 @@ func (td *TODO) getTasksTable() *widget.Table {
 				}
 			case "Status":
 				// Status
-				s := widget.NewSelect(taskStatus, func(value string) {
-					log.Println("Select set to ", value)
-					log.Println(id)
-					td.DB.UpdateStatus(int64(id), value)
-					if value == "Done" {
-						td.LoadTasks()
-						td.TaskTable.Refresh()
-					}
-				})
+				s := td.getStatusField(id)
 				s.SetSelected(td.UIElements.TODOTasks[i.Row].Status)
 				o.(*fyne.Container).Objects = []fyne.CanvasObject{
 					s,
