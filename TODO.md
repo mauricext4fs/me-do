@@ -1,6 +1,7 @@
 # TODO
 
-- 'Sample task' are being add automatically even if the table is not empty. That should not happen.
+- Adding a task now crash the App
+- Update UI table after new task is being added to DB
 - Delete task?
 - Limit the length of the Title field
 - Get the scrollbar to work in task list (convert to Table??)
@@ -14,6 +15,7 @@
 
 # DONE
 
+- (/) 'Sample task' are being add automatically even if the table is not empty. That should not happen.
 - (/) Refactor task grid for auto-refresh when changing position
 - (/) Add all Priority dropdown values
 - (/)Find a way to "enlarge" the titiel field in new task form
