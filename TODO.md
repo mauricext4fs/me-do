@@ -1,5 +1,6 @@
 # TODO
 
+- 'Sample task' are being add automatically even if the table is not empty. That should not happen.
 - Delete task?
 - Limit the length of the Title field
 - Get the scrollbar to work in task list (convert to Table??)
