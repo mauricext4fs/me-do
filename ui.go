@@ -74,7 +74,7 @@ func (cs *CustomSelect) showPopup() {
 	}
 
 	scroll := container.NewVScroll(optionsContainer)
-	scroll.SetMinSize(fyne.NewSize(200, 200))
+	scroll.SetMinSize(fyne.NewSize(200, 300))
 	content := container.NewBorder(
 		nil, nil, nil, nil,
 		container.NewPadded(scroll),
@@ -158,8 +158,6 @@ func (td *TODO) AddTaskRow(t repository.Tasks) fyne.CanvasObject {
 	})
 	tr.Title = widget.NewLabelWithStyle(t.Title, fyne.TextAlignCenter, fyne.TextStyle{Bold: true})
 	tr.Status = widget.NewSelect(taskStatus, func(value string) {
-		//log.Println("Select set to ", value)
-		//log.Println(t.ID)
 		td.DB.UpdateStatus(t.ID, value)
 		if value == "Done" {
 			td.UIElements.TaskListContainer.RemoveAll()
