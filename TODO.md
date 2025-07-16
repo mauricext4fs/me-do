@@ -1,5 +1,7 @@
 # TODO
 
+- Make the CustomSelect text bold in popup menu
+- Status and Priority background color should also show in Table
 - Delete task?
 - Limit the length of the Title field
 - Add event on changing status to "done" to update position (update task set posistion = position -1)
