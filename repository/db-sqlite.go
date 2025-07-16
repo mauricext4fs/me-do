@@ -174,7 +174,7 @@ func (repo *SQLiteRepository) UpdatePosition(id int64, newPos int64) error {
 
 func (repo *SQLiteRepository) UpdateStatus(id int64, status string) error {
 	if id == 0 {
-		return errors.New("Invalid Updated ID")
+		return errors.New("Invalid Task ID")
 	}
 
 	stmt := "UPDATE tasks SET status = ?, updated_at = ? WHERE id = ?"
@@ -197,9 +197,34 @@ func (repo *SQLiteRepository) UpdateStatus(id int64, status string) error {
 
 }
 
+func (repo *SQLiteRepository) UpdatePriority(id int64, status string) error {
+	if id == 0 {
+		return errors.New("Invalid Task ID")
+	}
+
+	stmt := "UPDATE tasks SET priority = ?, updated_at = ? WHERE id = ?"
+	res, err := repo.Conn.Exec(stmt, status, time.Now().Unix(), id)
+
+	if err != nil {
+		return err
+	}
+
+	rowAffected, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowAffected == 0 {
+		return errUpdateFailed
+	}
+
+	return nil
+
+}
+
 func (repo *SQLiteRepository) UpdateTask(id int64, updated Tasks) error {
 	if id == 0 {
-		return errors.New("Invalid Updated ID")
+		return errors.New("Invalid Task ID")
 	}
 
 	stmt := "UPDATE tasks SET updated_at = ? WHERE id = ?"
