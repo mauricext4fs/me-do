@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"strconv"
 
 	"fyne.io/fyne/v2"
@@ -25,6 +24,7 @@ func (td *TODO) todoTab() *fyne.Container {
 }
 
 func (td *TODO) getTasksTable() *widget.Table {
+
 	t := widget.NewTable(
 		func() (int, int) {
 			return len(td.UIElements.TODOTasks), len(TODOColumns) // Column numbers
@@ -37,10 +37,10 @@ func (td *TODO) getTasksTable() *widget.Table {
 			taskRow := td.UIElements.TODOTasks[i.Row]
 			id := taskRow.ID
 
-			log.Println("Drawing row with ID: ", id, " Row ID: ", i.Row, " Col ID: ", i.Col)
+			//log.Println("Drawing row with ID: ", id, " Row ID: ", i.Row, " Col ID: ", i.Col)
 
 			colName := TODOColumns[i.Col]
-			log.Println("Column: ", colName, " value: ", taskRow.GetValueByName(colName))
+			//log.Println("Column: ", colName, " value: ", taskRow.GetValueByName(colName))
 
 			switch colName {
 			case "Position":
@@ -52,15 +52,17 @@ func (td *TODO) getTasksTable() *widget.Table {
 					widget.NewLabel(taskRow.Title),
 				}
 			case "Priority":
+				pSel := td.getPriorityField(id)
+				pSel.SetSelected(taskRow.Priority)
 				o.(*fyne.Container).Objects = []fyne.CanvasObject{
-					widget.NewLabel(taskRow.Priority),
+					pSel,
 				}
 			case "Status":
 				// Status
-				s := td.getStatusField(id)
-				s.SetSelected(td.UIElements.TODOTasks[i.Row].Status)
+				sSel := td.getStatusField(id)
+				sSel.SetSelected(taskRow.Status)
 				o.(*fyne.Container).Objects = []fyne.CanvasObject{
-					s,
+					sSel,
 				}
 			default:
 				// Default is empty
