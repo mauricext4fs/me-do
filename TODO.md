@@ -1,5 +1,6 @@
 # TODO
 
+- Adjust the size of the CustomSelect automatically depending on the content
 - Make the CustomSelect text bold in popup menu
 - Status and Priority background color should also show in Table
 - Delete task?
