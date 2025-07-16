@@ -74,15 +74,24 @@ func (cs *CustomSelect) showPopup() {
 	}
 
 	scroll := container.NewVScroll(optionsContainer)
-	scroll.SetMinSize(fyne.NewSize(200, 300))
-	content := container.NewBorder(
+	scroll.SetMinSize(fyne.NewSize(cs.button.MinSize().Width, 300))
+	/*content := container.NewBorder(
 		nil, nil, nil, nil,
 		container.NewPadded(scroll),
-	)
+	)*/
+	content := container.NewPadded(scroll)
 
-	cs.popup = widget.NewModalPopUp(content, fyne.CurrentApp().Driver().CanvasForObject(cs.button))
+	buttonPos := fyne.CurrentApp().Driver().AbsolutePositionForObject(cs.button)
+	buttonSize := cs.button.Size()
 
-	cs.popup.Show()
+	popup := widget.NewPopUp(content, fyne.CurrentApp().Driver().CanvasForObject(cs.button))
+	popupPos := buttonPos.Add(fyne.NewPos(0, buttonSize.Height))
+
+	//cs.popup = widget.NewModalPopUp(content, fyne.CurrentApp().Driver().CanvasForObject(cs.button))
+
+	//cs.popup.Show()
+	popup.ShowAtPosition(popupPos)
+	cs.popup = popup
 }
 
 func (cs *CustomSelect) createOptionButton(option string) fyne.CanvasObject {
