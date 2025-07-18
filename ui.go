@@ -7,7 +7,6 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 )
 
@@ -27,11 +26,28 @@ func (td *TODO) LoadTasks() {
 
 }
 
-func (td *TODO) drawTaskRows() {
-	for _, x := range td.UIElements.TODOTasks {
-		td.UIElements.TaskListContainer.Add(td.AddTaskRow(x))
-		td.UIElements.TaskListContainer.Add(layout.NewSpacer())
-	}
+func (td *TODO) buildUI() *fyne.Container {
+	// Window
+	td.MainWindow = td.App.NewWindow("Me Do")
+	//td.MainWindow.Resize(fyne.NewSize(710, 410))
+	//td.MainWindow.SetFixedSize(true)
+	//td.MainWindow.CenterOnScreen()
+	td.MainWindow.SetMaster()
+
+	td.UIElements.TaskFormContainer = container.NewVBox()
+	td.UIElements.TaskFormContainer.Add(td.ShowTaskForm())
+
+	todoTab := td.todoTab()
+	tabs := container.NewAppTabs(
+		container.NewTabItem("TODO", todoTab),
+		container.NewTabItem("PlaceHolder", td.getPlaceHolderFixedImage()),
+	)
+	//tabs.Refresh()
+	tabs.SetTabLocation(container.TabLocationTop)
+	//c.Add(tabs)
+
+	return container.NewVBox(td.ShowTaskForm(), tabs)
+
 }
 
 func (td *TODO) AddTaskRow(t repository.Tasks) fyne.CanvasObject {

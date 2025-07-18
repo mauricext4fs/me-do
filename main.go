@@ -8,7 +8,6 @@ import (
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
-	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 
 	_ "github.com/glebarez/go-sqlite"
@@ -29,6 +28,7 @@ func main() {
 	var td TODO
 	a := app.NewWithID("ch.mauricext4fs.medo")
 	td.App = a
+	//a.Settings().SetTheme(&MyTheme{})
 
 	sqlDB, err := td.connectSQL()
 	if err != nil {
@@ -37,31 +37,7 @@ func main() {
 
 	td.setupDB(sqlDB)
 
-	// Window
-	td.MainWindow = a.NewWindow("Me Do")
-	//td.MainWindow.Resize(fyne.NewSize(710, 410))
-	//td.MainWindow.SetFixedSize(true)
-	//td.MainWindow.CenterOnScreen()
-	td.MainWindow.SetMaster()
-
-	td.UIElements.TaskFormContainer = container.NewVBox()
-	td.UIElements.TaskFormContainer.Add(td.ShowTaskForm())
-
-	//td.UIElements.TaskListContainer = container.NewVBox()
-	//td.LoadTasks()
-	//td.UIElements.TaskListAdaptiveContainer = container.NewAdaptiveGrid(1, td.UIElements.TaskListContainer)
-	//c.Add(td.UIElements.TaskListContainer)
-
-	todoTab := td.todoTab()
-	tabs := container.NewAppTabs(
-		container.NewTabItem("TODO", todoTab),
-		container.NewTabItem("PlaceHolder", td.getPlaceHolderFixedImage()),
-	)
-	//tabs.Refresh()
-	tabs.SetTabLocation(container.TabLocationTop)
-	//c.Add(tabs)
-
-	finalContent := container.NewVBox(td.ShowTaskForm(), tabs)
+	finalContent := td.buildUI()
 
 	td.MainWindow.SetContent(finalContent)
 	td.MainWindow.ShowAndRun()
