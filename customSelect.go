@@ -13,12 +13,14 @@ import (
 
 type CustomSelect struct {
 	widget.BaseWidget
-	options    []string
-	selected   string
-	onSelected func(string)
-	button     *widget.Button
-	popup      *widget.PopUp
-	bgColor    map[string]color.Color
+	options          []string
+	selected         string
+	onSelected       func(string)
+	buttonStack      *fyne.Container
+	buttonBackground *canvas.Rectangle
+	button           *widget.Button
+	popup            *widget.PopUp
+	bgColor          map[string]color.Color
 }
 
 var _ fyne.CanvasObject = (*CustomSelect)(nil)
@@ -30,14 +32,21 @@ func NewCustomSelect(bgColor map[string]color.Color, options []string, onSelecte
 		bgColor:    bgColor,
 	}
 	cs.ExtendBaseWidget(cs)
-	bc := cs.getOptionBackground("Not started")
-	bg := canvas.NewRectangle(bc)
+	// Set default BG to "almost" transparent
+	bc := &color.RGBA{R: 12, G: 111, B: 211, A: 1}
+	cs.buttonBackground = canvas.NewRectangle(bc)
 	cs.button = widget.NewButton("Select...", cs.showPopup)
-	stack := container.NewStack(bg, cs.button)
-	stack.Show()
+	cs.buttonStack = container.NewStack(cs.buttonBackground, cs.button)
+	// Set the button container to transparent so it shows the rectange background
+	cs.button.Importance = widget.LowImportance
 	cs.updateButtonText()
 
 	return cs
+}
+
+func (cs *CustomSelect) SetBGColor(c color.Color) {
+	cs.buttonBackground.FillColor = c
+	cs.Refresh()
 }
 
 func (cs *CustomSelect) SetSelected(value string) {
@@ -46,14 +55,16 @@ func (cs *CustomSelect) SetSelected(value string) {
 	if cs.popup != nil {
 		cs.popup.Hide()
 	}
+
 }
 
 func (cs *CustomSelect) updateButtonText() {
 	if cs.selected == "" {
 		cs.button.SetText("Select....")
 	} else {
-		cs.button.SetText(cs.selected + " vlad")
+		cs.button.SetText(cs.selected)
 	}
+
 }
 
 func (cs *CustomSelect) showPopup() {
@@ -119,5 +130,5 @@ func (cs *CustomSelect) getOptionBackground(option string) color.Color {
 }
 
 func (cs *CustomSelect) CreateRenderer() fyne.WidgetRenderer {
-	return widget.NewSimpleRenderer(cs.button)
+	return widget.NewSimpleRenderer(cs.buttonStack)
 }
