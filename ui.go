@@ -42,14 +42,13 @@ func (td *TODO) buildUI() *fyne.Container {
 		container.NewTabItem("TODO", todoTab),
 		container.NewTabItem("PlaceHolder", td.getPlaceHolderFixedImage()),
 	)
-	//tabs.Refresh()
 	tabs.SetTabLocation(container.TabLocationTop)
-	//c.Add(tabs)
 
 	return container.NewVBox(td.ShowTaskForm(), tabs)
 
 }
 
+// TODELETE
 func (td *TODO) AddTaskRow(t repository.Tasks) fyne.CanvasObject {
 	hbox := container.NewHBox()
 	var tr = &TaskForm{}

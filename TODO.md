@@ -1,5 +1,8 @@
 # TODO
 
+- Need bigger placeholder image to increase the size of the Window
+- Need to be able to set the default Value / Color on CustomSelect
+- Adjust the dropdown color
 - Adjust the size of the CustomSelect automatically depending on the content
 - Make the CustomSelect text bold in popup menu
 - Status and Priority background color should also show in Table

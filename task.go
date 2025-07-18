@@ -23,7 +23,7 @@ var taskStatusColors = map[string]color.Color{
 	"Done":        &colornames.Green,                        //Green
 }
 var TODOColumns = []string{"ID", "Position", "Title", "Status", "Priority"}
-var TODOColumnsSize = []float32{1, 70, 600, 210, 70}
+var TODOColumnsSize = []float32{1, 70, 600, 210, 210}
 
 func (td *TODO) getStatusField(id int64) *CustomSelect {
 	s := NewCustomSelect(taskStatusColors, taskStatus, func(value string) {

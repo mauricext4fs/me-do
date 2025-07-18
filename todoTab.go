@@ -37,10 +37,7 @@ func (td *TODO) getTasksTable() *widget.Table {
 			taskRow := td.UIElements.TODOTasks[i.Row]
 			id := taskRow.ID
 
-			//log.Println("Drawing row with ID: ", id, " Row ID: ", i.Row, " Col ID: ", i.Col)
-
 			colName := TODOColumns[i.Col]
-			//log.Println("Column: ", colName, " value: ", taskRow.GetValueByName(colName))
 
 			switch colName {
 			case "Position":
