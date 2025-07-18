@@ -51,6 +51,7 @@ func (cs *CustomSelect) SetBGColor(c color.Color) {
 
 func (cs *CustomSelect) SetSelected(value string) {
 	cs.selected = value
+	cs.SetBGColor(cs.getOptionBackground(value))
 	cs.updateButtonText()
 	if cs.popup != nil {
 		cs.popup.Hide()
