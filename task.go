@@ -8,11 +8,11 @@ import (
 
 var taskPriority = []string{"", "Critical", "Very High", "High", "Medium", "Low"}
 var taskPriorityColors = map[string]color.Color{
-	"Low":       &colornames.Lightgray,                       //Grey
-	"Medium":    &colornames.Orange,                          //Orange
-	"High":      &colornames.Dodgerblue,                      //Blue
-	"Very High": &color.NRGBA{R: 205, G: 65, B: 79, A: 255},  //Red
-	"Critical":  &color.NRGBA{R: 90, G: 197, B: 125, A: 255}, //Green
+	"Low":       &colornames.Lightcyan,    // Cyan
+	"Medium":    &colornames.Lightskyblue, // Medium blue
+	"High":      &colornames.Mediumblue,   //Blue
+	"Very High": &colornames.Darkblue,     //Dark Blue
+	"Critical":  &colornames.Black,        //Black
 }
 var taskStatus = []string{"Not started", "In Progress", "Paused", "Stuck", "Done"}
 var taskStatusColors = map[string]color.Color{
