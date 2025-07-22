@@ -1,5 +1,6 @@
 # TODO
 
+- Change Custom-Select font to white
 - Need bigger placeholder image to increase the size of the Window
 - Need to be able to set the default Value / Color on CustomSelect
 - Adjust the dropdown color
