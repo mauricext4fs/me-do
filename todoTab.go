@@ -1,11 +1,8 @@
 package main
 
 import (
-	"log"
-
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 )
 
@@ -31,7 +28,7 @@ func (td *TODO) getTasksTable() *widget.Table {
 			return len(td.UIElements.TODOTasks), len(TODODisplayColumns) // Column numbers
 		},
 		func() fyne.CanvasObject {
-			ctr := container.NewVBox(widget.NewLabel(""))
+			ctr := container.NewVBox(widget.NewLabel(" . "))
 			return ctr
 		},
 		func(i widget.TableCellID, o fyne.CanvasObject) {
@@ -43,13 +40,8 @@ func (td *TODO) getTasksTable() *widget.Table {
 			switch colName {
 			case "Position":
 				curPos := taskRow.Position
-				upBtn := widget.NewButtonWithIcon("", theme.MoveUpIcon(), func() {
-					log.Println("Up press for pos: ", curPos)
-				})
-				downBtn := widget.NewButtonWithIcon("", theme.MoveDownIcon(), func() {
-					log.Println("Down press for pos", curPos)
-				})
-				pc := container.NewCenter(container.NewHBox(downBtn, upBtn))
+
+				pc := td.getUpDownPositionField(id, curPos)
 
 				o.(*fyne.Container).Objects = []fyne.CanvasObject{
 					pc,

@@ -3,6 +3,10 @@ package main
 import (
 	"image/color"
 
+	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/theme"
+	"fyne.io/fyne/v2/widget"
 	"golang.org/x/image/colornames"
 )
 
@@ -46,4 +50,20 @@ func (td *TODO) getPriorityField(id int64) *CustomSelect {
 		td.DB.UpdatePriority(id, value)
 	})
 	return s
+}
+
+func (td *TODO) getUpDownPositionField(id int64, curPos int64) *fyne.Container {
+	upBtn := widget.NewButtonWithIcon("", theme.MoveUpIcon(), func() {
+		td.DB.UpdatePosition(id, (curPos + 1))
+		td.LoadTasks()
+		td.TaskTable.Refresh()
+	})
+	downBtn := widget.NewButtonWithIcon("", theme.MoveDownIcon(), func() {
+		td.DB.UpdatePosition(id, (curPos - 1))
+		td.LoadTasks()
+		td.TaskTable.Refresh()
+	})
+	pc := container.NewCenter(container.NewHBox(downBtn, upBtn))
+
+	return pc
 }
