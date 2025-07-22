@@ -9,6 +9,7 @@ import (
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
+	"golang.org/x/image/colornames"
 )
 
 type CustomSelect struct {
@@ -18,6 +19,7 @@ type CustomSelect struct {
 	onSelected       func(string)
 	buttonStack      *fyne.Container
 	buttonBackground *canvas.Rectangle
+	buttonText       *canvas.Text
 	button           *widget.Button
 	popup            *widget.PopUp
 	bgColor          map[string]color.Color
@@ -35,8 +37,11 @@ func NewCustomSelect(bgColor map[string]color.Color, options []string, onSelecte
 	// Set default BG to "almost" transparent
 	bc := &color.RGBA{R: 12, G: 111, B: 211, A: 1}
 	cs.buttonBackground = canvas.NewRectangle(bc)
-	cs.button = widget.NewButton("Select...", cs.showPopup)
-	cs.buttonStack = container.NewStack(cs.buttonBackground, cs.button)
+	cs.button = widget.NewButton("", cs.showPopup)
+	cs.buttonText = canvas.NewText("Select...", &colornames.White)
+	cs.buttonText.Alignment = fyne.TextAlignCenter
+	cs.buttonText.TextStyle.Bold = true
+	cs.buttonStack = container.NewStack(cs.buttonBackground, cs.buttonText, cs.button)
 	// Set the button container to transparent so it shows the rectange background
 	cs.button.Importance = widget.LowImportance
 	cs.updateButtonText()
@@ -61,9 +66,11 @@ func (cs *CustomSelect) SetSelected(value string) {
 
 func (cs *CustomSelect) updateButtonText() {
 	if cs.selected == "" {
-		cs.button.SetText("Select....")
+		cs.buttonText.Text = "Select..."
+		//cs.button.SetText("Select....")
 	} else {
-		cs.button.SetText(cs.selected)
+		cs.buttonText.Text = cs.selected
+		//cs.button.SetText(cs.selected)
 	}
 
 }
