@@ -22,8 +22,12 @@ var taskStatusColors = map[string]color.Color{
 	"Stuck":       &color.NRGBA{R: 205, G: 65, B: 79, A: 255},  //Red
 	"Done":        &color.NRGBA{R: 90, G: 197, B: 125, A: 255}, //Green
 }
-var TODOColumns = []string{"ID", "Position", "Title", "Status", "Priority"}
-var TODOColumnsSize = []float32{1, 70, 600, 210, 210}
+var TODODisplayColumns = []string{"Position", "Title", "Status", "Priority"}
+
+// var TODOColumns = []string{"ID", "Position", "Title", "Status", "Priority"}
+var TODOColumnsSize = []float32{80, 600, 210, 210}
+
+//var TODOColumnsSize = []float32{1, 70, 600, 210, 210}
 
 func (td *TODO) getStatusField(id int64) *CustomSelect {
 	s := NewCustomSelect(taskStatusColors, taskStatus, func(value string) {
