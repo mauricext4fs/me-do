@@ -7,7 +7,10 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
+	"golang.org/x/image/colornames"
 )
 
 type UIElements struct {
@@ -44,7 +47,14 @@ func (td *TODO) buildUI() *fyne.Container {
 	)
 	tabs.SetTabLocation(container.TabLocationTop)
 
-	return container.NewVBox(td.ShowTaskForm(), tabs)
+	pt := canvas.NewText("Path: "+td.getDBPath(), colornames.Hotpink)
+
+	saveBtn := widget.NewButtonWithIcon("Create DB File", theme.DocumentSaveIcon(), func() {
+		td.showFileSaveDialog()
+		log.Println("save as clicked!")
+	})
+
+	return container.NewVBox(td.ShowTaskForm(), pt, saveBtn, tabs)
 
 }
 
@@ -97,4 +107,24 @@ func (td *TODO) getPlaceHolderFixedImage() *canvas.Image {
 	img.FillMode = canvas.ImageFillOriginal
 
 	return img
+}
+
+func (td *TODO) showFileSaveDialog() {
+	win := td.MainWindow
+	saveDialog := dialog.NewFileSave(func(write fyne.URIWriteCloser, err error) {
+		if err != nil {
+			dialog.ShowError(err, win)
+		}
+
+		if write == nil {
+			return
+		}
+
+		// save file
+		td.CurrentFile = write.URI()
+
+		win.SetTitle(win.Title() + " - " + write.URI().Name())
+
+	}, win)
+	saveDialog.Show()
 }
