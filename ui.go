@@ -18,6 +18,7 @@ type UIElements struct {
 	TaskListAdaptiveContainer *fyne.Container
 	TaskListContainer         *fyne.Container
 	TaskFormContainer         *fyne.Container
+	DBPathText                *canvas.Text
 	TODOTasks                 []repository.Tasks
 }
 
@@ -48,7 +49,8 @@ func (td *TODO) buildUI() *fyne.Container {
 	)
 	tabs.SetTabLocation(container.TabLocationTop)
 
-	pt := canvas.NewText("Path: "+td.getDBPath(), colornames.Hotpink)
+	pt := canvas.NewText("Path: "+td.CurrentDBPath, colornames.Hotpink)
+	td.UIElements.DBPathText = pt
 
 	openBtn := widget.NewButtonWithIcon("Open existing DB", theme.DocumentIcon(), func() {
 		td.showFileOpenDialog()
@@ -60,7 +62,7 @@ func (td *TODO) buildUI() *fyne.Container {
 		log.Println("save was clicked!")
 	})
 
-	return container.NewVBox(td.ShowTaskForm(), pt, openBtn, saveBtn, tabs)
+	return container.NewVBox(td.ShowTaskForm(), td.UIElements.DBPathText, openBtn, saveBtn, tabs)
 
 }
 
@@ -148,6 +150,7 @@ func (td *TODO) showFileOpenDialog() {
 
 		// Add filename to the Window title
 		win.SetTitle("MeDo - " + read.URI().Name())
+		td.UIElements.DBPathText.Text = read.URI().Path()
 
 	}, win)
 	saveDialog.Show()
