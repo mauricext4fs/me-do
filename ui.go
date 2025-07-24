@@ -8,6 +8,7 @@ import (
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/storage"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 	"golang.org/x/image/colornames"
@@ -150,6 +151,10 @@ func (td *TODO) showFileOpenDialog() {
 
 	}, win)
 	saveDialog.Show()
+	saveDialog.Resize(fyne.Size{Width: 900, Height: 1000})
+	ext := []string{".medo"}
+	filter := storage.NewExtensionFileFilter(ext)
+	saveDialog.SetFilter(filter)
 }
 
 func (td *TODO) showFileSaveDialog() {
