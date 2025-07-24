@@ -49,12 +49,17 @@ func (td *TODO) buildUI() *fyne.Container {
 
 	pt := canvas.NewText("Path: "+td.getDBPath(), colornames.Hotpink)
 
-	saveBtn := widget.NewButtonWithIcon("Create DB File", theme.DocumentSaveIcon(), func() {
-		td.showFileSaveDialog()
-		log.Println("save as clicked!")
+	openBtn := widget.NewButtonWithIcon("Open existing DB", theme.DocumentIcon(), func() {
+		td.showFileOpenDialog()
+		log.Println("open was clicked!")
 	})
 
-	return container.NewVBox(td.ShowTaskForm(), pt, saveBtn, tabs)
+	saveBtn := widget.NewButtonWithIcon("Save as (copy current DB somewhere else)", theme.DocumentSaveIcon(), func() {
+		td.showFileSaveDialog()
+		log.Println("save was clicked!")
+	})
+
+	return container.NewVBox(td.ShowTaskForm(), pt, openBtn, saveBtn, tabs)
 
 }
 
@@ -109,6 +114,44 @@ func (td *TODO) getPlaceHolderFixedImage() *canvas.Image {
 	return img
 }
 
+func (td *TODO) showFileOpenDialog() {
+	win := td.MainWindow
+	saveDialog := dialog.NewFileOpen(func(read fyne.URIReadCloser, err error) {
+		if err != nil {
+			dialog.ShowError(err, win)
+		}
+
+		// Nothing was choosen
+		if read == nil {
+			return
+		}
+
+		// Add current path to recent
+		td.addToRecentDBFilesList(td.CurrentDBPath)
+
+		// Copy current DB to new Location
+
+		// save Path
+		//td.CurrentDBPath = write.URI().Path()
+		log.Println("New DB Path", read.URI().Path())
+
+		// Reset DB with new location
+		db, err := td.connectSQL(read.URI().Path())
+		if err != nil {
+			// Not working... cannot open new DB
+			log.Panicln("Cannot open new DB location ", err)
+		}
+		td.setupDB(db)
+		td.LoadTasks()
+		td.TaskTable.Refresh()
+
+		// Add filename to the Window title
+		win.SetTitle("MeDo - " + read.URI().Name())
+
+	}, win)
+	saveDialog.Show()
+}
+
 func (td *TODO) showFileSaveDialog() {
 	win := td.MainWindow
 	saveDialog := dialog.NewFileSave(func(write fyne.URIWriteCloser, err error) {
@@ -116,14 +159,36 @@ func (td *TODO) showFileSaveDialog() {
 			dialog.ShowError(err, win)
 		}
 
+		// Nothing was choosen
 		if write == nil {
 			return
 		}
 
-		// save file
-		td.CurrentFile = write.URI()
+		// Add current path to recent
+		td.addToRecentDBFilesList(td.CurrentDBPath)
 
-		win.SetTitle(win.Title() + " - " + write.URI().Name())
+		// Copy current DB to new Location
+
+		// save Path
+		//td.CurrentDBPath = write.URI().Path()
+		log.Println("New DB Path", write.URI().Path())
+
+		// Reset DB with new location
+		err = td.copyDB(td.CurrentDBPath, write.URI().Path())
+		if err != nil {
+			log.Panicln("Cannot copy the current DB to the new Location: ", err)
+		}
+		db, err := td.connectSQL(write.URI().Path())
+		if err != nil {
+			// Not working... cannot open new DB
+			log.Panicln("Cannot open new DB location ", err)
+		}
+		td.setupDB(db)
+		td.LoadTasks()
+		td.TaskTable.Refresh()
+
+		// Add filename to the Window title
+		win.SetTitle("MeDo - " + write.URI().Name())
 
 	}, win)
 	saveDialog.Show()
