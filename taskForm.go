@@ -50,6 +50,7 @@ func (td *TODO) ShowTaskForm() fyne.CanvasObject {
 		//Clear up existing field value
 		nt.Title.Text = ""
 		nt.Title.Refresh()
+		td.MainWindow.Canvas().Focus(nt.Title)
 
 		tr.Priority.ClearSelected()
 	})
