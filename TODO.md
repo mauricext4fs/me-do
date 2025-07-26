@@ -1,6 +1,8 @@
 # TODO
 
+- When switching task to done... need to update all position
 - Bundle placeholder image
+- Edit title on click
 - Replace position field for a relation table Task_Status_Position. Giving the possibility to order per Status. Important is to get position 'unique' for "non" completed tasks for the main view
 - Add event on changing status to "done" to update position (update task set posistion = position -1)
 - Add event on changing "done" status to reorder position (update task set position = position + 1), update task set position = 1 where id = xxx
