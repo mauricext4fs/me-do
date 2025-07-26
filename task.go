@@ -37,7 +37,18 @@ var TODOColumnsSize = []float32{80, 600, 210, 210}
 func (td *TODO) getStatusField(id int64) *CustomSelect {
 	s := NewCustomSelect(taskStatusColors, taskStatus, func(value string) {
 		td.DB.UpdateStatus(id, value)
+	})
+
+	return s
+}
+
+func (td *TODO) getTODOStatusField(id int64, curPos int64) *CustomSelect {
+	s := NewCustomSelect(taskStatusColors, taskStatus, func(value string) {
+		td.DB.UpdateStatus(id, value)
 		if value == "Done" {
+			// We need to unshift the position
+			log.Println("Shifting task id: ", id, " with position ", curPos)
+			td.DB.ShiftPosition(id, curPos, "TODO")
 			td.LoadTasks()
 			td.TaskTable.Refresh()
 		}

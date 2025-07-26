@@ -117,6 +117,37 @@ func (repo *SQLiteRepository) InsertPosition(position Positions) (*Positions, er
 	return &position, nil
 }
 
+func (repo *SQLiteRepository) ShiftPosition(taskId int64, curPos int64, label string) error {
+	// Delete Position
+	stmt := `
+	DELTE FROM task_positions
+	WHERE task_id = ? AND label = ?	
+	`
+	log.Println("Deleting position : ", curPos, " with task_id: ", taskId, " and label ", label)
+	_, err := repo.Conn.Exec(stmt, taskId, label)
+	if err != nil {
+		return err
+	}
+
+	// Lower all position higher that curPos (replacing the shifted position)
+	stmt = `
+	UPDATE 
+		task_positions
+	SET
+		position = position -1
+	WHERE 
+	 	label = ?
+		AND position > ?
+	`
+	log.Println("Lowering all position higher than : ", curPos)
+	_, err = repo.Conn.Exec(stmt, label, curPos)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (repo *SQLiteRepository) PushPosition() error {
 	query := `
 	UPDATE 

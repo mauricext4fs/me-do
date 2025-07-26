@@ -17,6 +17,7 @@ type Repository interface {
 	InsertTask(a Tasks) (*Tasks, error)
 	InsertPosition(p Positions) (*Positions, error)
 	PushPosition() error
+	ShiftPosition(id int64, curPos int64, label string) error
 	UpPosition(id int64, curPos int64, label string) error
 	DownPosition(id int64, curPos int64, label string) error
 	AllTODOTasks() ([]Tasks, error)

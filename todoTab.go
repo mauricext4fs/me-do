@@ -58,7 +58,7 @@ func (td *TODO) getTasksTable() *widget.Table {
 				}
 			case "Status":
 				// Status
-				sSel := td.getStatusField(id)
+				sSel := td.getTODOStatusField(id, taskRow.Position)
 				sSel.SetSelected(taskRow.Status)
 				o.(*fyne.Container).Objects = []fyne.CanvasObject{
 					sSel,
