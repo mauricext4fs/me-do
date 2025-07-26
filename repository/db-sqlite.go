@@ -29,6 +29,13 @@ func (repo *SQLiteRepository) Migrate() error {
 		updated_at INTEGER DEFAULT 0
 	);
 
+	CREATE TABLE IF NOT EXISTS task_positions (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		task_id INTEGER NOT NULL,
+		position INTEGER DEFAULT 0,
+		label TEXT DEFAULT 'TODO'
+	);
+
 
 	CREATE TABLE IF NOT EXISTS task_timers (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -53,12 +60,21 @@ func (repo *SQLiteRepository) Migrate() error {
 
 
 INSERT INTO
-Tasks
+tasks
 	(id, position, title)
 SELECT
 	1, 1, "Sample task"
 WHERE NOT EXISTS(
-	SELECT 1 FROM Tasks WHERE id = 1
+	SELECT 1 FROM tasks WHERE id = 1
+);
+ 
+INSERT INTO
+task_positions
+	(id, task_id, position, label)
+SELECT
+	1, 1, 1, "TODO"
+WHERE NOT EXISTS(
+	SELECT 1 FROM task_positions WHERE id = 1
 );
 	
 `
@@ -67,7 +83,7 @@ WHERE NOT EXISTS(
 }
 
 func (repo *SQLiteRepository) InsertTask(tasks Tasks) (*Tasks, error) {
-	stmt := "INSERT INTO Tasks (position, title, priority, created_at, updated_at) VALUES ((SELECT MAX(position) +1 FROM tasks), ?, ?, ?, ?)"
+	stmt := "INSERT INTO tasks (position, title, priority, created_at, updated_at) VALUES ((SELECT MAX(position) +1 FROM tasks), ?, ?, ?, ?)"
 
 	res, err := repo.Conn.Exec(stmt, tasks.Title, tasks.Priority, time.Now().Unix(), time.Now().Unix())
 	if err != nil {
@@ -80,8 +96,62 @@ func (repo *SQLiteRepository) InsertTask(tasks Tasks) (*Tasks, error) {
 	}
 
 	tasks.ID = id
+	_ = repo.PushPosition()
+	// Add to position table
+	ps := &Positions{
+		TaskID: id,
+		Label:  "TODO",
+	}
+	repo.InsertPosition(*ps)
 
 	return &tasks, nil
+}
+
+func (repo *SQLiteRepository) InsertPosition(position Positions) (*Positions, error) {
+	query := `
+	INSERT INTO 
+		task_positions
+		(task_id, position, label)
+	VALUES 
+		(?, 1, ?);
+	`
+	res, err := repo.Conn.Exec(query, position.TaskID, position.Label)
+	if err != nil {
+		return nil, err
+	}
+
+	id, err := res.LastInsertId()
+	if err != nil {
+		return nil, err
+	}
+
+	position.ID = id
+
+	return &position, nil
+}
+
+func (repo *SQLiteRepository) PushPosition() error {
+	query := `
+	UPDATE 
+		task_positions
+	SET position = position +1;
+	`
+	res, err := repo.Conn.Exec(query)
+
+	if err != nil {
+		return err
+	}
+
+	rowAffected, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowAffected == 0 {
+		return errUpdateFailed
+	}
+
+	return nil
 }
 
 func (repo *SQLiteRepository) AllTODOTasks() ([]Tasks, error) {
@@ -153,6 +223,31 @@ func (repo *SQLiteRepository) UpdatePosition(id int64, newPos int64) error {
 	}
 
 	stmt := "UPDATE tasks SET position = ?, updated_at = ? WHERE id = ?"
+	res, err := repo.Conn.Exec(stmt, newPos, time.Now().Unix(), id)
+
+	if err != nil {
+		return err
+	}
+
+	rowAffected, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowAffected == 0 {
+		return errUpdateFailed
+	}
+
+	return nil
+
+}
+
+func (repo *SQLiteRepository) UpdateTaskPosition(id int64, newPos int64, label string) error {
+	if id == 0 {
+		return errors.New("Invalid Updated ID")
+	}
+
+	stmt := "UPDATE task_positions SET position = ? WHERE task_id = ? AND label = ?"
 	res, err := repo.Conn.Exec(stmt, newPos, time.Now().Unix(), id)
 
 	if err != nil {

@@ -15,6 +15,9 @@ var (
 type Repository interface {
 	Migrate() error
 	InsertTask(a Tasks) (*Tasks, error)
+	InsertPosition(p Positions) (*Positions, error)
+	PushPosition() error
+	UpdateTaskPosition(id int64, newPos int64, label string) error
 	AllTODOTasks() ([]Tasks, error)
 	GetTaskByID(id int) (*Tasks, error)
 	UpdateTask(id int64, updated Tasks) error
@@ -32,6 +35,13 @@ type Tasks struct {
 	Priority  string    `json:"priority"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
+}
+
+type Positions struct {
+	ID       int64  `json:"id"`
+	TaskID   int64  `json:"task_id"`
+	Position int64  `json:"position"`
+	Label    string `json:"label"`
 }
 
 type Count struct {
