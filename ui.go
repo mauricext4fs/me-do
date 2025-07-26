@@ -66,49 +66,6 @@ func (td *TODO) buildUI() *fyne.Container {
 
 }
 
-// TODELETE
-func (td *TODO) AddTaskRow(t repository.Tasks) fyne.CanvasObject {
-	hbox := container.NewHBox()
-	var tr = &TaskForm{}
-	tr.Position = widget.NewSelect([]string{"Up", "Down"}, func(value string) {
-		var newPos int64
-		if value == "Up" {
-			newPos = t.Position + 1
-		} else {
-			newPos = t.Position - 1
-		}
-		td.DB.UpdatePosition(t.ID, newPos)
-		log.Println("Set position to: ", newPos, " from Position: ", t.Position)
-		t.Position = newPos
-		td.UIElements.TaskListContainer.RemoveAll()
-		td.LoadTasks()
-	})
-	tr.Title = widget.NewLabelWithStyle(t.Title, fyne.TextAlignCenter, fyne.TextStyle{Bold: true})
-	tr.Status = widget.NewSelect(taskStatus, func(value string) {
-		td.DB.UpdateStatus(t.ID, value)
-		if value == "Done" {
-			td.UIElements.TaskListContainer.RemoveAll()
-			td.LoadTasks()
-		}
-	})
-	tr.Status.SetSelected((t.Status))
-
-	tr.Priority = widget.NewSelect(taskPriority, func(value string) {
-		log.Println("Select set to ", value)
-	})
-	tr.Priority.SetSelected(t.Priority)
-
-	tr.LastUpdate = widget.NewLabel(t.UpdatedAt.Format("2006-01-02 15:04:25"))
-
-	hbox.Add(tr.Position)
-	hbox.Add(tr.Title)
-	hbox.Add(tr.Status)
-	hbox.Add(tr.Priority)
-	hbox.Add(tr.LastUpdate)
-
-	return hbox
-}
-
 func (td *TODO) getPlaceHolderFixedImage() *canvas.Image {
 	img := canvas.NewImageFromFile("blueblue.png")
 
