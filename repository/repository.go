@@ -17,13 +17,13 @@ type Repository interface {
 	InsertTask(a Tasks) (*Tasks, error)
 	InsertPosition(p Positions) (*Positions, error)
 	PushPosition() error
-	UpdateTaskPosition(id int64, newPos int64, label string) error
+	UpPosition(id int64, curPos int64, label string) error
+	DownPosition(id int64, curPos int64, label string) error
 	AllTODOTasks() ([]Tasks, error)
 	GetTaskByID(id int) (*Tasks, error)
 	UpdateTask(id int64, updated Tasks) error
 	UpdateStatus(id int64, status string) error
 	UpdatePriority(id int64, status string) error
-	UpdatePosition(id int64, newPos int64) error
 	DeleteTask(id int64) error
 }
 

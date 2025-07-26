@@ -2,6 +2,7 @@ package main
 
 import (
 	"image/color"
+	"log"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -54,12 +55,18 @@ func (td *TODO) getPriorityField(id int64) *CustomSelect {
 
 func (td *TODO) getUpDownPositionField(id int64, curPos int64) *fyne.Container {
 	upBtn := widget.NewButtonWithIcon("", theme.MoveUpIcon(), func() {
-		td.DB.UpdatePosition(id, (curPos + 1))
+		err := td.DB.UpPosition(id, (curPos), "TODO")
+		if err != nil {
+			log.Println("Error on Move up press: ", err)
+		}
 		td.LoadTasks()
 		td.TaskTable.Refresh()
 	})
 	downBtn := widget.NewButtonWithIcon("", theme.MoveDownIcon(), func() {
-		td.DB.UpdatePosition(id, (curPos - 1))
+		err := td.DB.DownPosition(id, (curPos), "TODO")
+		if err != nil {
+			log.Println("Error on Move Down press: ", err)
+		}
 		td.LoadTasks()
 		td.TaskTable.Refresh()
 	})

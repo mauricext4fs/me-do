@@ -3,6 +3,7 @@ package repository
 import (
 	"database/sql"
 	"errors"
+	"log"
 	"time"
 )
 
@@ -44,20 +45,6 @@ func (repo *SQLiteRepository) Migrate() error {
 		end_timestamp INTEGER DEFAULT 0
 	);
 	
-
-	CREATE TABLE IF NOT EXISTS labels (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		position INTEGER DEFAULT 0,
-		title TEXT NOT NULL,
-		color TEXT NOT NULL
-	);
-	
-	CREATE TABLE IF NOT EXISTS task_labels (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		position INTEGER DEFAULT 0,
-		task_id INTEGER NOT NULL
-	);
-
 
 INSERT INTO
 tasks
@@ -157,11 +144,15 @@ func (repo *SQLiteRepository) PushPosition() error {
 func (repo *SQLiteRepository) AllTODOTasks() ([]Tasks, error) {
 	query := `
 		SELECT
-			id, title, position, status, priority, created_at, updated_at
-		FROM tasks
+			t.id, t.title, IFNULL(tp.position, 9999999) AS pos, t.status, t.priority, t.created_at, t.updated_at
+		FROM
+			tasks t
+		LEFT JOIN
+			task_positions tp ON (t.id = tp.task_id AND label = 'TODO')
 		WHERE
-			status != 'Done'
-		ORDER BY position DESC, id DESC
+			t.status != 'Done'
+		ORDER BY
+			pos ASC, t.id DESC
 	`
 	rows, err := repo.Conn.Query(query)
 	if err != nil {
@@ -217,14 +208,23 @@ func (repo *SQLiteRepository) GetTaskByID(id int) (*Tasks, error) {
 	return &a, nil
 }
 
-func (repo *SQLiteRepository) UpdatePosition(id int64, newPos int64) error {
+func (repo *SQLiteRepository) DownPosition(id int64, curPos int64, label string) error {
 	if id == 0 {
 		return errors.New("Invalid Updated ID")
 	}
 
-	stmt := "UPDATE tasks SET position = ?, updated_at = ? WHERE id = ?"
-	res, err := repo.Conn.Exec(stmt, newPos, time.Now().Unix(), id)
-
+	// First we need to "downgrade" the task that is in the new position
+	stmt := `
+	UPDATE
+		task_positions
+	SET
+		position = position-1
+	WHERE 
+		position = ?
+		AND label = ?
+	`
+	log.Println("Setting existing task with new Position: ", curPos)
+	res, err := repo.Conn.Exec(stmt, curPos, label)
 	if err != nil {
 		return err
 	}
@@ -238,23 +238,85 @@ func (repo *SQLiteRepository) UpdatePosition(id int64, newPos int64) error {
 		return errUpdateFailed
 	}
 
-	return nil
+	// Then we up the task position
+	stmt = `
+	UPDATE
+		task_positions
+	SET
+		position = ?
+	WHERE
+		task_id = ?
+		AND label = ?
+	`
 
-}
-
-func (repo *SQLiteRepository) UpdateTaskPosition(id int64, newPos int64, label string) error {
-	if id == 0 {
-		return errors.New("Invalid Updated ID")
-	}
-
-	stmt := "UPDATE task_positions SET position = ? WHERE task_id = ? AND label = ?"
-	res, err := repo.Conn.Exec(stmt, newPos, time.Now().Unix(), id)
+	log.Println("Setting task Position: ", curPos+1, " for task_id : ", id)
+	res, err = repo.Conn.Exec(stmt, (curPos + 1), id, label)
 
 	if err != nil {
 		return err
 	}
 
+	rowAffected, err = res.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowAffected == 0 {
+		return errUpdateFailed
+	}
+
+	return nil
+
+}
+
+func (repo *SQLiteRepository) UpPosition(id int64, curPos int64, label string) error {
+	if id == 0 {
+		return errors.New("Invalid Updated ID")
+	}
+
+	// First we need to "Upgrade" the task that is in the new position
+	stmt := `
+	UPDATE
+		task_positions
+	SET
+		position = position+1
+	WHERE 
+		position = ?
+		AND label = ?
+	`
+	log.Println("Setting lower task Position to: ", curPos+1)
+	res, err := repo.Conn.Exec(stmt, curPos, label)
+	if err != nil {
+		return err
+	}
+
 	rowAffected, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowAffected == 0 {
+		return errUpdateFailed
+	}
+
+	// Then we up the task position
+	stmt = `
+	UPDATE
+		task_positions
+	SET
+		position = ?
+	WHERE
+		task_id = ?
+		AND label = ?
+	`
+	log.Println("Setting task Position: ", curPos-1, " for task_id : ", id)
+	res, err = repo.Conn.Exec(stmt, curPos-1, id, label)
+
+	if err != nil {
+		return err
+	}
+
+	rowAffected, err = res.RowsAffected()
 	if err != nil {
 		return err
 	}
