@@ -1,11 +1,8 @@
 # TODO
 
-- When switching task to done... need to update all position
 - Bundle placeholder image
-- Edit title on click
-- Replace position field for a relation table Task_Status_Position. Giving the possibility to order per Status. Important is to get position 'unique' for "non" completed tasks for the main view
-- Add event on changing status to "done" to update position (update task set posistion = position -1)
-- Add event on changing "done" status to reorder position (update task set position = position + 1), update task set position = 1 where id = xxx
+- Add update field to task Table
+- Set focus to field in OnSelected Form automatically
 - Need to be able to set the default Value / Color on CustomSelect
 - Make the CustomSelect text bold in popup menu
 - Status and Priority background color should also show in Table
@@ -17,6 +14,9 @@
 
 # DONE
 
+- (/) Edit title on click
+- (/) When switching task to done... need to update all position
+- (/) Replace position field for a relation table Task_Status_Position. Giving the possibility to order per Status. Important is to get position 'unique' for "non" completed tasks for the main view
 - (/) Add DB filename filter (*.medo)
 - (/) Replace dropdown for two button for UP / Down position
 - (/) Change Custom-Select font to white
