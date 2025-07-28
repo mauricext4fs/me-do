@@ -67,7 +67,7 @@ func (td *TODO) buildUI() *fyne.Container {
 }
 
 func (td *TODO) getPlaceHolderFixedImage() *canvas.Image {
-	img := canvas.NewImageFromFile("blueblue.png")
+	img := canvas.NewImageFromResource(resourceBluebluePng)
 
 	img.FillMode = canvas.ImageFillOriginal
 
