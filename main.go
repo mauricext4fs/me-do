@@ -1,5 +1,8 @@
 package main
 
+//go:generate fyne bundle -o bundled.go Icon.png
+//go:generate fyne bundle -o bundled.go -append resource/blueblue.png
+
 import (
 	"database/sql"
 	"io"
