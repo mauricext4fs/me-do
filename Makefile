@@ -12,7 +12,8 @@ runp:
 
 fynepackage:
 	@rm -rf ${BINARY_NAME}
-	fyne package -appVersion ${VERSION} -appBuild ${BUILD_NO} -name ${APP_NAME} -release
+	@#fyne package -appVersion ${VERSION} -appBuild ${BUILD_NO} -name ${APP_NAME} -release
+	fyne package -name ${APP_NAME} -release
 
 bundle:
 	@echo "Generating bundled.go from resource"
