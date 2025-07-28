@@ -10,9 +10,14 @@ run:
 runp:
 	go run -v .
 
-build:
+fynepackage:
 	@rm -rf ${BINARY_NAME}
 	fyne package -appVersion ${VERSION} -appBuild ${BUILD_NO} -name ${APP_NAME} -release
+
+bundle:
+	@echo "Generating bundled.go from resource"
+	go generate
+
 
 
 
