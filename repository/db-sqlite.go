@@ -33,7 +33,7 @@ func (repo *SQLiteRepository) Migrate() error {
 	CREATE TABLE IF NOT EXISTS task_positions (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		task_id INTEGER NOT NULL,
-		position INTEGER DEFAULT 0,
+		position INTEGER NOT NULL,
 		label TEXT DEFAULT 'TODO'
 	);
 
