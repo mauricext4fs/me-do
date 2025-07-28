@@ -1,8 +1,11 @@
 package main
 
 import (
+	"log"
+
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
 )
 
@@ -74,6 +77,37 @@ func (td *TODO) getTasksTable() *widget.Table {
 
 	for i := 0; i < len(TODOColumnsSize); i++ {
 		t.SetColumnWidth(i, TODOColumnsSize[i])
+	}
+
+	t.OnSelected = func(id widget.TableCellID) {
+		log.Println("Cell was selected: ", id)
+		// Which translate to:
+		taskRow := td.UIElements.TODOTasks[id.Row]
+		colName := TODODisplayColumns[id.Col]
+		log.Println("Here is the row involved: ", taskRow, " with column name: ", colName)
+		if colName == "Title" {
+			log.Println("Value in cell: ", taskRow.Title)
+			entryTitle := widget.NewEntry()
+			fTitle := &widget.FormItem{
+				Text:   "Title",
+				Widget: entryTitle,
+			}
+			entryTitle.SetText(taskRow.Title)
+
+			dialog.ShowForm("Edit task: "+taskRow.Title, "Save", "Cancel",
+				[]*widget.FormItem{fTitle},
+				func(submited bool) {
+					if submited {
+						log.Println("Save was press: ", entryTitle.Text)
+						log.Println("Let's save ", entryTitle.Text, " to task id: ", taskRow.ID)
+						// Let's save this
+						taskRow.Title = entryTitle.Text
+						td.DB.UpdateTitle(taskRow.ID, entryTitle.Text)
+						td.LoadTasks()
+						td.TaskTable.Refresh()
+					}
+				}, td.MainWindow)
+		}
 	}
 
 	return t
