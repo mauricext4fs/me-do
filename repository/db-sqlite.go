@@ -410,6 +410,31 @@ func (repo *SQLiteRepository) UpdatePriority(id int64, status string) error {
 
 }
 
+func (repo *SQLiteRepository) UpdateTitle(id int64, title string) error {
+	if id == 0 {
+		return errors.New("Invalid Task ID")
+	}
+
+	stmt := "UPDATE tasks SET title = ?, updated_at = ? WHERE id = ?"
+	res, err := repo.Conn.Exec(stmt, title, time.Now().Unix(), id)
+
+	if err != nil {
+		return err
+	}
+
+	rowAffected, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowAffected == 0 {
+		return errUpdateFailed
+	}
+
+	return nil
+
+}
+
 func (repo *SQLiteRepository) UpdateTask(id int64, updated Tasks) error {
 	if id == 0 {
 		return errors.New("Invalid Task ID")

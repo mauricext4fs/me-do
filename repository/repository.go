@@ -25,6 +25,7 @@ type Repository interface {
 	UpdateTask(id int64, updated Tasks) error
 	UpdateStatus(id int64, status string) error
 	UpdatePriority(id int64, status string) error
+	UpdateTitle(id int64, title string) error
 	DeleteTask(id int64) error
 }
 
