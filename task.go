@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"image/color"
 	"log"
+	"time"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -27,10 +29,10 @@ var taskStatusColors = map[string]color.Color{
 	"Stuck":       &color.NRGBA{R: 205, G: 65, B: 79, A: 255},  //Red
 	"Done":        &color.NRGBA{R: 90, G: 197, B: 125, A: 255}, //Green
 }
-var TODODisplayColumns = []string{"Position", "Title", "Status", "Priority"}
+var TODODisplayColumns = []string{"Position", "Title", "Status", "Priority", "UpdatedAt"}
 
 // var TODOColumns = []string{"ID", "Position", "Title", "Status", "Priority"}
-var TODOColumnsSize = []float32{80, 600, 210, 210}
+var TODOColumnsSize = []float32{80, 600, 210, 210, 210}
 
 //var TODOColumnsSize = []float32{1, 70, 600, 210, 210}
 
@@ -84,4 +86,16 @@ func (td *TODO) getUpDownPositionField(id int64, curPos int64) *fyne.Container {
 	pc := container.NewCenter(container.NewHBox(downBtn, upBtn))
 
 	return pc
+}
+
+func (td *TODO) getUpdatedAtField(uT time.Time) *widget.Label {
+
+	dUA := time.Since(uT)
+	hours, _ := time.ParseDuration(dUA.String())
+	minutes, _ := time.ParseDuration(dUA.String())
+	seconds, _ := time.ParseDuration(dUA.String())
+
+	lT := fmt.Sprintf("H: %s M: %s s: %s", hours, minutes, seconds)
+
+	return widget.NewLabel(lT)
 }

@@ -66,6 +66,14 @@ func (td *TODO) getTasksTable() *widget.Table {
 				o.(*fyne.Container).Objects = []fyne.CanvasObject{
 					sSel,
 				}
+			case "UpdatedAt":
+				// updated_at
+				//tUA, _ := time.ParseDuration(taskRow.UpdatedAt.Local().GoString())
+				//dUA := time.Since(taskRow.UpdatedAt)
+				uAl := td.getUpdatedAtField(taskRow.UpdatedAt)
+				o.(*fyne.Container).Objects = []fyne.CanvasObject{
+					uAl,
+				}
 			default:
 				// Default is empty
 				o.(*fyne.Container).Objects = []fyne.CanvasObject{
