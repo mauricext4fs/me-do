@@ -37,6 +37,13 @@ func (repo *SQLiteRepository) Migrate() error {
 		label TEXT DEFAULT 'TODO'
 	);
 
+	CREATE TABLE IF NOT EXISTS task_notes (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		task_id INTEGER NOT NULL,
+		note TEXT NOT NULL,
+		created_at INTEGER DEFAULT 0,
+		updated_at INTEGER DEFAULT 0
+	);
 
 	CREATE TABLE IF NOT EXISTS task_timers (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -478,4 +485,56 @@ func (repo *SQLiteRepository) DeleteTask(id int64) error {
 
 	return nil
 
+}
+
+func (repo *SQLiteRepository) AddNote(taskId int64, note string) error {
+	query := `
+	INSERT INTO 
+		task_notes
+		(task_id, note, created_at, updated_at)
+	VALUES 
+		(?, ?, ?, ?);
+	`
+	_, err := repo.Conn.Exec(query, taskId, note, time.Now().Unix(), time.Now().Unix())
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (repo *SQLiteRepository) GetNotes(taskId int64) ([]Notes, error) {
+	query := `
+	SELECT id, task_id, note, created_at, updated_at
+	FROM task_notes
+	WHERE task_id = ?
+	ORDER BY updated_at DESC
+	`
+	rows, err := repo.Conn.Query(query, taskId)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var all []Notes
+	for rows.Next() {
+		var n Notes
+		var cA int64
+		var uA int64
+		err := rows.Scan(
+			&n.ID,
+			&n.TaskID,
+			&n.Note,
+			&cA,
+			&uA,
+		)
+		if err != nil {
+			return nil, err
+		}
+		n.CreatedAt = time.Unix(cA, 0)
+		n.UpdatedAt = time.Unix(uA, 0)
+		all = append(all, n)
+	}
+
+	return all, nil
 }

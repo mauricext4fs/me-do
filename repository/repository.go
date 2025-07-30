@@ -27,6 +27,8 @@ type Repository interface {
 	UpdatePriority(id int64, status string) error
 	UpdateTitle(id int64, title string) error
 	DeleteTask(id int64) error
+	AddNote(taskId int64, note string) error
+	GetNotes(taskId int64) ([]Notes, error)
 }
 
 type Tasks struct {
@@ -35,6 +37,14 @@ type Tasks struct {
 	Title     string    `json:"title"`
 	Status    string    `json:"status"`
 	Priority  string    `json:"priority"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+}
+
+type Notes struct {
+	ID        int64     `json:"id"`
+	TaskID    int64     `json:"task_id"`
+	Note      string    `json:"note"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
