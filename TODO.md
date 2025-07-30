@@ -1,7 +1,7 @@
 # TODO
 
-- Bundle placeholder image
-- Add update field to task Table
+- Add update field to task Table UI
+- Disable Up button on first row, disable down button in last row
 - Set focus to field in OnSelected Form automatically
 - Need to be able to set the default Value / Color on CustomSelect
 - Make the CustomSelect text bold in popup menu
@@ -14,6 +14,7 @@
 
 # DONE
 
+- (/) Bundle placeholder image
 - (/) Edit title on click
 - (/) When switching task to done... need to update all position
 - (/) Replace position field for a relation table Task_Status_Position. Giving the possibility to order per Status. Important is to get position 'unique' for "non" completed tasks for the main view
