@@ -44,7 +44,7 @@ func (td *TODO) getTasksTable() *widget.Table {
 			case "Position":
 				curPos := taskRow.Position
 
-				pc := td.getUpDownPositionField(id, curPos)
+				pc := td.getUpDownPositionField(id, curPos, taskRow.Title)
 
 				o.(*fyne.Container).Objects = []fyne.CanvasObject{
 					pc,
