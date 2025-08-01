@@ -1,6 +1,10 @@
 # TODO
 
-- Add update field to task Table UI
+- Add Search
+- Improve update_at formating
+- Add user info in DB for the future maybe?
+- BUG: Sometime auto-switching the Status to not started in UI when clicking in the task row
+- BUG: Position UP/DOWN seems off... probably related to switching some task to "Done"
 - Disable Up button on first row, disable down button in last row
 - Set focus to field in OnSelected Form automatically
 - Need to be able to set the default Value / Color on CustomSelect
