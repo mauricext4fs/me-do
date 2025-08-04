@@ -62,7 +62,7 @@ func (td *TODO) buildUI() *fyne.Container {
 		log.Println("save was clicked!")
 	})
 
-	return container.NewVBox(td.ShowTaskForm(), td.UIElements.DBPathText, openBtn, saveBtn, tabs)
+	return container.NewVBox(td.ShowTaskForm(), td.UIElements.DBPathText, openBtn, saveBtn, td.getSearchContainer(), tabs)
 
 }
 

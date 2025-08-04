@@ -6,6 +6,7 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 )
 
@@ -22,6 +23,27 @@ func (td *TODO) todoTab() *fyne.Container {
 	)
 
 	return tasksTableContainer
+}
+
+func (td *TODO) getSearchContainer() *fyne.Container {
+
+	searchText := widget.NewEntry()
+	searchText.SetPlaceHolder("Search TODO tasks")
+	searchBtn := widget.NewButtonWithIcon("Search TODO Tasks", theme.SearchIcon(), func() {
+		log.Println("Searching for: ", searchText.Text)
+		res, err := td.DB.SearchTODOTasks(searchText.Text)
+		if err != nil {
+			log.Println("Oups... something when wrong: ", err)
+		}
+		td.UIElements.TODOTasks = res
+		td.TaskTable.Refresh()
+	})
+	searchContainer := container.NewGridWithColumns(2,
+		searchText,
+		searchBtn,
+	)
+
+	return searchContainer
 }
 
 func (td *TODO) getTasksTable() *widget.Table {

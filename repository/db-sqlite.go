@@ -223,6 +223,60 @@ func (repo *SQLiteRepository) AllTODOTasks() ([]Tasks, error) {
 	return all, nil
 }
 
+func (repo *SQLiteRepository) SearchTODOTasks(searchText string) ([]Tasks, error) {
+	//searchText = strings.TrimSpace(searchText)
+	sT := searchText + "%"
+	query := `
+		SELECT
+			t.id, t.title, IFNULL(tp.position, 9999999) AS pos, t.status, t.priority, t.created_at, t.updated_at
+		FROM
+			tasks t
+		LEFT JOIN
+			task_positions tp ON (t.id = tp.task_id AND label = 'TODO')
+		WHERE
+			t.status != 'Done'
+			AND t.title LIKE ?
+		ORDER BY
+			pos ASC, t.id DESC
+	`
+	log.Println("searchText: ", sT)
+	log.Println("Searchquery: ", query)
+
+	rows, err := repo.Conn.Query(query, sT)
+
+	if err != nil {
+		log.Println("SearchTODOTask Query Error: ", err)
+		return nil, err
+	}
+	defer rows.Close()
+
+	var all []Tasks
+	for rows.Next() {
+		var a Tasks
+		var cA int64
+		var uA int64
+		err := rows.Scan(
+			&a.ID,
+			&a.Title,
+			&a.Position,
+			&a.Status,
+			&a.Priority,
+			&cA,
+			&uA,
+		)
+		if err != nil {
+			return nil, err
+		}
+		a.CreatedAt = time.Unix(cA, 0)
+		a.UpdatedAt = time.Unix(uA, 0)
+		all = append(all, a)
+	}
+
+	log.Println("Result from Search Query: ", all)
+
+	return all, nil
+}
+
 func (repo *SQLiteRepository) GetTaskByID(id int) (*Tasks, error) {
 	row := repo.Conn.QueryRow("SELECT id, title, created_at, updated_at FROM tasks WHERE id = ?", id)
 
