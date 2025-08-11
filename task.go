@@ -97,11 +97,30 @@ func (td *TODO) getUpDownPositionField(id int64, curPos int64, title string) *fy
 func (td *TODO) getUpdatedAtField(uT time.Time) *widget.Label {
 
 	dUA := time.Since(uT)
-	hours, _ := time.ParseDuration(dUA.String())
-	minutes, _ := time.ParseDuration(dUA.String())
-	seconds, _ := time.ParseDuration(dUA.String())
+	tSeconds := int(dUA.Abs().Seconds())
 
-	lT := fmt.Sprintf("H: %s M: %s s: %s", hours, minutes, seconds)
+	sD := (60 * 60 * 24)
+	sH := (60 * 60)
+
+	days := tSeconds / sD
+	rSeconds := tSeconds % sD
+
+	hours := rSeconds / sH
+	rSeconds %= sH
+
+	minutes := rSeconds / 60
+	seconds := rSeconds % 60
+
+	lT := fmt.Sprintf("%d minutes %d seconds", minutes, seconds)
+	if hours == 0 && days == 0 && minutes == 0 {
+		lT = fmt.Sprintf("%d seconds", seconds)
+	}
+	if hours > 0 {
+		lT = fmt.Sprintf("%d hours %s", hours, lT)
+	}
+	if days > 0 {
+		lT = fmt.Sprintf("%d days %d hours", days, hours)
+	}
 
 	return widget.NewLabel(lT)
 }
