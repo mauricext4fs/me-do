@@ -1,7 +1,7 @@
 # TODO
 
-- Add Search
-- Improve update_at formating
+- Auto-refresh the updated_at field
+- Split task in two rows and add timer / Total time
 - Add user info in DB for the future maybe?
 - BUG: Sometime auto-switching the Status to not started in UI when clicking in the task row
 - BUG: Position UP/DOWN seems off... probably related to switching some task to "Done"
@@ -18,6 +18,8 @@
 
 # DONE
 
+- (/) Improve update_at formating
+- (/) Add Search
 - (/) Bundle placeholder image
 - (/) Edit title on click
 - (/) When switching task to done... need to update all position
