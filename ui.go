@@ -20,6 +20,8 @@ type UIElements struct {
 	TaskFormContainer         *fyne.Container
 	DBPathText                *canvas.Text
 	TODOTasks                 []repository.Tasks
+	InProgressTimerId         int64
+	InProgressTimerTaskId     int64
 }
 
 func (td *TODO) LoadTasks() {

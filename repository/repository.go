@@ -30,6 +30,7 @@ type Repository interface {
 	DeleteTask(id int64) error
 	AddNote(taskId int64, note string) error
 	GetNotes(taskId int64) ([]Notes, error)
+	StartTimer(taskId int64) (*Timers, error)
 }
 
 type Tasks struct {
@@ -39,7 +40,17 @@ type Tasks struct {
 	Status    string    `json:"status"`
 	Priority  string    `json:"priority"`
 	CreatedAt time.Time `json:"created_at"`
+	CreatedBy int64     `json:"created_by"`
 	UpdatedAt time.Time `json:"updated_at"`
+	UpdatedBy int64     `json:"updated_by"`
+}
+
+type Timers struct {
+	ID             int64     `json:"id"`
+	TaskID         int64     `json:"task_id"`
+	StartTimestamp time.Time `json:"created_at"`
+	EndTimestamp   time.Time `json:"updated_at"`
+	CreatedBy      int64     `json:"created_by"`
 }
 
 type Notes struct {
@@ -47,7 +58,9 @@ type Notes struct {
 	TaskID    int64     `json:"task_id"`
 	Note      string    `json:"note"`
 	CreatedAt time.Time `json:"created_at"`
+	CreatedBy int64     `json:"created_by"`
 	UpdatedAt time.Time `json:"updated_at"`
+	UpdatedBy int64     `json:"updated_by"`
 }
 
 type Positions struct {

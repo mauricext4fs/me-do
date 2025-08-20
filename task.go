@@ -15,11 +15,11 @@ import (
 
 var taskPriority = []string{"", "Critical", "Very High", "High", "Medium", "Low"}
 var taskPriorityColors = map[string]color.Color{
-	"Low":       &colornames.Lightcyan,    // Cyan
-	"Medium":    &colornames.Lightskyblue, // Medium blue
-	"High":      &colornames.Mediumblue,   //Blue
-	"Very High": &colornames.Darkblue,     //Dark Blue
-	"Critical":  &colornames.Black,        //Black
+	"Low":       &colornames.Lightskyblue,    // Medium blue
+	"Medium":    &colornames.Mediumslateblue, // Slightly violet
+	"High":      &colornames.Mediumblue,      //Blue
+	"Very High": &colornames.Darkblue,        //Dark Blue
+	"Critical":  &colornames.Black,           //Black
 }
 var taskStatus = []string{"Not started", "In Progress", "Paused", "Stuck", "Done"}
 var taskStatusColors = map[string]color.Color{
@@ -47,6 +47,23 @@ func (td *TODO) getStatusField(id int64) *CustomSelect {
 func (td *TODO) getTODOStatusField(id int64, curPos int64) *CustomSelect {
 	s := NewCustomSelect(taskStatusColors, taskStatus, func(value string) {
 		td.DB.UpdateStatus(id, value)
+		log.Println("Status: ", value, " for taskId: ", id)
+		if value == "In Progress" {
+			log.Println("In Progress...")
+			// Need to stop any existing timer and switch their status automatically
+			if td.UIElements.InProgressTimerId != 0 {
+				// ...
+			}
+
+			timer, err := td.DB.StartTimer(id)
+			if err != nil {
+				log.Println(err)
+			}
+
+			td.UIElements.InProgressTimerTaskId = timer.TaskID
+			td.UIElements.InProgressTimerId = timer.ID
+
+		}
 		if value == "Done" {
 			// We need to unshift the position
 			log.Println("Shifting task id: ", id, " with position ", curPos)

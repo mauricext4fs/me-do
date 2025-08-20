@@ -25,9 +25,11 @@ func (repo *SQLiteRepository) Migrate() error {
 		position INTEGER DEFAULT 0,
 		title TEXT NOT NULL,
 		status TEXT DEFAULT 'Not started',
-		priority TEXT DEFAULT '',
+		priority TEXT DEFAULT 'Low',
 		created_at INTEGER DEFAULT 0,
-		updated_at INTEGER DEFAULT 0
+		created_by INTEGER DEFAULT 1,
+		updated_at INTEGER DEFAULT 0,
+		updated_by INTEGER DEFAULT 1
 	);
 
 	CREATE TABLE IF NOT EXISTS task_positions (
@@ -42,14 +44,17 @@ func (repo *SQLiteRepository) Migrate() error {
 		task_id INTEGER NOT NULL,
 		note TEXT NOT NULL,
 		created_at INTEGER DEFAULT 0,
-		updated_at INTEGER DEFAULT 0
+		created_by INTEGER DEFAULT 1,
+		updated_at INTEGER DEFAULT 0,
+		updated_by INTEGER DEFAULT 1
 	);
 
 	CREATE TABLE IF NOT EXISTS task_timers (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		task_id INTEGER NOT NULL,
 		start_timestamp INTEGER DEFAULT 0,
-		end_timestamp INTEGER DEFAULT 0
+		end_timestamp INTEGER DEFAULT 0,
+		created_by INTEGER DEFAULT 1
 	);
 	
 
@@ -77,7 +82,14 @@ WHERE NOT EXISTS(
 }
 
 func (repo *SQLiteRepository) InsertTask(tasks Tasks) (*Tasks, error) {
-	stmt := "INSERT INTO tasks (position, title, priority, created_at, updated_at) VALUES ((SELECT MAX(position) +1 FROM tasks), ?, ?, ?, ?)"
+	stmt :=
+		`
+		INSERT INTO 
+			tasks 
+			(position, title, priority, created_at, updated_at)
+		VALUES
+			((SELECT MAX(position) +1 FROM tasks), ?, ?, ?, ?)
+		`
 
 	res, err := repo.Conn.Exec(stmt, tasks.Title, tasks.Priority, time.Now().Unix(), time.Now().Unix())
 	if err != nil {
@@ -591,4 +603,58 @@ func (repo *SQLiteRepository) GetNotes(taskId int64) ([]Notes, error) {
 	}
 
 	return all, nil
+}
+
+func (repo *SQLiteRepository) StopRunawayTimer() {
+
+}
+
+func (repo *SQLiteRepository) StartTimer(taskId int64) (*Timers, error) {
+	stmt :=
+		`
+		INSERT INTO 
+			task_timers 
+			(task_id, start_timestamp)
+		VALUES
+			(?, ?)
+		`
+
+	startTime := time.Now().Unix()
+	res, err := repo.Conn.Exec(stmt, taskId, startTime)
+	if err != nil {
+		return nil, err
+	}
+
+	id, err := res.LastInsertId()
+	if err != nil {
+		return nil, err
+	}
+
+	timer := &Timers{
+		ID:             id,
+		TaskID:         taskId,
+		StartTimestamp: time.Unix(startTime, 0),
+	}
+
+	return timer, nil
+}
+
+func (repo *SQLiteRepository) StopTimer(id int64) error {
+	stmt :=
+		`
+		UPDATE
+			task_timers 
+		SET 
+			end_timestamp = ?
+		WHERE
+			id = ?
+		`
+
+	endTime := time.Now().Unix()
+	_, err := repo.Conn.Exec(stmt, endTime, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
