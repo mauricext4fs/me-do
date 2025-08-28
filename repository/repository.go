@@ -25,12 +25,15 @@ type Repository interface {
 	GetTaskByID(id int) (*Tasks, error)
 	UpdateTask(id int64, updated Tasks) error
 	UpdateStatus(id int64, status string) error
+	GetStatusByTaskID(id int64) (string, error)
 	UpdatePriority(id int64, status string) error
 	UpdateTitle(id int64, title string) error
 	DeleteTask(id int64) error
 	AddNote(taskId int64, note string) error
 	GetNotes(taskId int64) ([]Notes, error)
 	StartTimer(taskId int64) (*Timers, error)
+	StopTimer(id int64) error
+	GetActiveTimerByTaskId(id int64) (int64, error)
 }
 
 type Tasks struct {

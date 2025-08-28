@@ -433,6 +433,21 @@ func (repo *SQLiteRepository) UpPosition(id int64, curPos int64, label string) e
 
 }
 
+func (repo *SQLiteRepository) GetStatusByTaskID(id int64) (string, error) {
+	row := repo.Conn.QueryRow("SELECT status FROM tasks WHERE id = ?", id)
+
+	var status string
+	err := row.Scan(
+		&status,
+	)
+
+	if err != nil {
+		return "", err
+	}
+
+	return status, nil
+}
+
 func (repo *SQLiteRepository) UpdateStatus(id int64, status string) error {
 	if id == 0 {
 		return errors.New("Invalid Task ID")
@@ -637,6 +652,34 @@ func (repo *SQLiteRepository) StartTimer(taskId int64) (*Timers, error) {
 	}
 
 	return timer, nil
+}
+
+func (repo *SQLiteRepository) GetActiveTimerByTaskId(id int64) (int64, error) {
+	stmt := `
+		SELECT 
+			id
+		FROM task_timers
+		WHERE 
+			task_id = ?
+			AND end_timestamp = 0
+		ORDER BY
+			id DESC
+		LIMIT
+			1 
+	`
+	row := repo.Conn.QueryRow(stmt, id)
+
+	var timerId int64
+	err := row.Scan(
+		&timerId,
+	)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return timerId, nil
+
 }
 
 func (repo *SQLiteRepository) StopTimer(id int64) error {
