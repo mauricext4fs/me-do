@@ -1,5 +1,6 @@
 # TODO
 
+- Get urgently a 'critical' Tab!
 - Auto-refresh the updated_at field
 - Split task in two rows and add timer / Total time
 - Add user info in DB for the future maybe?
