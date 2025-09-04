@@ -1,6 +1,6 @@
 # TODO
 
-- Get urgently a 'critical' Tab!
+- Table refresh not working as before. When adding new task, it does not appears in the table automatically.
 - Auto-refresh the updated_at field
 - Split task in two rows and add timer / Total time
 - Add user info in DB for the future maybe?
@@ -19,6 +19,7 @@
 
 # DONE
 
+- (/) Get urgently a 'critical' Tab!
 - (/) Improve update_at formating
 - (/) Add Search
 - (/) Bundle placeholder image
