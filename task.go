@@ -231,3 +231,23 @@ func (td *TODO) showNotesWindow(taskId int64, taskTitle string) {
 	w.Resize(fyne.Size{Width: 1000, Height: 700})
 	w.Show()
 }
+
+func (td *TODO) LoadTasks() {
+	tasks, err := td.DB.AllTODOTasks()
+	td.TODOTasks = nil
+	td.TODOTasks = tasks
+	if err != nil {
+		log.Println(err)
+	}
+
+}
+
+func (td *TODO) LoadCriticalTasks() {
+	tasks, err := td.DB.AllCriticalTasks()
+	td.CriticalTasks = nil
+	td.CriticalTasks = tasks
+	if err != nil {
+		log.Println(err)
+	}
+
+}

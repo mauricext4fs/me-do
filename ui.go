@@ -2,7 +2,6 @@ package main
 
 import (
 	"log"
-	"me-do/repository"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
@@ -19,18 +18,36 @@ type UIElements struct {
 	TaskListContainer         *fyne.Container
 	TaskFormContainer         *fyne.Container
 	DBPathText                *canvas.Text
-	TODOTasks                 []repository.Tasks
 	InProgressTimerId         int64
 	InProgressTimerTaskId     int64
 }
 
-func (td *TODO) LoadTasks() {
-	tasks, err := td.DB.AllTODOTasks()
-	td.UIElements.TODOTasks = tasks
-	if err != nil {
-		log.Println(err)
-	}
+func (td *TODO) buildTabs() *container.AppTabs {
+	todoTabContainer := td.todoTab()
+	criticalTabContainer := td.criticalTab()
+	tabs := container.NewAppTabs(
+		container.NewTabItem("TODO", todoTabContainer),
+		container.NewTabItem("Status: Critical", criticalTabContainer),
+		container.NewTabItem("PlaceHolder", td.getPlaceHolderFixedImage()),
+	)
+	td.setSwitchTabs(tabs)
+	tabs.SetTabLocation(container.TabLocationTop)
 
+	return tabs
+}
+
+func (td *TODO) setSwitchTabs(at *container.AppTabs) {
+	at.OnSelected = func(tab *container.TabItem) {
+		switch tab.Text {
+		case "Status: Critical":
+			// Load Critical tabs data
+			log.Println("Critical Tab clicked!")
+			td.OnTabSwitchCritical()
+		case "TODO":
+			log.Println("TODO Tab clicked!")
+			td.OnTabSwitchTODO()
+		}
+	}
 }
 
 func (td *TODO) buildUI() *fyne.Container {
@@ -44,12 +61,7 @@ func (td *TODO) buildUI() *fyne.Container {
 	td.UIElements.TaskFormContainer = container.NewVBox()
 	td.UIElements.TaskFormContainer.Add(td.ShowTaskForm())
 
-	todoTab := td.todoTab()
-	tabs := container.NewAppTabs(
-		container.NewTabItem("TODO", todoTab),
-		container.NewTabItem("PlaceHolder", td.getPlaceHolderFixedImage()),
-	)
-	tabs.SetTabLocation(container.TabLocationTop)
+	tabs := td.buildTabs()
 
 	pt := canvas.NewText("Path: "+td.CurrentDBPath, colornames.Hotpink)
 	td.UIElements.DBPathText = pt

@@ -6,12 +6,11 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
-	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 )
 
-func (td *TODO) todoTab() *fyne.Container {
-	td.OnTabSwitchTODO()
+func (td *TODO) criticalTab() *fyne.Container {
+	td.TaskTable = td.getCriticalTasksTable()
 
 	tasksTableContainer := container.NewBorder(
 		nil,
@@ -24,46 +23,25 @@ func (td *TODO) todoTab() *fyne.Container {
 	return tasksTableContainer
 }
 
-func (td *TODO) OnTabSwitchTODO() {
+func (td *TODO) OnTabSwitchCritical() {
 	td.TaskTable = nil
-	td.LoadTasks()
-	td.TaskTable = td.getTasksTable()
+	td.LoadCriticalTasks()
+	td.TaskTable = td.getCriticalTasksTable()
 	td.TaskTable.Refresh()
 }
 
-func (td *TODO) getSearchContainer() *fyne.Container {
-
-	searchText := widget.NewEntry()
-	searchText.SetPlaceHolder("Search TODO tasks")
-	searchBtn := widget.NewButtonWithIcon("Search TODO Tasks", theme.SearchIcon(), func() {
-		log.Println("Searching for: ", searchText.Text)
-		res, err := td.DB.SearchTODOTasks(searchText.Text)
-		if err != nil {
-			log.Println("Oups... something when wrong: ", err)
-		}
-		td.TODOTasks = res
-		td.TaskTable.Refresh()
-	})
-	searchContainer := container.NewGridWithColumns(2,
-		searchText,
-		searchBtn,
-	)
-
-	return searchContainer
-}
-
-func (td *TODO) getTasksTable() *widget.Table {
+func (td *TODO) getCriticalTasksTable() *widget.Table {
 
 	t := widget.NewTable(
 		func() (int, int) {
-			return len(td.TODOTasks), len(TODODisplayColumns) // Column numbers
+			return len(td.CriticalTasks), len(TODODisplayColumns) // Column numbers
 		},
 		func() fyne.CanvasObject {
 			ctr := container.NewVBox(widget.NewLabel(" . "))
 			return ctr
 		},
 		func(i widget.TableCellID, o fyne.CanvasObject) {
-			taskRow := td.TODOTasks[i.Row]
+			taskRow := td.CriticalTasks[i.Row]
 			id := taskRow.ID
 
 			colName := TODODisplayColumns[i.Col]
@@ -118,7 +96,7 @@ func (td *TODO) getTasksTable() *widget.Table {
 	t.OnSelected = func(id widget.TableCellID) {
 		log.Println("Cell was selected: ", id)
 		// Which translate to:
-		taskRow := td.TODOTasks[id.Row]
+		taskRow := td.CriticalTasks[id.Row]
 		colName := TODODisplayColumns[id.Col]
 		log.Println("Here is the row involved: ", taskRow, " with column name: ", colName)
 		if colName == "Title" {

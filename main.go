@@ -9,6 +9,7 @@ import (
 	"log"
 	"me-do/repository"
 	"os"
+	"os/user"
 	"strings"
 
 	"fyne.io/fyne/v2"
@@ -31,6 +32,9 @@ type TODO struct {
 
 	Tasks     [][]interface{}
 	TaskTable *widget.Table
+
+	TODOTasks     []repository.Tasks
+	CriticalTasks []repository.Tasks
 }
 
 func main() {
@@ -158,4 +162,12 @@ func (td *TODO) copyDB(src string, dst string) error {
 	}
 
 	return nil
+}
+
+func (td *TODO) getUser() string {
+	user, err := user.Current()
+	if err != nil {
+		return "noname"
+	}
+	return user.Username
 }
