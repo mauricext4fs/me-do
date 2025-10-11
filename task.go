@@ -30,67 +30,7 @@ var taskStatusColors = map[string]color.Color{
 	"Done":        &color.NRGBA{R: 90, G: 197, B: 125, A: 255}, //Green
 }
 var TODODisplayColumns = []string{"Position", "Title", "Status", "Priority", "UpdatedAt"}
-
-// var TODOColumns = []string{"ID", "Position", "Title", "Status", "Priority"}
 var TODOColumnsSize = []float32{110, 600, 210, 210, 180}
-
-//var TODOColumnsSize = []float32{1, 70, 600, 210, 210}
-
-func (td *TODO) getStatusField(id int64) *CustomSelect {
-	s := NewCustomSelect(taskStatusColors, taskStatus, func(value string) {
-		td.DB.UpdateStatus(id, value)
-	})
-
-	return s
-}
-
-func (td *TODO) getTODOStatusField(id int64, curPos int64) *CustomSelect {
-	s := NewCustomSelect(taskStatusColors, taskStatus, func(value string) {
-		log.Println("Status: ", value, " for taskId: ", id)
-		// Stop any existing timer
-		previousStatus, _ := td.DB.GetStatusByTaskID(id)
-		if previousStatus == "In Progress" {
-			log.Println("Previous Status was 'In Progress'; We need to stop the previous timer; if any.")
-			activeTimerID, err := td.DB.GetActiveTimerByTaskId(id)
-			if err != nil {
-				log.Println(err)
-			}
-			log.Println("Active Timer ID: ", activeTimerID)
-			if activeTimerID != 0 {
-				td.DB.StopTimer(activeTimerID)
-			}
-		}
-
-		if value == "In Progress" {
-			log.Println("In Progress...")
-			// Need to stop any existing timer and switch their status automatically
-			if td.UIElements.InProgressTimerId != 0 {
-				// ...
-			}
-
-			timer, err := td.DB.StartTimer(id)
-			if err != nil {
-				log.Println(err)
-			}
-
-			td.UIElements.InProgressTimerTaskId = timer.TaskID
-			td.UIElements.InProgressTimerId = timer.ID
-
-		}
-
-		td.DB.UpdateStatus(id, value)
-
-		if value == "Done" {
-			// We need to unshift the position
-			log.Println("Shifting task id: ", id, " with position ", curPos)
-			td.DB.ShiftPosition(id, curPos, "TODO")
-			td.LoadTasks()
-			td.TaskTable.Refresh()
-		}
-	})
-
-	return s
-}
 
 func (td *TODO) getPriorityField(id int64) *CustomSelect {
 	s := NewCustomSelect(taskPriorityColors, taskPriority, func(value string) {
