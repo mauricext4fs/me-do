@@ -50,7 +50,7 @@ func (td *TODO) getCriticalTasksTable() *widget.Table {
 			case "Position":
 				curPos := taskRow.Position
 
-				pc := td.getUpDownPositionField(id, curPos, taskRow.Title)
+				pc := td.getActionButtonsContainer(id, curPos, taskRow.Title)
 
 				o.(*fyne.Container).Objects = []fyne.CanvasObject{
 					pc,

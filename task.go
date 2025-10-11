@@ -99,7 +99,7 @@ func (td *TODO) getPriorityField(id int64) *CustomSelect {
 	return s
 }
 
-func (td *TODO) getUpDownPositionField(id int64, curPos int64, title string) *fyne.Container {
+func (td *TODO) getActionButtonsContainer(id int64, curPos int64, title string) *fyne.Container {
 	upBtn := widget.NewButtonWithIcon("", theme.MoveUpIcon(), func() {
 		err := td.DB.UpPosition(id, (curPos), "TODO")
 		if err != nil {
@@ -234,7 +234,6 @@ func (td *TODO) showNotesWindow(taskId int64, taskTitle string) {
 
 func (td *TODO) LoadTasks() {
 	tasks, err := td.DB.AllTODOTasks()
-	td.TODOTasks = nil
 	td.TODOTasks = tasks
 	if err != nil {
 		log.Println(err)
@@ -244,7 +243,6 @@ func (td *TODO) LoadTasks() {
 
 func (td *TODO) LoadCriticalTasks() {
 	tasks, err := td.DB.AllCriticalTasks()
-	td.CriticalTasks = nil
 	td.CriticalTasks = tasks
 	if err != nil {
 		log.Println(err)

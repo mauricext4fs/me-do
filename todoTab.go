@@ -25,7 +25,6 @@ func (td *TODO) todoTab() *fyne.Container {
 }
 
 func (td *TODO) OnTabSwitchTODO() {
-	td.TaskTable = nil
 	td.LoadTasks()
 	td.TaskTable = td.getTasksTable()
 	td.TaskTable.Refresh()
@@ -72,7 +71,7 @@ func (td *TODO) getTasksTable() *widget.Table {
 			case "Position":
 				curPos := taskRow.Position
 
-				pc := td.getUpDownPositionField(id, curPos, taskRow.Title)
+				pc := td.getActionButtonsContainer(id, curPos, taskRow.Title)
 
 				o.(*fyne.Container).Objects = []fyne.CanvasObject{
 					pc,
