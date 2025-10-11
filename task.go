@@ -46,7 +46,7 @@ func (td *TODO) getActionButtonsContainer(id int64, curPos int64, title string) 
 			log.Println("Error on Move up press: ", err)
 		}
 		td.LoadTODOTasks()
-		td.TaskTable.Refresh()
+		td.TODOTaskTable.Refresh()
 	})
 	downBtn := widget.NewButtonWithIcon("", theme.MoveDownIcon(), func() {
 		err := td.DB.DownPosition(id, (curPos), "TODO")
@@ -54,7 +54,7 @@ func (td *TODO) getActionButtonsContainer(id int64, curPos int64, title string) 
 			log.Println("Error on Move Down press: ", err)
 		}
 		td.LoadTODOTasks()
-		td.TaskTable.Refresh()
+		td.TODOTaskTable.Refresh()
 	})
 	notesBtn := widget.NewButtonWithIcon("", theme.FileTextIcon(), func() {
 		// Load notes (if any) and show them somewhere

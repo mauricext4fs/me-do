@@ -118,7 +118,7 @@ func (td *TODO) showFileOpenDialog() {
 		}
 		td.setupDB(db)
 		td.LoadTODOTasks()
-		td.TaskTable.Refresh()
+		td.TODOTaskTable.Refresh()
 
 		// Add filename to the Window title
 		win.SetTitle("MeDo - " + read.URI().Name())
@@ -165,7 +165,7 @@ func (td *TODO) showFileSaveDialog() {
 		}
 		td.setupDB(db)
 		td.LoadTODOTasks()
-		td.TaskTable.Refresh()
+		td.TODOTaskTable.Refresh()
 
 		// Add filename to the Window title
 		win.SetTitle("MeDo - " + write.URI().Name())

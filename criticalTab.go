@@ -18,17 +18,17 @@ func (td *TODO) criticalTab() *fyne.Container {
 		nil,
 		nil,
 		nil,
-		container.NewAdaptiveGrid(1, td.TaskTable),
+		container.NewAdaptiveGrid(1, td.CriticalTaskTable),
 	)
 
 	return tasksTableContainer
 }
 
 func (td *TODO) OnTabSwitchCritical() {
-	td.TaskTable = nil
+	td.CriticalTaskTable = nil
 	td.LoadCriticalTasks()
-	td.TaskTable = td.getCriticalTasksTable()
-	td.TaskTable.Refresh()
+	td.CriticalTaskTable = td.getCriticalTasksTable()
+	td.CriticalTaskTable.Refresh()
 }
 
 func (td *TODO) getCriticalTasksTable() *widget.Table {
@@ -119,7 +119,7 @@ func (td *TODO) getCriticalTasksTable() *widget.Table {
 						taskRow.Title = entryTitle.Text
 						td.DB.UpdateTitle(taskRow.ID, entryTitle.Text)
 						td.LoadCriticalTasks()
-						td.TaskTable.Refresh()
+						td.CriticalTaskTable.Refresh()
 					}
 				}, td.MainWindow)
 		}
@@ -169,7 +169,7 @@ func (td *TODO) getCriticalStatusField(id int64, curPos int64) *CustomSelect {
 			log.Println("Shifting task id: ", id, " with position ", curPos)
 			td.DB.ShiftPosition(id, curPos, "TODO")
 			td.LoadCriticalTasks()
-			td.TaskTable.Refresh()
+			td.CriticalTaskTable.Refresh()
 		}
 	})
 

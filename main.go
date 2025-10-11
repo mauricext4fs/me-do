@@ -30,8 +30,8 @@ type TODO struct {
 	UIElements    UIElements
 	ID            int64
 
-	Tasks     [][]interface{}
-	TaskTable *widget.Table
+	TODOTaskTable     *widget.Table
+	CriticalTaskTable *widget.Table
 
 	TODOTasks     []repository.Tasks
 	CriticalTasks []repository.Tasks

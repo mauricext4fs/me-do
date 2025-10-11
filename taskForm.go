@@ -35,19 +35,20 @@ func (td *TODO) ShowTaskForm() fyne.CanvasObject {
 
 	s := widget.NewButton("Add new Task", func() {
 		log.Println("Content was: ", nt.Title.Text)
-		_, err := td.DB.InsertTask(repository.Tasks{
+		task := repository.Tasks{
 			Title:    nt.Title.Text,
 			Priority: tr.Priority.Selected,
-		})
+		}
+		nTask, err := td.DB.InsertTask(task)
 		if err != nil {
 			log.Println(err)
 		}
 
+		log.Println("New Task Inserted: ", nTask)
+
 		// Reload the Tabs Table
-		//td.LoadTasks()
-		//td.TaskTable.Refresh()
-		td.OnTabSwitchTODO()
 		td.OnTabSwitchCritical()
+		td.OnTabSwitchTODO()
 
 		//Clear up existing field value
 		nt.Title.Text = ""

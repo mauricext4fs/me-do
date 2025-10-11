@@ -18,17 +18,17 @@ func (td *TODO) todoTab() *fyne.Container {
 		nil,
 		nil,
 		nil,
-		container.NewAdaptiveGrid(1, td.TaskTable),
+		container.NewAdaptiveGrid(1, td.TODOTaskTable),
 	)
 
 	return tasksTableContainer
 }
 
 func (td *TODO) OnTabSwitchTODO() {
-	td.TaskTable = nil
+	td.TODOTaskTable = nil
 	td.LoadTODOTasks()
-	td.TaskTable = td.getTasksTable()
-	td.TaskTable.Refresh()
+	td.TODOTaskTable = td.getTasksTable()
+	td.TODOTaskTable.Refresh()
 }
 
 func (td *TODO) getSearchContainer() *fyne.Container {
@@ -42,7 +42,7 @@ func (td *TODO) getSearchContainer() *fyne.Container {
 			log.Println("Oups... something when wrong: ", err)
 		}
 		td.TODOTasks = res
-		td.TaskTable.Refresh()
+		td.TODOTaskTable.Refresh()
 	})
 	searchContainer := container.NewGridWithColumns(2,
 		searchText,
@@ -140,7 +140,7 @@ func (td *TODO) getTasksTable() *widget.Table {
 						taskRow.Title = entryTitle.Text
 						td.DB.UpdateTitle(taskRow.ID, entryTitle.Text)
 						td.LoadTODOTasks()
-						td.TaskTable.Refresh()
+						td.TODOTaskTable.Refresh()
 					}
 				}, td.MainWindow)
 		}
@@ -190,7 +190,7 @@ func (td *TODO) getTODOStatusField(id int64, curPos int64) *CustomSelect {
 			log.Println("Shifting task id: ", id, " with position ", curPos)
 			td.DB.ShiftPosition(id, curPos, "TODO")
 			td.LoadTODOTasks()
-			td.TaskTable.Refresh()
+			td.TODOTaskTable.Refresh()
 		}
 	})
 
