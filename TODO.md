@@ -1,7 +1,7 @@
 # TODO
 
+- BUG: All tabs now required to be switch back and forth for data and UI update to take effect. This brake a lot of functionality especially the up/down position.
 - BUG: Table refresh not working as before. When adding new task, it does not appears in the table automatically.
-- BUG: Position function are not working anymore when switching Tab/Adding new task
 - Auto-refresh the updated_at field
 - Split task in two rows and add timer / Total time
 - Add user info in DB for the future maybe?
