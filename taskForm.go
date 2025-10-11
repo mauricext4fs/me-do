@@ -24,7 +24,7 @@ type NewTask struct {
 func (td *TODO) ShowTaskForm() fyne.CanvasObject {
 	var tr = &TaskForm{}
 	tr.Priority = widget.NewSelect(taskPriority, func(value string) {
-		log.Println("Select set to ", value)
+		log.Println("Task Priority for new task set to ", value)
 	})
 
 	tr.LastUpdate = widget.NewLabel("Last update")
@@ -43,9 +43,11 @@ func (td *TODO) ShowTaskForm() fyne.CanvasObject {
 			log.Println(err)
 		}
 
-		// Reload the TODO Table
-		td.LoadTasks()
-		td.TaskTable.Refresh()
+		// Reload the Tabs Table
+		//td.LoadTasks()
+		//td.TaskTable.Refresh()
+		td.OnTabSwitchTODO()
+		td.OnTabSwitchCritical()
 
 		//Clear up existing field value
 		nt.Title.Text = ""

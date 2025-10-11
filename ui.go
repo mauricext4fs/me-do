@@ -38,6 +38,7 @@ func (td *TODO) buildTabs() *container.AppTabs {
 
 func (td *TODO) setSwitchTabs(at *container.AppTabs) {
 	at.OnSelected = func(tab *container.TabItem) {
+		log.Println("Tab switching to: ", tab.Text)
 		switch tab.Text {
 		case "Status: Critical":
 			// Load Critical tabs data
@@ -116,7 +117,7 @@ func (td *TODO) showFileOpenDialog() {
 			log.Panicln("Cannot open new DB location ", err)
 		}
 		td.setupDB(db)
-		td.LoadTasks()
+		td.LoadTODOTasks()
 		td.TaskTable.Refresh()
 
 		// Add filename to the Window title
@@ -163,7 +164,7 @@ func (td *TODO) showFileSaveDialog() {
 			log.Panicln("Cannot open new DB location ", err)
 		}
 		td.setupDB(db)
-		td.LoadTasks()
+		td.LoadTODOTasks()
 		td.TaskTable.Refresh()
 
 		// Add filename to the Window title

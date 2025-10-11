@@ -10,7 +10,8 @@ import (
 )
 
 func (td *TODO) criticalTab() *fyne.Container {
-	td.TaskTable = td.getCriticalTasksTable()
+	//td.TaskTable = td.getCriticalTasksTable()
+	td.OnTabSwitchCritical()
 
 	tasksTableContainer := container.NewBorder(
 		nil,
@@ -117,7 +118,7 @@ func (td *TODO) getCriticalTasksTable() *widget.Table {
 						// Let's save this
 						taskRow.Title = entryTitle.Text
 						td.DB.UpdateTitle(taskRow.ID, entryTitle.Text)
-						td.LoadTasks()
+						td.LoadCriticalTasks()
 						td.TaskTable.Refresh()
 					}
 				}, td.MainWindow)
@@ -167,7 +168,7 @@ func (td *TODO) getCriticalStatusField(id int64, curPos int64) *CustomSelect {
 			// We need to unshift the position
 			log.Println("Shifting task id: ", id, " with position ", curPos)
 			td.DB.ShiftPosition(id, curPos, "TODO")
-			td.LoadTasks()
+			td.LoadCriticalTasks()
 			td.TaskTable.Refresh()
 		}
 	})

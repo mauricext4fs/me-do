@@ -25,7 +25,8 @@ func (td *TODO) todoTab() *fyne.Container {
 }
 
 func (td *TODO) OnTabSwitchTODO() {
-	td.LoadTasks()
+	td.TaskTable = nil
+	td.LoadTODOTasks()
 	td.TaskTable = td.getTasksTable()
 	td.TaskTable.Refresh()
 }
@@ -138,7 +139,7 @@ func (td *TODO) getTasksTable() *widget.Table {
 						// Let's save this
 						taskRow.Title = entryTitle.Text
 						td.DB.UpdateTitle(taskRow.ID, entryTitle.Text)
-						td.LoadTasks()
+						td.LoadTODOTasks()
 						td.TaskTable.Refresh()
 					}
 				}, td.MainWindow)
@@ -188,7 +189,7 @@ func (td *TODO) getTODOStatusField(id int64, curPos int64) *CustomSelect {
 			// We need to unshift the position
 			log.Println("Shifting task id: ", id, " with position ", curPos)
 			td.DB.ShiftPosition(id, curPos, "TODO")
-			td.LoadTasks()
+			td.LoadTODOTasks()
 			td.TaskTable.Refresh()
 		}
 	})
