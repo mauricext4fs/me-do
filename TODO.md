@@ -1,5 +1,6 @@
 # TODO
 
+- BUG: Up/Down position jammed after first moved... need to update other Tab as well
 - BUG: Switching task to "Done" does not refresh inactive Tab
 - BUG: Switching Status does not affect other tab and when switching back to orignal Tab... status are reverted back (only in UI, DB is fine)
 - IMPROVEMENT: Need to improve the up/down position... it's hard to use and the Position Number does not adjust properly when task are set to "Done".
