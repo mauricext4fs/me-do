@@ -48,6 +48,7 @@ func (td *TODO) getSearchContainer() *fyne.Container {
 		}
 		td.TODOTasks = res
 		td.TODOTaskTable.Refresh()
+		td.UIElements.TODOTaskListContainer.Refresh()
 	})
 	searchContainer := container.NewGridWithColumns(2,
 		searchText,
@@ -146,6 +147,7 @@ func (td *TODO) getTasksTable() *widget.Table {
 						td.DB.UpdateTitle(taskRow.ID, entryTitle.Text)
 						td.LoadTODOTasks()
 						td.TODOTaskTable.Refresh()
+						td.UIElements.TODOTaskListContainer.Refresh()
 					}
 				}, td.MainWindow)
 		}
@@ -196,9 +198,11 @@ func (td *TODO) getTODOStatusField(id int64, curPos int64) *CustomSelect {
 			// We need to unshift the position
 			log.Println("Shifting task id: ", id, " with position ", curPos)
 			td.DB.ShiftPosition(id, curPos, "TODO")
-			td.LoadTODOTasks()
-			// Do we still need that TODOTaskTable.Refresh()??
-			td.TODOTaskTable.Refresh()
+
+			// Do as if we switch the Tab and reload everything
+			td.OnTabSwitchTODO()
+
+			td.CriticalTaskTable.Refresh()
 
 			// Refresh UI views
 			td.UIElements.TODOTaskListContainer.Refresh()
