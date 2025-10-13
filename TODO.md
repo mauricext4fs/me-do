@@ -1,5 +1,6 @@
 # TODO
 
+- Create a new branch for Position Drag and Drop
 - BUG: Up/Down position jammed after first moved... need to update other Tab as well
 - BUG: Switching task to "Done" does not refresh inactive Tab
 - BUG: Switching Status does not affect other tab and when switching back to orignal Tab... status are reverted back (only in UI, DB is fine)
