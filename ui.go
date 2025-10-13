@@ -42,11 +42,15 @@ func (td *TODO) setSwitchTabs(at *container.AppTabs) {
 		switch tab.Text {
 		case "Status: Critical":
 			// Load Critical tabs data
-			log.Println("Critical Tab clicked!")
+			log.Println("Critical Tab switched!")
 			td.OnTabSwitchCritical()
+			// And refresh container
+			td.UIElements.CriticalTaskListContainer.Refresh()
 		case "TODO":
-			log.Println("TODO Tab clicked!")
+			log.Println("TODO Tab switched!")
 			td.OnTabSwitchTODO()
+			// And refresh container
+			td.UIElements.TODOTaskListContainer.Refresh()
 		}
 	}
 }

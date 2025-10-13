@@ -10,8 +10,7 @@ import (
 )
 
 func (td *TODO) criticalTab() *fyne.Container {
-	td.CriticalTaskTable = td.getCriticalTasksTable()
-	td.OnTabSwitchCritical()
+	td.initCriticalTab()
 
 	td.UIElements.CriticalTaskListContainer = container.NewBorder(
 		nil,
@@ -22,6 +21,11 @@ func (td *TODO) criticalTab() *fyne.Container {
 	)
 
 	return td.UIElements.CriticalTaskListContainer
+}
+
+func (td *TODO) initCriticalTab() {
+	td.LoadCriticalTasks()
+	td.CriticalTaskTable = td.getCriticalTasksTable()
 }
 
 func (td *TODO) OnTabSwitchCritical() {
@@ -130,9 +134,11 @@ func (td *TODO) getCriticalTasksTable() *widget.Table {
 
 func (td *TODO) getCriticalStatusField(id int64, curPos int64) *CustomSelect {
 	s := NewCustomSelect(taskStatusColors, taskStatus, func(value string) {
-		log.Println("Status: ", value, " for taskId: ", id)
 		// Stop any existing timer
 		previousStatus, _ := td.DB.GetStatusByTaskID(id)
+
+		log.Println("Previous Status: ", previousStatus, "New Status: ", value, " for taskId: ", id)
+
 		if previousStatus == "In Progress" {
 			log.Println("Previous Status was 'In Progress'; We need to stop the previous timer; if any.")
 			activeTimerID, err := td.DB.GetActiveTimerByTaskId(id)
@@ -169,12 +175,14 @@ func (td *TODO) getCriticalStatusField(id int64, curPos int64) *CustomSelect {
 			log.Println("Shifting task id: ", id, " with position ", curPos)
 			td.DB.ShiftPosition(id, curPos, "TODO")
 			td.LoadCriticalTasks()
-			// Refresh UI views
 			// Do we still need that CriticalTaskTable.Refresh()??
 			td.CriticalTaskTable.Refresh()
+
+			// Refresh UI views
 			td.UIElements.TODOTaskListContainer.Refresh()
 			td.UIElements.CriticalTaskListContainer.Refresh()
 		}
+
 	})
 
 	return s

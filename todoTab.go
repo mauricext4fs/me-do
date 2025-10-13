@@ -11,19 +11,22 @@ import (
 )
 
 func (td *TODO) todoTab() *fyne.Container {
-	td.TODOTaskTable = td.getTasksTable()
-	td.OnTabSwitchTODO()
-	td.UIElements.TODOGrid = container.NewAdaptiveGrid(1, td.TODOTaskTable)
+	td.initTODOTab()
 
 	td.UIElements.TODOTaskListContainer = container.NewBorder(
 		nil,
 		nil,
 		nil,
 		nil,
-		td.UIElements.TODOGrid,
+		container.NewAdaptiveGrid(1, td.TODOTaskTable),
 	)
 
 	return td.UIElements.TODOTaskListContainer
+}
+
+func (td *TODO) initTODOTab() {
+	td.LoadTODOTasks()
+	td.TODOTaskTable = td.getTasksTable()
 }
 
 func (td *TODO) OnTabSwitchTODO() {
@@ -153,9 +156,11 @@ func (td *TODO) getTasksTable() *widget.Table {
 
 func (td *TODO) getTODOStatusField(id int64, curPos int64) *CustomSelect {
 	s := NewCustomSelect(taskStatusColors, taskStatus, func(value string) {
-		log.Println("Status: ", value, " for taskId: ", id)
 		// Stop any existing timer
 		previousStatus, _ := td.DB.GetStatusByTaskID(id)
+
+		log.Println("Previous Status: ", previousStatus, "New Status: ", value, " for taskId: ", id)
+
 		if previousStatus == "In Progress" {
 			log.Println("Previous Status was 'In Progress'; We need to stop the previous timer; if any.")
 			activeTimerID, err := td.DB.GetActiveTimerByTaskId(id)
@@ -192,12 +197,14 @@ func (td *TODO) getTODOStatusField(id int64, curPos int64) *CustomSelect {
 			log.Println("Shifting task id: ", id, " with position ", curPos)
 			td.DB.ShiftPosition(id, curPos, "TODO")
 			td.LoadTODOTasks()
-			// Refresh UI views
 			// Do we still need that TODOTaskTable.Refresh()??
 			td.TODOTaskTable.Refresh()
+
+			// Refresh UI views
 			td.UIElements.TODOTaskListContainer.Refresh()
 			td.UIElements.CriticalTaskListContainer.Refresh()
 		}
+
 	})
 
 	return s
