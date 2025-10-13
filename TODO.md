@@ -1,6 +1,7 @@
 # TODO
 
 - BUG: Switching task to "Done" does not refresh inactive Tab
+- BUG: Switching Status does not affect other tab and when switching back to orignal Tab... status are reverted back (only in UI, DB is fine)
 - IMPROVEMENT: Need to improve the up/down position... it's hard to use and the Position Number does not adjust properly when task are set to "Done".
 - BUG: All tabs now required to be switch back and forth for data and UI update to take effect. This brake a lot of functionality especially the up/down position.
 - Auto-refresh the updated_at field
