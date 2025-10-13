@@ -49,10 +49,11 @@ func (td *TODO) ShowTaskForm() fyne.CanvasObject {
 		// Reload the Tabs Table
 		td.OnTabSwitchCritical()
 		td.OnTabSwitchTODO()
+		// Refresh UI
 		td.UIElements.TODOTaskListContainer.Refresh()
 		td.UIElements.CriticalTaskListContainer.Refresh()
 
-		//Clear up existing field value
+		// Clear up existing field value
 		nt.Title.Text = ""
 		nt.Title.Refresh()
 		td.MainWindow.Canvas().Focus(nt.Title)

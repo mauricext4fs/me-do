@@ -192,7 +192,11 @@ func (td *TODO) getTODOStatusField(id int64, curPos int64) *CustomSelect {
 			log.Println("Shifting task id: ", id, " with position ", curPos)
 			td.DB.ShiftPosition(id, curPos, "TODO")
 			td.LoadTODOTasks()
+			// Refresh UI views
+			// Do we still need that TODOTaskTable.Refresh()??
 			td.TODOTaskTable.Refresh()
+			td.UIElements.TODOTaskListContainer.Refresh()
+			td.UIElements.CriticalTaskListContainer.Refresh()
 		}
 	})
 
