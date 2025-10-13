@@ -14,8 +14,9 @@ import (
 )
 
 type UIElements struct {
-	TaskListAdaptiveContainer *fyne.Container
-	TaskListContainer         *fyne.Container
+	TODOTaskListContainer     *fyne.Container
+	CriticalTaskListContainer *fyne.Container
+	TODOGrid                  *fyne.Container
 	TaskFormContainer         *fyne.Container
 	DBPathText                *canvas.Text
 	InProgressTimerId         int64

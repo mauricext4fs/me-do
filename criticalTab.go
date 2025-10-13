@@ -10,10 +10,10 @@ import (
 )
 
 func (td *TODO) criticalTab() *fyne.Container {
-	//td.TaskTable = td.getCriticalTasksTable()
+	td.CriticalTaskTable = td.getCriticalTasksTable()
 	td.OnTabSwitchCritical()
 
-	tasksTableContainer := container.NewBorder(
+	td.UIElements.CriticalTaskListContainer = container.NewBorder(
 		nil,
 		nil,
 		nil,
@@ -21,7 +21,7 @@ func (td *TODO) criticalTab() *fyne.Container {
 		container.NewAdaptiveGrid(1, td.CriticalTaskTable),
 	)
 
-	return tasksTableContainer
+	return td.UIElements.CriticalTaskListContainer
 }
 
 func (td *TODO) OnTabSwitchCritical() {

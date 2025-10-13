@@ -11,17 +11,19 @@ import (
 )
 
 func (td *TODO) todoTab() *fyne.Container {
+	td.TODOTaskTable = td.getTasksTable()
 	td.OnTabSwitchTODO()
+	td.UIElements.TODOGrid = container.NewAdaptiveGrid(1, td.TODOTaskTable)
 
-	tasksTableContainer := container.NewBorder(
+	td.UIElements.TODOTaskListContainer = container.NewBorder(
 		nil,
 		nil,
 		nil,
 		nil,
-		container.NewAdaptiveGrid(1, td.TODOTaskTable),
+		td.UIElements.TODOGrid,
 	)
 
-	return tasksTableContainer
+	return td.UIElements.TODOTaskListContainer
 }
 
 func (td *TODO) OnTabSwitchTODO() {
