@@ -38,9 +38,17 @@ type UIElements struct {
 func (td *TODO) buildTabs() *container.AppTabs {
 	todoTabContainer := td.todoTab()
 	criticalTabContainer := td.criticalTab()
+	veryHighTabContainer := td.veryHighTab()
+	highTabContainer := td.highTab()
+	mediumTabContainer := td.mediumTab()
+	lowTabContainer := td.lowTab()
 	tabs := container.NewAppTabs(
 		container.NewTabItem("TODO", todoTabContainer),
-		container.NewTabItem("Status: Critical", criticalTabContainer),
+		container.NewTabItem("Critical", criticalTabContainer),
+		container.NewTabItem("Very High", veryHighTabContainer),
+		container.NewTabItem("High", highTabContainer),
+		container.NewTabItem("Medium", mediumTabContainer),
+		container.NewTabItem("Low", lowTabContainer),
 		container.NewTabItem("PlaceHolder", td.getPlaceHolderFixedImage()),
 	)
 	td.setSwitchTabs(tabs)
