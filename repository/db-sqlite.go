@@ -235,7 +235,7 @@ func (repo *SQLiteRepository) AllTODOTasks() ([]Tasks, error) {
 	return all, nil
 }
 
-func (repo *SQLiteRepository) AllCriticalTasks() ([]Tasks, error) {
+func (repo *SQLiteRepository) AllOtherTabTasks(tab string) ([]Tasks, error) {
 	query := `
 		SELECT
 			t.id, t.title, IFNULL(tp.position, 9999999) AS pos, t.status, t.priority, t.created_at, t.updated_at
@@ -245,11 +245,11 @@ func (repo *SQLiteRepository) AllCriticalTasks() ([]Tasks, error) {
 			task_positions tp ON (t.id = tp.task_id AND label = 'TODO')
 		WHERE
 			t.status != 'Done'
-			AND t.priority = 'Critical'
+			AND t.priority = ?
 		ORDER BY
 			pos ASC, t.id DESC
 	`
-	rows, err := repo.Conn.Query(query)
+	rows, err := repo.Conn.Query(query, tab)
 	if err != nil {
 		return nil, err
 	}
@@ -276,6 +276,7 @@ func (repo *SQLiteRepository) AllCriticalTasks() ([]Tasks, error) {
 		a.UpdatedAt = time.Unix(uA, 0)
 		all = append(all, a)
 	}
+	log.Println("AllOtherTabQuery for ", tab, " with Result: ", all)
 
 	return all, nil
 }

@@ -205,7 +205,7 @@ func (td *TODO) LoadTODOTasks() {
 }
 
 func (td *TODO) LoadCriticalTasks() {
-	tasks, err := td.DB.AllCriticalTasks()
+	tasks, err := td.DB.AllOtherTabTasks("Critical")
 	td.CriticalTasks = tasks
 	if err != nil {
 		log.Println(err)
@@ -214,7 +214,7 @@ func (td *TODO) LoadCriticalTasks() {
 }
 
 func (td *TODO) LoadVeryHighTasks() {
-	tasks, err := td.DB.AllCriticalTasks()
+	tasks, err := td.DB.AllOtherTabTasks("Very High")
 	td.CriticalTasks = tasks
 	if err != nil {
 		log.Println(err)
@@ -222,7 +222,7 @@ func (td *TODO) LoadVeryHighTasks() {
 
 }
 func (td *TODO) LoadHighTasks() {
-	tasks, err := td.DB.AllCriticalTasks()
+	tasks, err := td.DB.AllOtherTabTasks("High")
 	td.CriticalTasks = tasks
 	if err != nil {
 		log.Println(err)
@@ -230,7 +230,7 @@ func (td *TODO) LoadHighTasks() {
 
 }
 func (td *TODO) LoadMediumTasks() {
-	tasks, err := td.DB.AllCriticalTasks()
+	tasks, err := td.DB.AllOtherTabTasks("Medium")
 	td.CriticalTasks = tasks
 	if err != nil {
 		log.Println(err)
@@ -239,7 +239,7 @@ func (td *TODO) LoadMediumTasks() {
 }
 
 func (td *TODO) LoadLowTasks() {
-	tasks, err := td.DB.AllCriticalTasks()
+	tasks, err := td.DB.AllOtherTabTasks("Low")
 	td.CriticalTasks = tasks
 	if err != nil {
 		log.Println(err)
