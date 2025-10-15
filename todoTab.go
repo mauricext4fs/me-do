@@ -18,7 +18,7 @@ func (td *TODO) todoTab() *fyne.Container {
 		nil,
 		nil,
 		nil,
-		container.NewAdaptiveGrid(1, td.TODOTaskTable),
+		container.NewAdaptiveGrid(1, td.UIElements.TODOTaskTable),
 	)
 
 	return td.UIElements.TODOTaskListContainer
@@ -26,14 +26,14 @@ func (td *TODO) todoTab() *fyne.Container {
 
 func (td *TODO) initTODOTab() {
 	td.LoadTODOTasks()
-	td.TODOTaskTable = td.getTasksTable()
+	td.UIElements.TODOTaskTable = td.getTasksTable()
 }
 
 func (td *TODO) OnTabSwitchTODO() {
-	td.TODOTaskTable = nil
+	td.UIElements.TODOTaskTable = nil
 	td.LoadTODOTasks()
-	td.TODOTaskTable = td.getTasksTable()
-	td.TODOTaskTable.Refresh()
+	td.UIElements.TODOTaskTable = td.getTasksTable()
+	td.UIElements.TODOTaskTable.Refresh()
 }
 
 func (td *TODO) getSearchContainer() *fyne.Container {
@@ -47,7 +47,7 @@ func (td *TODO) getSearchContainer() *fyne.Container {
 			log.Println("Oups... something when wrong: ", err)
 		}
 		td.TODOTasks = res
-		td.TODOTaskTable.Refresh()
+		td.UIElements.TODOTaskTable.Refresh()
 		td.UIElements.TODOTaskListContainer.Refresh()
 	})
 	searchContainer := container.NewGridWithColumns(2,
@@ -146,7 +146,7 @@ func (td *TODO) getTasksTable() *widget.Table {
 						taskRow.Title = entryTitle.Text
 						td.DB.UpdateTitle(taskRow.ID, entryTitle.Text)
 						td.LoadTODOTasks()
-						td.TODOTaskTable.Refresh()
+						td.UIElements.TODOTaskTable.Refresh()
 						td.UIElements.TODOTaskListContainer.Refresh()
 					}
 				}, td.MainWindow)
@@ -157,59 +157,5 @@ func (td *TODO) getTasksTable() *widget.Table {
 }
 
 func (td *TODO) getTODOStatusField(id int64, curPos int64) *CustomSelect {
-	s := NewCustomSelect(taskStatusColors, taskStatus, func(value string) {
-		// Stop any existing timer
-		previousStatus, _ := td.DB.GetStatusByTaskID(id)
-
-		log.Println("Previous Status: ", previousStatus, "New Status: ", value, " for taskId: ", id)
-
-		if previousStatus == "In Progress" {
-			log.Println("Previous Status was 'In Progress'; We need to stop the previous timer; if any.")
-			activeTimerID, err := td.DB.GetActiveTimerByTaskId(id)
-			if err != nil {
-				log.Println(err)
-			}
-			log.Println("Active Timer ID: ", activeTimerID)
-			if activeTimerID != 0 {
-				td.DB.StopTimer(activeTimerID)
-			}
-		}
-
-		if value == "In Progress" {
-			log.Println("In Progress...")
-			// Need to stop any existing timer and switch their status automatically
-			if td.UIElements.InProgressTimerId != 0 {
-				// ...
-			}
-
-			timer, err := td.DB.StartTimer(id)
-			if err != nil {
-				log.Println(err)
-			}
-
-			td.UIElements.InProgressTimerTaskId = timer.TaskID
-			td.UIElements.InProgressTimerId = timer.ID
-
-		}
-
-		td.DB.UpdateStatus(id, value)
-
-		if value == "Done" {
-			// We need to unshift the position
-			log.Println("Shifting task id: ", id, " with position ", curPos)
-			td.DB.ShiftPosition(id, curPos, "TODO")
-
-			// Do as if we switch the Tab and reload everything
-			td.OnTabSwitchTODO()
-
-			td.CriticalTaskTable.Refresh()
-
-			// Refresh UI views
-			td.UIElements.TODOTaskListContainer.Refresh()
-			td.UIElements.CriticalTaskListContainer.Refresh()
-		}
-
-	})
-
-	return s
+	return td.getGenericStatusField(id, curPos)
 }

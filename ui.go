@@ -14,8 +14,19 @@ import (
 )
 
 type UIElements struct {
+	TODOTaskTable     *widget.Table
+	CriticalTaskTable *widget.Table
+	VeryHighTaskTable *widget.Table
+	HighTaskTable     *widget.Table
+	MediumTaskTable   *widget.Table
+	LowTaskTable      *widget.Table
+
 	TODOTaskListContainer     *fyne.Container
 	CriticalTaskListContainer *fyne.Container
+	VeryHighTaskListContainer *fyne.Container
+	HighTaskListContainer     *fyne.Container
+	MediumTaskListContainer   *fyne.Container
+	LowTaskListContainer      *fyne.Container
 	TaskFormContainer         *fyne.Container
 	DBPathText                *canvas.Text
 	InProgressTimerId         int64
@@ -122,7 +133,7 @@ func (td *TODO) showFileOpenDialog() {
 		}
 		td.setupDB(db)
 		td.LoadTODOTasks()
-		td.TODOTaskTable.Refresh()
+		td.UIElements.TODOTaskTable.Refresh()
 
 		// Add filename to the Window title
 		win.SetTitle("MeDo - " + read.URI().Name())
@@ -169,7 +180,7 @@ func (td *TODO) showFileSaveDialog() {
 		}
 		td.setupDB(db)
 		td.LoadTODOTasks()
-		td.TODOTaskTable.Refresh()
+		td.UIElements.TODOTaskTable.Refresh()
 
 		// Add filename to the Window title
 		win.SetTitle("MeDo - " + write.URI().Name())

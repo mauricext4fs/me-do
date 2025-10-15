@@ -14,7 +14,6 @@ import (
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
-	"fyne.io/fyne/v2/widget"
 
 	_ "github.com/glebarez/go-sqlite"
 )
@@ -29,9 +28,6 @@ type TODO struct {
 	MainWindow    fyne.Window
 	UIElements    UIElements
 	ID            int64
-
-	TODOTaskTable     *widget.Table
-	CriticalTaskTable *widget.Table
 
 	TODOTasks     []repository.Tasks
 	CriticalTasks []repository.Tasks
