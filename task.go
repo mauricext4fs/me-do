@@ -43,18 +43,40 @@ func (td *TODO) getActionButtonsContainer(id int64, curPos int64, title string) 
 	upBtn := widget.NewButtonWithIcon("", theme.MoveUpIcon(), func() {
 		err := td.DB.UpPosition(id, (curPos), "TODO")
 		if err != nil {
-			log.Println("Error on Move up press: ", err)
+			log.Println("Error on Move up press for TaskID: ", id, " : ", err)
 		}
-		td.LoadTODOTasks()
+		//td.LoadTODOTasks()
+		//td.TODOTaskTable.Refresh()
+		// Do as if we switch the Tab and reload everything
+		td.OnTabSwitchCritical()
+		td.OnTabSwitchTODO()
+
+		td.CriticalTaskTable.Refresh()
 		td.TODOTaskTable.Refresh()
+
+		// Refresh UI views
+		td.UIElements.TODOTaskListContainer.Refresh()
+		td.UIElements.CriticalTaskListContainer.Refresh()
 	})
 	downBtn := widget.NewButtonWithIcon("", theme.MoveDownIcon(), func() {
 		err := td.DB.DownPosition(id, (curPos), "TODO")
 		if err != nil {
-			log.Println("Error on Move Down press: ", err)
+			log.Println("Error on Move Down press for TaskID: ", id, " : ", err)
 		}
-		td.LoadTODOTasks()
+		//td.LoadTODOTasks()
+		//td.TODOTaskTable.Refresh()
+
+		// Do as if we switch the Tab and reload everything
+		td.OnTabSwitchCritical()
+		td.OnTabSwitchTODO()
+
+		td.CriticalTaskTable.Refresh()
 		td.TODOTaskTable.Refresh()
+
+		// Refresh UI views
+		td.UIElements.TODOTaskListContainer.Refresh()
+		td.UIElements.CriticalTaskListContainer.Refresh()
+
 	})
 	notesBtn := widget.NewButtonWithIcon("", theme.FileTextIcon(), func() {
 		// Load notes (if any) and show them somewhere
