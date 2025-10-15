@@ -25,7 +25,7 @@ func (td *TODO) initHighTab() {
 	td.UIElements.HighTaskTable = td.getHighTasksTable()
 }
 
-func (td *TODO) OnTabSwitchHight() {
+func (td *TODO) OnTabSwitchHigh() {
 	td.UIElements.HighTaskTable = nil
 	td.LoadHighTasks()
 	td.UIElements.HighTaskTable = td.getHighTasksTable()

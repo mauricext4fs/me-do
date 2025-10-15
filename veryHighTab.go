@@ -25,7 +25,7 @@ func (td *TODO) initVeryHighTab() {
 	td.UIElements.VeryHighTaskTable = td.getVeryHighTasksTable()
 }
 
-func (td *TODO) OnTabSwitchVeryHight() {
+func (td *TODO) OnTabSwitchVeryHigh() {
 	td.UIElements.VeryHighTaskTable = nil
 	td.LoadVeryHighTasks()
 	td.UIElements.VeryHighTaskTable = td.getVeryHighTasksTable()
@@ -38,7 +38,7 @@ func (td *TODO) getVeryHighTasksTable() *widget.Table {
 
 }
 
-func (td *TODO) getVeryHightStatusField(id int64, curPos int64) *CustomSelect {
+func (td *TODO) getVeryHighStatusField(id int64, curPos int64) *CustomSelect {
 
 	return td.getGenericStatusField(id, curPos)
 }
