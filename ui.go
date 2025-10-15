@@ -27,10 +27,12 @@ type UIElements struct {
 	HighTaskListContainer     *fyne.Container
 	MediumTaskListContainer   *fyne.Container
 	LowTaskListContainer      *fyne.Container
-	TaskFormContainer         *fyne.Container
-	DBPathText                *canvas.Text
-	InProgressTimerId         int64
-	InProgressTimerTaskId     int64
+
+	TaskFormContainer *fyne.Container
+
+	DBPathText            *canvas.Text
+	InProgressTimerId     int64
+	InProgressTimerTaskId int64
 }
 
 func (td *TODO) buildTabs() *container.AppTabs {

@@ -221,6 +221,31 @@ func (td *TODO) LoadVeryHighTasks() {
 	}
 
 }
+func (td *TODO) LoadHighTasks() {
+	tasks, err := td.DB.AllCriticalTasks()
+	td.CriticalTasks = tasks
+	if err != nil {
+		log.Println(err)
+	}
+
+}
+func (td *TODO) LoadMediumTasks() {
+	tasks, err := td.DB.AllCriticalTasks()
+	td.CriticalTasks = tasks
+	if err != nil {
+		log.Println(err)
+	}
+
+}
+
+func (td *TODO) LoadLowTasks() {
+	tasks, err := td.DB.AllCriticalTasks()
+	td.CriticalTasks = tasks
+	if err != nil {
+		log.Println(err)
+	}
+
+}
 
 func (td *TODO) getGenericStatusField(id int64, curPos int64) *CustomSelect {
 	s := NewCustomSelect(taskStatusColors, taskStatus, func(value string) {
