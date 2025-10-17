@@ -3,6 +3,7 @@
 - Add all other Priorities Tabs as well
 - Create a new branch for Position Drag and Drop
 - IMPROVEMENT: Need to improve the up/down position... it's hard to use and the Position Number does not adjust properly when task are set to "Done".
+- BUG: Very High, High- Tab shows ghost value on adding / removing (setting to done) task
 - BUG: All tabs now required to be switch back and forth for data and UI update to take effect. This brake a lot of functionality especially the up/down position.
 - Auto-refresh the updated_at field
 - Split task in two rows and add timer / Total time
