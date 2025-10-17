@@ -34,11 +34,11 @@ func (td *TODO) OnTabSwitchMedium() {
 
 func (td *TODO) getMediumTasksTable() *widget.Table {
 
-	return td.getGenericTaskTable()
+	return td.getGenericTaskTable("Medium")
 
 }
 
 func (td *TODO) getMediumStatusField(id int64, curPos int64) *CustomSelect {
 
-	return td.getGenericStatusField(id, curPos)
+	return td.getGenericStatusField(id, curPos, "Medium")
 }

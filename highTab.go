@@ -34,11 +34,11 @@ func (td *TODO) OnTabSwitchHigh() {
 
 func (td *TODO) getHighTasksTable() *widget.Table {
 
-	return td.getGenericTaskTable()
+	return td.getGenericTaskTable("High")
 
 }
 
 func (td *TODO) getHightStatusField(id int64, curPos int64) *CustomSelect {
 
-	return td.getGenericStatusField(id, curPos)
+	return td.getGenericStatusField(id, curPos, "High")
 }

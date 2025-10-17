@@ -247,7 +247,7 @@ func (td *TODO) LoadLowTasks() {
 
 }
 
-func (td *TODO) getGenericStatusField(id int64, curPos int64) *CustomSelect {
+func (td *TODO) getGenericStatusField(id int64, curPos int64, origTab string) *CustomSelect {
 	s := NewCustomSelect(taskStatusColors, taskStatus, func(value string) {
 		// Stop any existing timer
 		previousStatus, _ := td.DB.GetStatusByTaskID(id)
@@ -291,13 +291,29 @@ func (td *TODO) getGenericStatusField(id int64, curPos int64) *CustomSelect {
 			td.DB.ShiftPosition(id, curPos, "TODO")
 
 			// Do as if we switch the Tab and reload everything
-			td.OnTabSwitchTODO()
+			//td.OnTabSwitchTODO()
+			switch origTab {
+			case "Critical":
+				td.OnTabSwitchCritical()
+				td.UIElements.CriticalTaskTable.Refresh()
+				td.UIElements.CriticalTaskListContainer.Refresh()
+			case "Very High":
+				td.OnTabSwitchVeryHigh()
+				td.UIElements.VeryHighTaskListContainer.Refresh()
+			case "High":
+				td.OnTabSwitchHigh()
+				td.UIElements.HighTaskListContainer.Refresh()
+			case "Medium":
+				td.OnTabSwitchMedium()
+				td.UIElements.MediumTaskListContainer.Refresh()
+			case "Low":
+				td.OnTabSwitchLow()
+				td.UIElements.LowTaskListContainer.Refresh()
+			}
 
 			// Refresh other tabs
-			td.UIElements.CriticalTaskTable.Refresh()
-			td.UIElements.TODOTaskTable.Refresh()
-			td.UIElements.TODOTaskListContainer.Refresh()
-			td.UIElements.CriticalTaskListContainer.Refresh()
+			//td.UIElements.TODOTaskTable.Refresh()
+			//td.UIElements.TODOTaskListContainer.Refresh()
 		}
 
 	})
@@ -305,7 +321,7 @@ func (td *TODO) getGenericStatusField(id int64, curPos int64) *CustomSelect {
 	return s
 }
 
-func (td *TODO) getGenericTaskTable() *widget.Table {
+func (td *TODO) getGenericTaskTable(origTab string) *widget.Table {
 
 	t := widget.NewTable(
 		func() (int, int) {
@@ -336,7 +352,7 @@ func (td *TODO) getGenericTaskTable() *widget.Table {
 				}
 			case "Status":
 				// Status
-				sSel := td.getCriticalStatusField(id, taskRow.Position)
+				sSel := td.getGenericStatusField(id, taskRow.Position, origTab)
 				sSel.SetSelected(taskRow.Status)
 				o.(*fyne.Container).Objects = []fyne.CanvasObject{
 					sSel,

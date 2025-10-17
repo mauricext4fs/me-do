@@ -157,5 +157,5 @@ func (td *TODO) getTasksTable() *widget.Table {
 }
 
 func (td *TODO) getTODOStatusField(id int64, curPos int64) *CustomSelect {
-	return td.getGenericStatusField(id, curPos)
+	return td.getGenericStatusField(id, curPos, "TODO")
 }
