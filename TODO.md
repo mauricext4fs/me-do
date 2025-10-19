@@ -1,5 +1,6 @@
 # TODO
 
+- BUG: In TODO Tab, status changes do not trigger view update
 - BUG: Adding a new Task should refresh the current Tab
 - Replace the status switch origTab with refreshStatusTab()
 - Create a new branch for Position Drag and Drop
