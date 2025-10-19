@@ -1,8 +1,5 @@
 # TODO
 
-- BUG: In TODO Tab, status changes do not trigger view update
-- BUG: Adding a new Task should refresh the current Tab
-- Replace the status switch origTab with refreshStatusTab()
 - Create a new branch for Position Drag and Drop
 - IMPROVEMENT: Need to improve the up/down position... it's hard to use and the Position Number does not adjust properly when task are set to "Done".
 - Auto-refresh the updated_at field
@@ -23,6 +20,9 @@
 
 # DONE
 
+- (/) Replace the status switch origTab with refreshStatusTab()
+- (/) BUG: Adding a new Task should refresh the current Tab
+- (/) BUG: In TODO Tab, status changes do not trigger view update
 - (/) BUG: Very High, High- Tab shows ghost value on adding / removing (set status to done) task
 - (/) Add all other Priorities Tabs as well
 - (/) BUG: Up/Down position jammed after first 
