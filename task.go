@@ -291,29 +291,7 @@ func (td *TODO) getGenericStatusField(id int64, curPos int64, origTab string) *C
 			td.DB.ShiftPosition(id, curPos, "TODO")
 
 			// Do as if we switch the Tab and reload everything
-			//td.OnTabSwitchTODO()
-			switch origTab {
-			case "Critical":
-				td.OnTabSwitchCritical()
-				td.UIElements.CriticalTaskTable.Refresh()
-				td.UIElements.CriticalTaskListContainer.Refresh()
-			case "Very High":
-				td.OnTabSwitchVeryHigh()
-				td.UIElements.VeryHighTaskListContainer.Refresh()
-			case "High":
-				td.OnTabSwitchHigh()
-				td.UIElements.HighTaskListContainer.Refresh()
-			case "Medium":
-				td.OnTabSwitchMedium()
-				td.UIElements.MediumTaskListContainer.Refresh()
-			case "Low":
-				td.OnTabSwitchLow()
-				td.UIElements.LowTaskListContainer.Refresh()
-			}
-
-			// Refresh other tabs
-			//td.UIElements.TODOTaskTable.Refresh()
-			//td.UIElements.TODOTaskListContainer.Refresh()
+			td.refreshStatusTab(origTab)
 		}
 
 	})

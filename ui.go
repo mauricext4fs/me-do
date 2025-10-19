@@ -14,6 +14,8 @@ import (
 )
 
 type UIElements struct {
+	CurrentActiveTab string
+
 	TODOTaskTable     *widget.Table
 	CriticalTaskTable *widget.Table
 	VeryHighTaskTable *widget.Table
@@ -54,6 +56,9 @@ func (td *TODO) buildTabs() *container.AppTabs {
 	td.setSwitchTabs(tabs)
 	tabs.SetTabLocation(container.TabLocationTop)
 
+	// Flag current default Tab
+	td.UIElements.CurrentActiveTab = "TODO"
+
 	return tabs
 }
 
@@ -62,32 +67,37 @@ func (td *TODO) setSwitchTabs(at *container.AppTabs) {
 		log.Println("Tab switching to: ", tab.Text)
 		switch tab.Text {
 		case "TODO":
+			td.UIElements.CurrentActiveTab = "TODO"
 			log.Println("TODO Tab switched!")
 			td.OnTabSwitchTODO()
 			// And refresh container
 			td.UIElements.TODOTaskListContainer.Refresh()
 		case "Critical":
-			// Load Critical tabs data
+			td.UIElements.CurrentActiveTab = "Critical"
 			log.Println("Critical Tab switched!")
 			td.OnTabSwitchCritical()
 			// And refresh container
 			td.UIElements.CriticalTaskListContainer.Refresh()
 		case "Very High":
+			td.UIElements.CurrentActiveTab = "Very High"
 			log.Println("VeryHigh Tab switched!")
 			td.OnTabSwitchVeryHigh()
 			// And refresh container
 			td.UIElements.VeryHighTaskListContainer.Refresh()
 		case "High":
+			td.UIElements.CurrentActiveTab = "High"
 			log.Println("High Tab switched!")
 			td.OnTabSwitchHigh()
 			// And refresh container
 			td.UIElements.HighTaskListContainer.Refresh()
 		case "Medium":
+			td.UIElements.CurrentActiveTab = "Medium"
 			log.Println("Medium Tab switched!")
 			td.OnTabSwitchMedium()
 			// And refresh container
 			td.UIElements.MediumTaskListContainer.Refresh()
 		case "Low":
+			td.UIElements.CurrentActiveTab = "Low"
 			log.Println("Low Tab switched!")
 			td.OnTabSwitchLow()
 			// And refresh container
@@ -217,4 +227,28 @@ func (td *TODO) showFileSaveDialog() {
 
 	}, win)
 	saveDialog.Show()
+}
+
+func (td *TODO) refreshStatusTab(tabname string) {
+	switch tabname {
+	case "TODO":
+		td.OnTabSwitchTODO()
+		td.UIElements.TODOTaskListContainer.Refresh()
+	case "Critical":
+		td.OnTabSwitchCritical()
+		td.UIElements.CriticalTaskTable.Refresh()
+		td.UIElements.CriticalTaskListContainer.Refresh()
+	case "Very High":
+		td.OnTabSwitchVeryHigh()
+		td.UIElements.VeryHighTaskListContainer.Refresh()
+	case "High":
+		td.OnTabSwitchHigh()
+		td.UIElements.HighTaskListContainer.Refresh()
+	case "Medium":
+		td.OnTabSwitchMedium()
+		td.UIElements.MediumTaskListContainer.Refresh()
+	case "Low":
+		td.OnTabSwitchLow()
+		td.UIElements.LowTaskListContainer.Refresh()
+	}
 }

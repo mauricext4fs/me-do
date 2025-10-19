@@ -44,14 +44,19 @@ func (td *TODO) ShowTaskForm() fyne.CanvasObject {
 			log.Println(err)
 		}
 
+		log.Println("New task inserted with active Tab: ", td.UIElements.CurrentActiveTab)
+
 		log.Println("New Task Inserted: ", nTask)
 
 		// Reload the Tabs Table
-		td.OnTabSwitchCritical()
-		td.OnTabSwitchTODO()
+		//td.OnTabSwitchCritical()
+		//td.OnTabSwitchTODO()
+		td.refreshStatusTab(td.UIElements.CurrentActiveTab)
+
 		// Refresh UI
-		td.UIElements.TODOTaskListContainer.Refresh()
-		td.UIElements.CriticalTaskListContainer.Refresh()
+		//td.UIElements.TODOTaskListContainer.Refresh()
+		//td.UIElements.CriticalTaskListContainer.Refresh()
+		//td.UIElements.VeryHighTaskListContainer.Refresh()
 
 		// Clear up existing field value
 		nt.Title.Text = ""
