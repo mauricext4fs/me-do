@@ -289,10 +289,11 @@ func (td *TODO) getGenericStatusField(id int64, curPos int64, origTab string) *C
 			// We need to unshift the position
 			log.Println("Shifting task id: ", id, " with position ", curPos)
 			td.DB.ShiftPosition(id, curPos, "TODO")
-
-			// Do as if we switch the Tab and reload everything
-			td.refreshStatusTab(origTab)
 		}
+
+		log.Println("Refresh Priority Tab")
+		// Do as if we switch the Tab and reload everything
+		td.refreshPriorityTab(origTab)
 
 	})
 

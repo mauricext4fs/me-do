@@ -276,7 +276,7 @@ func (repo *SQLiteRepository) AllOtherTabTasks(tab string) ([]Tasks, error) {
 		a.UpdatedAt = time.Unix(uA, 0)
 		all = append(all, a)
 	}
-	log.Println("AllOtherTabQuery for ", tab, " with Result: ", all)
+	//log.Println("AllOtherTabQuery for ", tab, " with Result: ", all)
 
 	return all, nil
 }

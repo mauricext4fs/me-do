@@ -229,7 +229,7 @@ func (td *TODO) showFileSaveDialog() {
 	saveDialog.Show()
 }
 
-func (td *TODO) refreshStatusTab(tabname string) {
+func (td *TODO) refreshPriorityTab(tabname string) {
 	switch tabname {
 	case "TODO":
 		td.OnTabSwitchTODO()

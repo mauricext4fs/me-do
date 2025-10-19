@@ -51,7 +51,7 @@ func (td *TODO) ShowTaskForm() fyne.CanvasObject {
 		// Reload the Tabs Table
 		//td.OnTabSwitchCritical()
 		//td.OnTabSwitchTODO()
-		td.refreshStatusTab(td.UIElements.CurrentActiveTab)
+		td.refreshPriorityTab(td.UIElements.CurrentActiveTab)
 
 		// Refresh UI
 		//td.UIElements.TODOTaskListContainer.Refresh()
