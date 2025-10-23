@@ -1,5 +1,6 @@
 # TODO
 
+- BUG: Cannot select text in notes
 - Create a new branch for Position Drag and Drop
 - IMPROVEMENT: Need to improve the up/down position... it's hard to use and the Position Number does not adjust properly when task are set to "Done".
 - Auto-refresh the updated_at field
