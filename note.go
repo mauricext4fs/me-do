@@ -69,16 +69,28 @@ func (td *TODO) buildNotesContainer(taskId int64) *fyne.Container {
 		l := widget.NewLabel(lText)
 		l.TextStyle.Bold = true
 		v.Add(l)
-		//m := widget.NewMultiLineEntry()
-		//m.SetText(note.Note)
-		//m.Disable()
-		//m.Wrapping = fyne.TextWrapWord
-		//mn := canvas.NewText(note.Note, colornames.Blueviolet)
 		m := widget.NewRichText(
 			&widget.TextSegment{Text: note.Note, Style: widget.RichTextStyleParagraph},
 		)
 		m.Wrapping = fyne.TextWrapWord
 		v.Add(m)
+		tg := widget.NewTextGrid()
+		tg.SetText(note.Note)
+		v.Add(tg)
+
+		// Add copy button
+		cBtn := widget.NewButtonWithIcon("Copy Text", theme.ContentCopyIcon(), func() {
+			// Testing direct clipboard copy
+			clipclip := td.App.Clipboard()
+			clipclip.SetContent(note.Note)
+			td.App.SendNotification(&fyne.Notification{
+				Title:   "Copied",
+				Content: "Note copied to clipboard!",
+			})
+		})
+
+		v.Add(cBtn)
+
 	}
 
 	return v
