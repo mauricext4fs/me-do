@@ -121,36 +121,6 @@ func (td *TODO) getUpdatedAtField(uT time.Time) *widget.Label {
 	return widget.NewLabel(lT)
 }
 
-func (td *TODO) buildNotesContainer(taskId int64) *fyne.Container {
-
-	notes, err := td.DB.GetNotes(taskId)
-	if err != nil {
-		// Handle error
-	}
-
-	v := container.NewVBox()
-	for i := range notes {
-		note := notes[i]
-
-		lText := fmt.Sprintf("Note added on: %s", note.CreatedAt.String())
-		l := widget.NewLabel(lText)
-		l.TextStyle.Bold = true
-		v.Add(l)
-		//m := widget.NewMultiLineEntry()
-		//m.SetText(note.Note)
-		//m.Disable()
-		//m.Wrapping = fyne.TextWrapWord
-		//mn := canvas.NewText(note.Note, colornames.Blueviolet)
-		m := widget.NewRichText(
-			&widget.TextSegment{Text: note.Note, Style: widget.RichTextStyleParagraph},
-		)
-		m.Wrapping = fyne.TextWrapWord
-		v.Add(m)
-	}
-
-	return v
-}
-
 func (td *TODO) LoadTODOTasks() {
 	tasks, err := td.DB.AllTODOTasks()
 	td.TODOTasks = tasks
