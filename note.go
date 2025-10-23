@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"time"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -78,18 +79,37 @@ func (td *TODO) buildNotesContainer(taskId int64) *fyne.Container {
 		tg.SetText(note.Note)
 		v.Add(tg)
 
+		sIco := widget.NewIcon(theme.ConfirmIcon())
+		sIco.Hide()
+
 		// Add copy button
-		cBtn := widget.NewButtonWithIcon("Copy Text", theme.ContentCopyIcon(), func() {
-			// Testing direct clipboard copy
+		cBtn := widget.NewButtonWithIcon("Copy Text", theme.ContentCopyIcon(), nil)
+		cBtn.OnTapped = func() {
 			clipclip := td.App.Clipboard()
 			clipclip.SetContent(note.Note)
-			td.App.SendNotification(&fyne.Notification{
-				Title:   "Copied",
-				Content: "Note copied to clipboard!",
-			})
-		})
 
-		v.Add(cBtn)
+			// Show checkmark when button is clicked
+			sIco.SetResource(theme.ConfirmIcon())
+			sIco.Show()
+			cBtn.Disable()
+
+			go func() {
+				time.Sleep(2 * time.Second)
+				fyne.Do(func() {
+					sIco.Hide()
+					cBtn.Enable()
+				})
+
+			}()
+
+		}
+
+		bRow := container.NewHBox(
+			cBtn,
+			sIco,
+		)
+
+		v.Add(bRow)
 
 	}
 
