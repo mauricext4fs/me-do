@@ -74,13 +74,15 @@ func (td *TODO) buildNotesContainer(taskId int64) *fyne.Container {
 			&widget.TextSegment{Text: note.Note, Style: widget.RichTextStyleParagraph},
 		)
 		m.Wrapping = fyne.TextWrapWord
-		v.Add(m)
+		//v.Add(m)
 		tg := widget.NewTextGrid()
 		tg.SetText(note.Note)
 		v.Add(tg)
 
-		sIco := widget.NewIcon(theme.ConfirmIcon())
-		sIco.Hide()
+		// Show confirmation when Text is copied
+		confirmBtn := widget.NewButtonWithIcon("Text Copied to clipboard!", theme.ConfirmIcon(), nil)
+		confirmBtn.Importance = widget.SuccessImportance
+		confirmBtn.Hide()
 
 		// Add copy button
 		cBtn := widget.NewButtonWithIcon("Copy Text", theme.ContentCopyIcon(), nil)
@@ -89,14 +91,13 @@ func (td *TODO) buildNotesContainer(taskId int64) *fyne.Container {
 			clipclip.SetContent(note.Note)
 
 			// Show checkmark when button is clicked
-			sIco.SetResource(theme.ConfirmIcon())
-			sIco.Show()
+			confirmBtn.Show()
 			cBtn.Disable()
 
 			go func() {
-				time.Sleep(2 * time.Second)
+				time.Sleep(1 * time.Second)
 				fyne.Do(func() {
-					sIco.Hide()
+					confirmBtn.Hide()
 					cBtn.Enable()
 				})
 
@@ -106,7 +107,7 @@ func (td *TODO) buildNotesContainer(taskId int64) *fyne.Container {
 
 		bRow := container.NewHBox(
 			cBtn,
-			sIco,
+			confirmBtn,
 		)
 
 		v.Add(bRow)
