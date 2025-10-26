@@ -70,11 +70,6 @@ func (td *TODO) buildNotesContainer(taskId int64) *fyne.Container {
 		l := widget.NewLabel(lText)
 		l.TextStyle.Bold = true
 		v.Add(l)
-		m := widget.NewRichText(
-			&widget.TextSegment{Text: note.Note, Style: widget.RichTextStyleParagraph},
-		)
-		m.Wrapping = fyne.TextWrapWord
-		//v.Add(m)
 		tg := widget.NewTextGrid()
 		tg.SetText(note.Note)
 		v.Add(tg)
