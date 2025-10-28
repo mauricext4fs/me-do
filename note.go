@@ -90,7 +90,7 @@ func (td *TODO) buildNotesContainer(taskId int64) *fyne.Container {
 			cBtn.Disable()
 
 			go func() {
-				time.Sleep(1 * time.Second)
+				time.Sleep(2 * time.Second)
 				fyne.Do(func() {
 					confirmBtn.Hide()
 					cBtn.Enable()
