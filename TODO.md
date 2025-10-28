@@ -1,7 +1,7 @@
 # TODO
 
-- Make the CustomSelect text bold in popup menu
 - Add refresh to Priority change as well (just like status)
+- Remove empty option in customSelect for both Status and Priority
 - Create a new branch for Position Drag and Drop
 - IMPROVEMENT: Need to improve the up/down position... it's hard to use and the Position Number does not adjust properly when task are set to "Done".
 - Auto-refresh the updated_at field
@@ -20,6 +20,7 @@
 
 # DONE
 
+- (/) Make the CustomSelect text bold in popup menu
 - (/) Hide what is not working for the moment (all the files functionalities)
 - (/) Show Done Tasks somewhere
 - (/) BUG: Prevent addition of "empty" Task (clicking multiple time the Add new Task Button) 

@@ -67,10 +67,8 @@ func (cs *CustomSelect) SetSelected(value string) {
 func (cs *CustomSelect) updateButtonText() {
 	if cs.selected == "" {
 		cs.buttonText.Text = "Select..."
-		//cs.button.SetText("Select....")
 	} else {
 		cs.buttonText.Text = cs.selected
-		//cs.button.SetText(cs.selected)
 	}
 
 }
@@ -107,7 +105,7 @@ func (cs *CustomSelect) createOptionButton(option string) fyne.CanvasObject {
 
 	label := widget.NewLabel(option)
 	label.Alignment = fyne.TextAlignLeading
-	//label.TextStyle.Bold = true
+	label.TextStyle.Bold = true
 
 	paddedContent := container.NewHBox(layout.NewSpacer(), label, layout.NewSpacer())
 	content := container.NewPadded(paddedContent)
