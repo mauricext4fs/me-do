@@ -6,6 +6,7 @@ import (
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
 )
 
@@ -27,6 +28,7 @@ func (td *TODO) ShowTaskForm() fyne.CanvasObject {
 		log.Println("Task Priority for new task set to ", value)
 	})
 
+	// what is this ???
 	tr.LastUpdate = widget.NewLabel("Last update")
 
 	var nt = &NewTask{}
@@ -34,7 +36,20 @@ func (td *TODO) ShowTaskForm() fyne.CanvasObject {
 	nt.Title.SetPlaceHolder("Enter Task name...")
 
 	s := widget.NewButton("Add new Task", func() {
+		// All empty... just ignore
+		if nt.Title.Text == "" {
+			return
+		}
+
 		log.Println("Content was: ", nt.Title.Text)
+		log.Println("Priority choosen: ", tr.Priority.Selected)
+
+		if tr.Priority.Selected == "" {
+			infoWin := dialog.NewInformation("Error adding new Task", "A priority must be chosen for new Task!", td.MainWindow)
+			infoWin.Show()
+			return
+		}
+
 		task := repository.Tasks{
 			Title:    nt.Title.Text,
 			Priority: tr.Priority.Selected,

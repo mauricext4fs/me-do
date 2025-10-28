@@ -1,6 +1,5 @@
 # TODO
 
-- BUG: Prevent addition of "empty" Task (clicking multiple time the Add new Task Button) 
 - Add refresh to Priority change as well (just like status)
 - Create a new branch for Position Drag and Drop
 - IMPROVEMENT: Need to improve the up/down position... it's hard to use and the Position Number does not adjust properly when task are set to "Done".
@@ -22,6 +21,7 @@
 
 # DONE
 
+- (/) BUG: Prevent addition of "empty" Task (clicking multiple time the Add new Task Button) 
 - (/) BUG: Cannot select text in notes
     Now the whole text can be copied with the copy button
 - (/) Replace the status switch origTab with refreshStatusTab()
