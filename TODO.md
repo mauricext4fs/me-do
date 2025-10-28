@@ -1,6 +1,6 @@
 # TODO
 
-- 
+- BUG: Prevent addition of "empty" Task (clicking multiple time the Add new Task Button) 
 - Add refresh to Priority change as well (just like status)
 - BUG: Cannot select text in notes
 - Create a new branch for Position Drag and Drop
