@@ -235,6 +235,50 @@ func (repo *SQLiteRepository) AllTODOTasks() ([]Tasks, error) {
 	return all, nil
 }
 
+func (repo *SQLiteRepository) AllDoneTasks() ([]Tasks, error) {
+	query := `
+		SELECT
+			t.id, t.title, IFNULL(tp.position, 9999999) AS pos, t.status, t.priority, t.created_at, t.updated_at
+		FROM
+			tasks t
+		LEFT JOIN
+			task_positions tp ON (t.id = tp.task_id AND label = 'TODO')
+		WHERE
+			t.status = 'Done'
+		ORDER BY
+			pos ASC, t.id DESC
+	`
+	rows, err := repo.Conn.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var all []Tasks
+	for rows.Next() {
+		var a Tasks
+		var cA int64
+		var uA int64
+		err := rows.Scan(
+			&a.ID,
+			&a.Title,
+			&a.Position,
+			&a.Status,
+			&a.Priority,
+			&cA,
+			&uA,
+		)
+		if err != nil {
+			return nil, err
+		}
+		a.CreatedAt = time.Unix(cA, 0)
+		a.UpdatedAt = time.Unix(uA, 0)
+		all = append(all, a)
+	}
+
+	return all, nil
+}
+
 func (repo *SQLiteRepository) AllOtherTabTasks(tab string) ([]Tasks, error) {
 	query := `
 		SELECT

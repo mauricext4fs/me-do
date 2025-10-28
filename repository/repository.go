@@ -21,6 +21,7 @@ type Repository interface {
 	UpPosition(id int64, curPos int64, label string) error
 	DownPosition(id int64, curPos int64, label string) error
 	AllTODOTasks() ([]Tasks, error)
+	AllDoneTasks() ([]Tasks, error)
 	AllOtherTabTasks(tabname string) ([]Tasks, error)
 	SearchTODOTasks(searchText string) ([]Tasks, error)
 	GetTaskByID(id int) (*Tasks, error)
