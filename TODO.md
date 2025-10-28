@@ -1,5 +1,6 @@
 # TODO
 
+- Hide what is not working for the moment (all the files functionalities)
 - Add refresh to Priority change as well (just like status)
 - Create a new branch for Position Drag and Drop
 - IMPROVEMENT: Need to improve the up/down position... it's hard to use and the Position Number does not adjust properly when task are set to "Done".
