@@ -7,6 +7,7 @@ import (
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/driver/desktop"
 	"fyne.io/fyne/v2/storage"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
@@ -62,6 +63,73 @@ func (td *TODO) buildTabs() *container.AppTabs {
 
 	// Flag current default Tab
 	td.UIElements.CurrentActiveTab = "TODO"
+
+	// Set cmd+number shortcut for Desktop
+	if _, ok := td.App.(desktop.App); ok {
+		td.MainWindow.Canvas().AddShortcut(&desktop.CustomShortcut{
+			KeyName:  fyne.Key1,
+			Modifier: fyne.KeyModifierSuper,
+		}, func(shortcut fyne.Shortcut) {
+			tabs.SelectIndex(0)
+		})
+
+		td.MainWindow.Canvas().AddShortcut(&desktop.CustomShortcut{
+			KeyName:  fyne.Key2,
+			Modifier: fyne.KeyModifierSuper,
+		}, func(shortcut fyne.Shortcut) {
+			tabs.SelectIndex(1)
+		})
+
+		td.MainWindow.Canvas().AddShortcut(&desktop.CustomShortcut{
+			KeyName:  fyne.Key3,
+			Modifier: fyne.KeyModifierSuper,
+		}, func(shortcut fyne.Shortcut) {
+			tabs.SelectIndex(2)
+		})
+
+		td.MainWindow.Canvas().AddShortcut(&desktop.CustomShortcut{
+			KeyName:  fyne.Key4,
+			Modifier: fyne.KeyModifierSuper,
+		}, func(shortcut fyne.Shortcut) {
+			tabs.SelectIndex(3)
+		})
+
+		td.MainWindow.Canvas().AddShortcut(&desktop.CustomShortcut{
+			KeyName:  fyne.Key5,
+			Modifier: fyne.KeyModifierSuper,
+		}, func(shortcut fyne.Shortcut) {
+			tabs.SelectIndex(4)
+		})
+
+		td.MainWindow.Canvas().AddShortcut(&desktop.CustomShortcut{
+			KeyName:  fyne.Key6,
+			Modifier: fyne.KeyModifierSuper,
+		}, func(shortcut fyne.Shortcut) {
+			tabs.SelectIndex(5)
+		})
+
+		td.MainWindow.Canvas().AddShortcut(&desktop.CustomShortcut{
+			KeyName:  fyne.Key7,
+			Modifier: fyne.KeyModifierSuper,
+		}, func(shortcut fyne.Shortcut) {
+			tabs.SelectIndex(6)
+		})
+
+		td.MainWindow.Canvas().AddShortcut(&desktop.CustomShortcut{
+			KeyName:  fyne.Key8,
+			Modifier: fyne.KeyModifierSuper,
+		}, func(shortcut fyne.Shortcut) {
+			tabs.SelectIndex(7)
+		})
+
+		td.MainWindow.Canvas().AddShortcut(&desktop.CustomShortcut{
+			KeyName:  fyne.Key9,
+			Modifier: fyne.KeyModifierSuper,
+		}, func(shortcut fyne.Shortcut) {
+			tabs.SelectIndex(8)
+		})
+
+	}
 
 	return tabs
 }
