@@ -22,6 +22,7 @@ type UIElements struct {
 	HighTaskTable     *widget.Table
 	MediumTaskTable   *widget.Table
 	LowTaskTable      *widget.Table
+	DoneTaskTable     *widget.Table
 
 	TODOTaskListContainer     *fyne.Container
 	CriticalTaskListContainer *fyne.Container
@@ -29,6 +30,7 @@ type UIElements struct {
 	HighTaskListContainer     *fyne.Container
 	MediumTaskListContainer   *fyne.Container
 	LowTaskListContainer      *fyne.Container
+	DoneTaskListContainer     *fyne.Container
 
 	TaskFormContainer *fyne.Container
 
@@ -44,8 +46,10 @@ func (td *TODO) buildTabs() *container.AppTabs {
 	highTabContainer := td.highTab()
 	mediumTabContainer := td.mediumTab()
 	lowTabContainer := td.lowTab()
+	doneTabContainer := td.doneTab()
 	tabs := container.NewAppTabs(
 		container.NewTabItem("TODO", todoTabContainer),
+		container.NewTabItem("Done", doneTabContainer),
 		container.NewTabItem("Critical", criticalTabContainer),
 		container.NewTabItem("Very High", veryHighTabContainer),
 		container.NewTabItem("High", highTabContainer),

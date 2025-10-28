@@ -173,6 +173,15 @@ func (td *TODO) LoadLowTasks() {
 
 }
 
+func (td *TODO) LoadDoneTasks() {
+	tasks, err := td.DB.AllOtherTabTasks("Low")
+	td.CriticalTasks = tasks
+	if err != nil {
+		log.Println(err)
+	}
+
+}
+
 func (td *TODO) getGenericStatusField(id int64, curPos int64, origTab string) *CustomSelect {
 	s := NewCustomSelect(taskStatusColors, taskStatus, func(value string) {
 		// Stop any existing timer

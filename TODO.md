@@ -1,5 +1,6 @@
 # TODO
 
+- Show Done Tasks somewhere
 - Hide what is not working for the moment (all the files functionalities)
 - Add refresh to Priority change as well (just like status)
 - Create a new branch for Position Drag and Drop
