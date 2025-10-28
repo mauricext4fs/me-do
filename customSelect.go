@@ -2,6 +2,7 @@ package main
 
 import (
 	"image/color"
+	"log"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
@@ -81,12 +82,16 @@ func (cs *CustomSelect) showPopup() {
 
 	optionsContainer := container.NewVBox()
 	for _, option := range cs.options {
+		// Skip "emtpy" option... user needs to choose a real option
+		if option == "" {
+			continue
+		}
 		btn := cs.createOptionButton(option)
 		optionsContainer.Add(btn)
 	}
 
 	scroll := container.NewVScroll(optionsContainer)
-	scroll.SetMinSize(fyne.NewSize(cs.button.MinSize().Width, 300))
+	scroll.SetMinSize(fyne.NewSize(cs.button.MinSize().Width, 239))
 	content := container.NewPadded(scroll)
 
 	buttonPos := fyne.CurrentApp().Driver().AbsolutePositionForObject(cs.button)
@@ -101,6 +106,7 @@ func (cs *CustomSelect) showPopup() {
 
 func (cs *CustomSelect) createOptionButton(option string) fyne.CanvasObject {
 	bgColor := cs.getOptionBackground(option)
+	log.Println("Background Color: ", bgColor, " for Option: ", option)
 	bg := canvas.NewRectangle(bgColor)
 
 	label := widget.NewLabel(option)
