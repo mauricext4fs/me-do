@@ -49,12 +49,12 @@ func (td *TODO) buildTabs() *container.AppTabs {
 	doneTabContainer := td.doneTab()
 	tabs := container.NewAppTabs(
 		container.NewTabItem("TODO", todoTabContainer),
-		container.NewTabItem("Done", doneTabContainer),
 		container.NewTabItem("Critical", criticalTabContainer),
 		container.NewTabItem("Very High", veryHighTabContainer),
 		container.NewTabItem("High", highTabContainer),
 		container.NewTabItem("Medium", mediumTabContainer),
 		container.NewTabItem("Low", lowTabContainer),
+		container.NewTabItem("Done", doneTabContainer),
 		container.NewTabItem("PlaceHolder", td.getPlaceHolderFixedImage()),
 	)
 	td.setSwitchTabs(tabs)
@@ -142,8 +142,19 @@ func (td *TODO) buildUI() *fyne.Container {
 		log.Println("save was clicked!")
 	})
 
-	return container.NewVBox(td.ShowTaskForm(), td.UIElements.DBPathText, openBtn, saveBtn, td.getSearchContainer(), tabs)
+	vb := container.NewVBox(
+		td.UIElements.DBPathText,
+		openBtn,
+		saveBtn,
+		td.ShowTaskForm(),
+		td.getSearchContainer(),
+		tabs,
+	)
 
+	openBtn.Hide()
+	saveBtn.Hide()
+
+	return vb
 }
 
 func (td *TODO) getPlaceHolderFixedImage() *canvas.Image {

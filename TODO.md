@@ -1,6 +1,6 @@
 # TODO
 
-- Hide what is not working for the moment (all the files functionalities)
+- Make the CustomSelect text bold in popup menu
 - Add refresh to Priority change as well (just like status)
 - Create a new branch for Position Drag and Drop
 - IMPROVEMENT: Need to improve the up/down position... it's hard to use and the Position Number does not adjust properly when task are set to "Done".
@@ -12,16 +12,15 @@
 - Disable Up button on first row, disable down button in last row
 - Set focus to field in OnSelected Form automatically
 - Need to be able to set the default Value / Color on CustomSelect
-- Make the CustomSelect text bold in popup menu
 - Status and Priority background color should also show in Table
 - Delete task?
 - Limit the length of the Title field
-- Split view for "Done" vs not done tasks
 - Add comments / update
 
 
 # DONE
 
+- (/) Hide what is not working for the moment (all the files functionalities)
 - (/) Show Done Tasks somewhere
 - (/) BUG: Prevent addition of "empty" Task (clicking multiple time the Add new Task Button) 
 - (/) BUG: Cannot select text in notes
