@@ -1,6 +1,5 @@
 # TODO
 
-- Show Done Tasks somewhere
 - Hide what is not working for the moment (all the files functionalities)
 - Add refresh to Priority change as well (just like status)
 - Create a new branch for Position Drag and Drop
@@ -23,6 +22,7 @@
 
 # DONE
 
+- (/) Show Done Tasks somewhere
 - (/) BUG: Prevent addition of "empty" Task (clicking multiple time the Add new Task Button) 
 - (/) BUG: Cannot select text in notes
     Now the whole text can be copied with the copy button

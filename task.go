@@ -174,7 +174,7 @@ func (td *TODO) LoadLowTasks() {
 }
 
 func (td *TODO) LoadDoneTasks() {
-	tasks, err := td.DB.AllOtherTabTasks("Low")
+	tasks, err := td.DB.AllDoneTasks()
 	td.CriticalTasks = tasks
 	if err != nil {
 		log.Println(err)

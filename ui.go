@@ -106,6 +106,12 @@ func (td *TODO) setSwitchTabs(at *container.AppTabs) {
 			td.OnTabSwitchLow()
 			// And refresh container
 			td.UIElements.LowTaskListContainer.Refresh()
+		case "Done":
+			td.UIElements.CurrentActiveTab = "Done"
+			log.Println("Done Tab switched!")
+			td.OnTabSwitchDone()
+			// And refresh container
+			td.UIElements.DoneTaskListContainer.Refresh()
 		}
 	}
 }
@@ -254,5 +260,8 @@ func (td *TODO) refreshPriorityTab(tabname string) {
 	case "Low":
 		td.OnTabSwitchLow()
 		td.UIElements.LowTaskListContainer.Refresh()
+	case "Done":
+		td.OnTabSwitchDone()
+		td.UIElements.DoneTaskListContainer.Refresh()
 	}
 }
