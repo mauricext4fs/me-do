@@ -63,6 +63,7 @@ func (td *TODO) buildNotesContainer(taskId int64) *fyne.Container {
 	}
 
 	v := container.NewVBox()
+
 	for i := range notes {
 		note := notes[i]
 
@@ -76,6 +77,7 @@ func (td *TODO) buildNotesContainer(taskId int64) *fyne.Container {
 
 		// Show confirmation when Text is copied
 		confirmBtn := widget.NewButtonWithIcon("Text Copied to clipboard!", theme.ConfirmIcon(), nil)
+		// Just so we get it green
 		confirmBtn.Importance = widget.SuccessImportance
 		confirmBtn.Hide()
 
@@ -85,7 +87,7 @@ func (td *TODO) buildNotesContainer(taskId int64) *fyne.Container {
 			clipclip := td.App.Clipboard()
 			clipclip.SetContent(note.Note)
 
-			// Show checkmark when button is clicked
+			// Show info when note Text is copied
 			confirmBtn.Show()
 			cBtn.Disable()
 
