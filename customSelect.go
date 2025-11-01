@@ -1,13 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"image/color"
-	"log"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 	"golang.org/x/image/colornames"
@@ -41,7 +40,7 @@ func NewCustomSelect(bgColor map[string]color.Color, options []string, onSelecte
 	cs.button = widget.NewButton("", cs.showPopup)
 	cs.buttonText = canvas.NewText("Select...", &colornames.White)
 	cs.buttonText.Alignment = fyne.TextAlignCenter
-	cs.buttonText.TextStyle.Bold = true
+	cs.buttonText.TextStyle = fyne.TextStyle{Bold: true}
 	cs.buttonStack = container.NewStack(cs.buttonBackground, cs.buttonText, cs.button)
 	// Set the button container to transparent so it shows the rectange background
 	cs.button.Importance = widget.LowImportance
@@ -106,20 +105,23 @@ func (cs *CustomSelect) showPopup() {
 
 func (cs *CustomSelect) createOptionButton(option string) fyne.CanvasObject {
 	bgColor := cs.getOptionBackground(option)
-	log.Println("Background Color: ", bgColor, " for Option: ", option)
 	bg := canvas.NewRectangle(bgColor)
 
-	label := widget.NewLabel(option)
-	label.Alignment = fyne.TextAlignLeading
-	label.TextStyle.Bold = true
+	optionSpacer := "              "
+	pt := fmt.Sprintf("%s%s%s", optionSpacer, option, optionSpacer)
 
-	paddedContent := container.NewHBox(layout.NewSpacer(), label, layout.NewSpacer())
-	content := container.NewPadded(paddedContent)
+	ot := canvas.NewText(pt, &colornames.White)
+	ot.Alignment = fyne.TextAlignCenter
+	ot.TextStyle.Bold = true
 
-	stack := container.NewStack(bg, content)
+	padded := container.NewPadded(ot)
+	content := container.NewStack(
+		bg,
+		container.NewCenter(padded),
+	)
 
 	clickable := container.NewStack(
-		stack,
+		content,
 		widget.NewButton("", func() {
 			cs.SetSelected(option)
 			if cs.onSelected != nil {

@@ -1,5 +1,6 @@
 # TODO
 
+- Add attachement to notes or as a separate functionality
 - Change customSelect "hover" color to something a litle nicer
 - Add refresh to Priority change as well (just like status)
 - Create a new branch for Position Drag and Drop
@@ -20,6 +21,7 @@
 
 # DONE
 
+- (/) Popup fonts looks blur and does not follow the color of the other Text
 - (/) Add tab switchting with cmd+number
 - (/) Remove empty option in customSelect for both Status and Priority
 - (/) Make the CustomSelect text bold in popup menu
