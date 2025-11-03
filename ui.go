@@ -187,8 +187,8 @@ func (td *TODO) setSwitchTabs(at *container.AppTabs) {
 func (td *TODO) buildUI() *fyne.Container {
 	// Window
 	td.MainWindow = td.App.NewWindow("Me Do")
-	//td.MainWindow.Resize(fyne.NewSize(710, 410))
 	//td.MainWindow.SetFixedSize(true)
+	//td.MainWindow.Resize(fyne.NewSize(750, 410))
 	//td.MainWindow.CenterOnScreen()
 	td.MainWindow.SetMaster()
 
