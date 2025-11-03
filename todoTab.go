@@ -70,6 +70,7 @@ func (td *TODO) getTasksTable() *widget.Table {
 		},
 		func(i widget.TableCellID, o fyne.CanvasObject) {
 			taskRow := td.TODOTasks[i.Row]
+			endRow := len(td.TODOTasks) - 1
 			id := taskRow.ID
 
 			colName := TODODisplayColumns[i.Col]
@@ -78,7 +79,7 @@ func (td *TODO) getTasksTable() *widget.Table {
 			case "Position":
 				curPos := taskRow.Position
 
-				pc := td.getActionButtonsContainer(id, curPos, taskRow.Title)
+				pc := td.getActionButtonsContainer(endRow, i.Row, id, curPos, taskRow.Title)
 
 				o.(*fyne.Container).Objects = []fyne.CanvasObject{
 					pc,

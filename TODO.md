@@ -1,5 +1,6 @@
 # TODO
 
+- BUG: Using td.CriticalTasks in task getGenericTaskTable!!! need to use the currently selected Tab matching Array instead!!
 - Add attachement to notes or as a separate functionality
 - Change customSelect "hover" color to something a litle nicer
 - Add refresh to Priority change as well (just like status)
@@ -10,7 +11,6 @@
 - Add user info in DB for the future maybe?
 - BUG: Sometime auto-switching the Status to not started in UI when clicking in the task row
 - BUG: Position UP/DOWN seems off... probably related to switching some task to "Done"
-- Disable Up button on first row, disable down button in last row
 - Set focus to field in OnSelected Form automatically
 - Need to be able to set the default Value / Color on CustomSelect
 - Status and Priority background color should also show in Table
@@ -21,6 +21,7 @@
 
 # DONE
 
+- (/) Disable Up button on first row, disable down button in last row
 - (/) Popup fonts looks blur and does not follow the color of the other Text
 - (/) Add tab switchting with cmd+number
 - (/) Remove empty option in customSelect for both Status and Priority

@@ -40,7 +40,7 @@ func (td *TODO) getPriorityField(id int64) *CustomSelect {
 	return s
 }
 
-func (td *TODO) getActionButtonsContainer(id int64, curPos int64, title string) *fyne.Container {
+func (td *TODO) getActionButtonsContainer(endRow int, uiTableRow int, id int64, curPos int64, title string) *fyne.Container {
 	upBtn := widget.NewButtonWithIcon("", theme.MoveUpIcon(), func() {
 		err := td.DB.UpPosition(id, (curPos), "TODO")
 		if err != nil {
@@ -85,6 +85,14 @@ func (td *TODO) getActionButtonsContainer(id int64, curPos int64, title string) 
 
 		td.showNotesWindow(id, title)
 	})
+
+	if uiTableRow == 0 {
+		// Disable Up Position button
+		upBtn.Disable()
+	}
+	if endRow == uiTableRow {
+		downBtn.Disable()
+	}
 	pc := container.NewCenter(container.NewHBox(downBtn, upBtn, notesBtn))
 
 	return pc
@@ -246,7 +254,9 @@ func (td *TODO) getGenericTaskTable(origTab string) *widget.Table {
 			return ctr
 		},
 		func(i widget.TableCellID, o fyne.CanvasObject) {
+			// CriticalTasks???
 			taskRow := td.CriticalTasks[i.Row]
+			endRow := len(td.CriticalTasks) - 1
 			id := taskRow.ID
 
 			colName := TODODisplayColumns[i.Col]
@@ -255,7 +265,7 @@ func (td *TODO) getGenericTaskTable(origTab string) *widget.Table {
 			case "Position":
 				curPos := taskRow.Position
 
-				pc := td.getActionButtonsContainer(id, curPos, taskRow.Title)
+				pc := td.getActionButtonsContainer(endRow, i.Row, id, curPos, taskRow.Title)
 
 				o.(*fyne.Container).Objects = []fyne.CanvasObject{
 					pc,
