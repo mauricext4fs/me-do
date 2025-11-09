@@ -8,7 +8,6 @@ import (
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 	"golang.org/x/image/colornames"
@@ -316,26 +315,7 @@ func (td *TODO) getGenericTaskTable(origTab string) *widget.Table {
 		log.Println("Here is the row involved: ", taskRow, " with column name: ", colName)
 		if colName == "Title" {
 			log.Println("Value in cell: ", taskRow.Title)
-			entryTitle := widget.NewEntry()
-			fTitle := &widget.FormItem{
-				Text:   "Title",
-				Widget: entryTitle,
-			}
-			entryTitle.SetText(taskRow.Title)
-
-			dialog.ShowForm("Edit task: "+taskRow.Title, "Save", "Cancel",
-				[]*widget.FormItem{fTitle},
-				func(submited bool) {
-					if submited {
-						log.Println("Save was press: ", entryTitle.Text)
-						log.Println("Let's save ", entryTitle.Text, " to task id: ", taskRow.ID)
-						// Let's save this
-						taskRow.Title = entryTitle.Text
-						td.DB.UpdateTitle(taskRow.ID, entryTitle.Text)
-						td.LoadCriticalTasks()
-						td.UIElements.CriticalTaskTable.Refresh()
-					}
-				}, td.MainWindow)
+			td.ShowTaskTitleEditDialog(taskRow, td.MainWindow)
 		}
 	}
 

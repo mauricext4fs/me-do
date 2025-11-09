@@ -2,6 +2,8 @@ package main
 
 import (
 	"log"
+	"me-do/repository"
+	"time"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
@@ -38,6 +40,70 @@ type UIElements struct {
 	DBPathText            *canvas.Text
 	InProgressTimerId     int64
 	InProgressTimerTaskId int64
+}
+
+type TitleEditDialog struct {
+	dialog.Dialog
+	focusWidget fyne.Focusable
+	parent      fyne.Window
+}
+
+func NewTitleEditDialog(title, confirm, dismiss string, items []*widget.FormItem, callback func(bool), parent fyne.Window, focusOn fyne.Focusable) *TitleEditDialog {
+
+	bD := dialog.NewForm(title, confirm, dismiss, items, callback, parent)
+
+	d := &TitleEditDialog{
+		Dialog:      bD,
+		focusWidget: focusOn,
+		parent:      parent,
+	}
+	return d
+}
+
+// ????
+func (d *TitleEditDialog) Move() {
+
+}
+
+func (td *TODO) ShowTaskTitleEditDialog(taskRow repository.Tasks, parentWindow fyne.Window) {
+	entryTitle := widget.NewEntry()
+	fTitle := &widget.FormItem{
+		Text:   "Title",
+		Widget: entryTitle,
+	}
+	entryTitle.SetText(taskRow.Title)
+
+	editTitleForm := NewTitleEditDialog(
+		"Edit task: "+taskRow.Title,
+		"Save",
+		"Cancel",
+		[]*widget.FormItem{fTitle},
+		func(submited bool) {
+			if submited {
+				log.Println("Save was press: ", entryTitle.Text)
+				log.Println("Let's save ", entryTitle.Text, " to task id: ", taskRow.ID)
+				// Let's save this
+				taskRow.Title = entryTitle.Text
+				td.DB.UpdateTitle(taskRow.ID, entryTitle.Text)
+				td.LoadCriticalTasks()
+				td.UIElements.CriticalTaskTable.Refresh()
+			}
+		},
+		td.MainWindow,
+		entryTitle,
+	)
+	editTitleForm.Show()
+}
+
+func (d *TitleEditDialog) Show() {
+	d.Dialog.Show()
+	if d.focusWidget != nil {
+		//fyne.CurrentApp().Driver().CanvasForObject(d.FormDialog).Focus(d.focusWidget)
+		go func() {
+			time.Sleep(time.Millisecond * 50)
+			d.parent.Canvas().Focus(d.focusWidget)
+		}()
+	}
 }
 
 func (td *TODO) buildTabs() *container.AppTabs {

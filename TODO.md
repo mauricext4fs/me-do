@@ -1,5 +1,6 @@
 # TODO
 
+- Set focus to field in OnSelected Form (edit title) automatically
 - BUG: Using td.CriticalTasks in task getGenericTaskTable!!! need to use the currently selected Tab matching Array instead!!
 - Add attachement to notes or as a separate functionality
 - Change customSelect "hover" color to something a litle nicer
@@ -11,9 +12,7 @@
 - Add user info in DB for the future maybe?
 - BUG: Sometime auto-switching the Status to not started in UI when clicking in the task row
 - BUG: Position UP/DOWN seems off... probably related to switching some task to "Done"
-- Set focus to field in OnSelected Form automatically
 - Need to be able to set the default Value / Color on CustomSelect
-- Status and Priority background color should also show in Table
 - Delete task?
 - Limit the length of the Title field
 - Add comments / update
