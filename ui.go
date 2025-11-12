@@ -85,7 +85,8 @@ func (td *TODO) ShowTaskTitleEditDialog(taskRow repository.Tasks, parentWindow f
 				// Let's save this
 				taskRow.Title = entryTitle.Text
 				td.DB.UpdateTitle(taskRow.ID, entryTitle.Text)
-				td.LoadCriticalTasks()
+				log.Println("Current Tab: ", td.UIElements.CurrentActiveTab)
+				td.SwitchTabTo(td.UIElements.CurrentActiveTab)
 				td.UIElements.CriticalTaskTable.Refresh()
 			}
 		},
@@ -200,53 +201,57 @@ func (td *TODO) buildTabs() *container.AppTabs {
 	return tabs
 }
 
+func (td *TODO) SwitchTabTo(tab string) {
+	switch tab {
+	case "TODO":
+		td.UIElements.CurrentActiveTab = "TODO"
+		log.Println("TODO Tab switched!")
+		td.OnTabSwitchTODO()
+		// And refresh container
+		td.UIElements.TODOTaskListContainer.Refresh()
+	case "Critical":
+		td.UIElements.CurrentActiveTab = "Critical"
+		log.Println("Critical Tab switched!")
+		td.OnTabSwitchCritical()
+		// And refresh container
+		td.UIElements.CriticalTaskListContainer.Refresh()
+	case "Very High":
+		td.UIElements.CurrentActiveTab = "Very High"
+		log.Println("VeryHigh Tab switched!")
+		td.OnTabSwitchVeryHigh()
+		// And refresh container
+		td.UIElements.VeryHighTaskListContainer.Refresh()
+	case "High":
+		td.UIElements.CurrentActiveTab = "High"
+		log.Println("High Tab switched!")
+		td.OnTabSwitchHigh()
+		// And refresh container
+		td.UIElements.HighTaskListContainer.Refresh()
+	case "Medium":
+		td.UIElements.CurrentActiveTab = "Medium"
+		log.Println("Medium Tab switched!")
+		td.OnTabSwitchMedium()
+		// And refresh container
+		td.UIElements.MediumTaskListContainer.Refresh()
+	case "Low":
+		td.UIElements.CurrentActiveTab = "Low"
+		log.Println("Low Tab switched!")
+		td.OnTabSwitchLow()
+		// And refresh container
+		td.UIElements.LowTaskListContainer.Refresh()
+	case "Done":
+		td.UIElements.CurrentActiveTab = "Done"
+		log.Println("Done Tab switched!")
+		td.OnTabSwitchDone()
+		// And refresh container
+		td.UIElements.DoneTaskListContainer.Refresh()
+	}
+}
+
 func (td *TODO) setSwitchTabs(at *container.AppTabs) {
 	at.OnSelected = func(tab *container.TabItem) {
 		log.Println("Tab switching to: ", tab.Text)
-		switch tab.Text {
-		case "TODO":
-			td.UIElements.CurrentActiveTab = "TODO"
-			log.Println("TODO Tab switched!")
-			td.OnTabSwitchTODO()
-			// And refresh container
-			td.UIElements.TODOTaskListContainer.Refresh()
-		case "Critical":
-			td.UIElements.CurrentActiveTab = "Critical"
-			log.Println("Critical Tab switched!")
-			td.OnTabSwitchCritical()
-			// And refresh container
-			td.UIElements.CriticalTaskListContainer.Refresh()
-		case "Very High":
-			td.UIElements.CurrentActiveTab = "Very High"
-			log.Println("VeryHigh Tab switched!")
-			td.OnTabSwitchVeryHigh()
-			// And refresh container
-			td.UIElements.VeryHighTaskListContainer.Refresh()
-		case "High":
-			td.UIElements.CurrentActiveTab = "High"
-			log.Println("High Tab switched!")
-			td.OnTabSwitchHigh()
-			// And refresh container
-			td.UIElements.HighTaskListContainer.Refresh()
-		case "Medium":
-			td.UIElements.CurrentActiveTab = "Medium"
-			log.Println("Medium Tab switched!")
-			td.OnTabSwitchMedium()
-			// And refresh container
-			td.UIElements.MediumTaskListContainer.Refresh()
-		case "Low":
-			td.UIElements.CurrentActiveTab = "Low"
-			log.Println("Low Tab switched!")
-			td.OnTabSwitchLow()
-			// And refresh container
-			td.UIElements.LowTaskListContainer.Refresh()
-		case "Done":
-			td.UIElements.CurrentActiveTab = "Done"
-			log.Println("Done Tab switched!")
-			td.OnTabSwitchDone()
-			// And refresh container
-			td.UIElements.DoneTaskListContainer.Refresh()
-		}
+		td.SwitchTabTo(tab.Text)
 	}
 }
 
