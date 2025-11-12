@@ -102,7 +102,10 @@ func (d *TitleEditDialog) Show() {
 		//fyne.CurrentApp().Driver().CanvasForObject(d.FormDialog).Focus(d.focusWidget)
 		go func() {
 			time.Sleep(time.Millisecond * 50)
-			d.parent.Canvas().Focus(d.focusWidget)
+			fyne.Do(
+				func() {
+					d.parent.Canvas().Focus(d.focusWidget)
+				})
 		}()
 	}
 }
