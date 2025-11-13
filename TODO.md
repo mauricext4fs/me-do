@@ -1,6 +1,5 @@
 # TODO
 
-- Set focus to field in OnSelected Form (edit title) automatically
 - BUG: Using td.CriticalTasks in task getGenericTaskTable!!! need to use the currently selected Tab matching Array instead!!
 - Add attachement to notes or as a separate functionality
 - Change customSelect "hover" color to something a litle nicer
@@ -20,6 +19,7 @@
 
 # DONE
 
+- (/) Set focus to field in OnSelected Form (edit title) automatically
 - (/) Disable Up button on first row, disable down button in last row
 - (/) Popup fonts looks blur and does not follow the color of the other Text
 - (/) Add tab switchting with cmd+number
