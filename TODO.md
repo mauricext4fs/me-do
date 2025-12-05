@@ -1,5 +1,6 @@
 # TODO
 
+- BUG: New custom task list is not scrollable any longer.
 - BUG: Using td.CriticalTasks in task getGenericTaskTable!!! need to use the currently selected Tab matching Array instead!!
 - Add attachement to notes or as a separate functionality
 - Change customSelect "hover" color to something a litle nicer
