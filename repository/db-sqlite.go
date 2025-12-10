@@ -246,7 +246,7 @@ func (repo *SQLiteRepository) AllDoneTasks() ([]Tasks, error) {
 		WHERE
 			t.status = 'Done'
 		ORDER BY
-			pos ASC, t.id DESC
+			t.updated_at DESC, t.id DESC
 	`
 	rows, err := repo.Conn.Query(query)
 	if err != nil {
