@@ -1,5 +1,6 @@
 # TODO
 
+- BUG: Very High Tab scrollbar does not work.
 - Add some visual cue in the Task list when a Task has a Note.
 - BUG: Using td.CriticalTasks in task getGenericTaskTable!!! need to use the currently selected Tab matching Array instead!!
 - Add attachement to notes or as a separate functionality
