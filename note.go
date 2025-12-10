@@ -50,7 +50,9 @@ func (td *TODO) showNotesWindow(taskId int64, taskTitle string) {
 	v.Add(saveBtn)
 	v.Add(notesContainer)
 
-	w.SetContent(v)
+	scroll := container.NewScroll(v)
+
+	w.SetContent(scroll)
 	w.Resize(fyne.Size{Width: 1000, Height: 700})
 	w.Show()
 }

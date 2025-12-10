@@ -1,7 +1,6 @@
 # TODO
 
 - Add some visual cue in the Task list when a Task has a Note.
-- BUG: New custom task list is not scrollable any longer.
 - BUG: Using td.CriticalTasks in task getGenericTaskTable!!! need to use the currently selected Tab matching Array instead!!
 - Add attachement to notes or as a separate functionality
 - Change customSelect "hover" color to something a litle nicer
@@ -21,6 +20,7 @@
 
 # DONE
 
+- (/) Add: Notes listing should be scrollable.
 - (/) Set focus to field in OnSelected Form (edit title) automatically
 - (/) Disable Up button on first row, disable down button in last row
 - (/) Popup fonts looks blur and does not follow the color of the other Text
