@@ -1,10 +1,12 @@
 # TODO
 
+- BUG: Position of CustomSelect hover goes outside the screen for task at the bottom of the List.
 - BUG: Very High Tab scrollbar does not work.
+  (issue is that we use "CriticalTasks" for counting the elements for all Tabs!)
 - Add some visual cue in the Task list when a Task has a Note.
 - BUG: Using td.CriticalTasks in task getGenericTaskTable!!! need to use the currently selected Tab matching Array instead!!
-- Add attachement to notes or as a separate functionality
-- Change customSelect "hover" color to something a litle nicer
+- Add attachment to notes or as a separate functionality
+- Change customSelect "hover" color to something a little nicer
 - Add refresh to Priority change as well (just like status)
 - Create a new branch for Position Drag and Drop
 - IMPROVEMENT: Need to improve the up/down position... it's hard to use and the Position Number does not adjust properly when task are set to "Done".
