@@ -49,6 +49,19 @@ func (repo *SQLiteRepository) Migrate() error {
 		updated_by INTEGER DEFAULT 1
 	);
 
+	CREATE TABLE IF NOT EXISTS note_files (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		note_id INTEGER NOT NULL,
+		name TEXT NOT NULL,
+		type TEXT NOT NULL,
+		path TEXT NOT NULL,
+		deleted INTEGER DEFAULT 0,
+		created_at INTEGER DEFAULT 0,
+		created_by INTEGER DEFAULT 1,
+		updated_at INTEGER DEFAULT 0,
+		updated_by INTEGER DEFAULT 1
+	);
+
 	CREATE TABLE IF NOT EXISTS task_timers (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		task_id INTEGER NOT NULL,
@@ -708,6 +721,22 @@ func (repo *SQLiteRepository) GetNotes(taskId int64) ([]Notes, error) {
 	}
 
 	return all, nil
+}
+
+func (repo *SQLiteRepository) AddFileToNote(noteId int64, filename string, filepath string, filetype string) error {
+	query := `
+	INSERT INTO 
+		note_files
+		(note_id, filename, filepath, filetype, created_at, updated_at)
+	VALUES 
+		(?, ?, ?, ?, ?, ?);
+	`
+	_, err := repo.Conn.Exec(query, noteId, filename, filepath, filetype, time.Now().Unix(), time.Now().Unix())
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (repo *SQLiteRepository) StopRunawayTimer() {

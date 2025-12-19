@@ -2,11 +2,15 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"log"
+	"path/filepath"
 	"time"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/storage"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 )
@@ -114,4 +118,42 @@ func (td *TODO) buildNotesContainer(taskId int64) *fyne.Container {
 	}
 
 	return v
+}
+
+func (td *TODO) ShowNotesAttachmentOpenDialog() {
+	mainWin := td.MainWindow
+	fileDialog := dialog.NewFileOpen(func(reader fyne.URIReadCloser, err error) {
+		if err != nil {
+			dialog.ShowError(err, mainWin)
+			return
+		}
+
+		// Nothing was choosen
+		if reader == nil {
+			return
+		}
+
+		defer reader.Close()
+
+		fileURI := reader.URI()
+		filename := filepath.Base(fileURI.String())
+		fileExt := filepath.Ext(fileURI.String())
+
+		// Add to DB and use the id for storage
+		td.DB.AddFileToNote(1, filename, "notes/", fileExt)
+
+		data, err := io.ReadAll(reader)
+		if err != nil {
+			dialog.ShowError(err, mainWin)
+			return
+		}
+
+		td.InfoLog.Println(len(data), " Data uploaded!")
+
+	}, mainWin)
+	fileDialog.Show()
+	fileDialog.Resize(fyne.Size{Width: 900, Height: 1000})
+	ext := []string{".jpg", ".png", ".pdf"}
+	filter := storage.NewExtensionFileFilter(ext)
+	fileDialog.SetFilter(filter)
 }
