@@ -275,7 +275,7 @@ func (td *TODO) buildUI() *fyne.Container {
 	td.UIElements.DBPathText = pt
 
 	openBtn := widget.NewButtonWithIcon("Open existing DB", theme.DocumentIcon(), func() {
-		td.showFileOpenDialog()
+		td.showDBFileOpenDialog()
 		log.Println("open was clicked!")
 	})
 
@@ -307,7 +307,7 @@ func (td *TODO) getPlaceHolderFixedImage() *canvas.Image {
 	return img
 }
 
-func (td *TODO) showFileOpenDialog() {
+func (td *TODO) showDBFileOpenDialog() {
 	win := td.MainWindow
 	saveDialog := dialog.NewFileOpen(func(read fyne.URIReadCloser, err error) {
 		if err != nil {

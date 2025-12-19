@@ -1,5 +1,6 @@
 # TODO
 
+- Add Inline image to Notes
 - BUG: Position of CustomSelect hover goes outside the screen for task at the bottom of the List.
 - BUG: Very High Tab scrollbar does not work.
   (issue is that we use "CriticalTasks" for counting the elements for all Tabs!)
