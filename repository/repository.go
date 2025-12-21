@@ -33,7 +33,7 @@ type Repository interface {
 	DeleteTask(id int64) error
 	AddNote(taskId int64, note string) error
 	GetNotes(taskId int64) ([]Notes, error)
-	AddFileToNote(noteId int64, filename string, filetype string) error
+	AddFileToNote(noteId int64, filename string, filetype string) (int64, error)
 	StartTimer(taskId int64) (*Timers, error)
 	StopTimer(id int64) error
 	GetActiveTimerByTaskId(id int64) (int64, error)

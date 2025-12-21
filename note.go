@@ -54,7 +54,9 @@ func (td *TODO) showNotesWindow(taskId int64, taskTitle string) {
 	v.Add(saveBtn)
 
 	attachmentBtn := widget.NewButtonWithIcon("Attach File", theme.ContentAddIcon(), func() {
-		td.ShowNotesAttachmentOpenDialog()
+		// Fake note Id as the note may not be saved yet at that point
+		noteId := 1
+		td.ShowNotesAttachmentOpenDialog(int64(noteId))
 
 		// Then refresh the note list
 		notesContainer.RemoveAll()
@@ -131,7 +133,7 @@ func (td *TODO) buildNotesContainer(taskId int64) *fyne.Container {
 	return v
 }
 
-func (td *TODO) ShowNotesAttachmentOpenDialog() {
+func (td *TODO) ShowNotesAttachmentOpenDialog(noteId int64) {
 	mainWin := td.MainWindow
 	fileDialog := dialog.NewFileOpen(func(reader fyne.URIReadCloser, err error) {
 		if err != nil {
@@ -150,8 +152,14 @@ func (td *TODO) ShowNotesAttachmentOpenDialog() {
 		filename := filepath.Base(fileURI.String())
 		fileExt := filepath.Ext(fileURI.String())
 
+		log.Println("Adding file: ", filename, " added to note id: ", 1)
+
 		// Add to DB and use the id for storage
-		td.DB.AddFileToNote(1, filename, fileExt)
+		noteFileId, err := td.DB.AddFileToNote(1, filename, fileExt)
+		if err != nil {
+			log.Fatalln("Adding file info to the note_files table fail!  ", err)
+		}
+		log.Println("New note_files ID: ", noteFileId)
 
 		data, err := io.ReadAll(reader)
 		if err != nil {
@@ -163,7 +171,7 @@ func (td *TODO) ShowNotesAttachmentOpenDialog() {
 
 	}, mainWin)
 	fileDialog.Show()
-	fileDialog.Resize(fyne.Size{Width: 900, Height: 1000})
+	//fileDialog.Resize(fyne.Size{Width: 900, Height: 700})
 	ext := []string{".jpg", ".png", ".pdf"}
 	filter := storage.NewExtensionFileFilter(ext)
 	fileDialog.SetFilter(filter)

@@ -54,7 +54,6 @@ func (repo *SQLiteRepository) Migrate() error {
 		note_id INTEGER NOT NULL,
 		name TEXT NOT NULL,
 		type TEXT NOT NULL,
-		path TEXT NOT NULL,
 		deleted INTEGER DEFAULT 0,
 		created_at INTEGER DEFAULT 0,
 		created_by INTEGER DEFAULT 1,
@@ -723,20 +722,25 @@ func (repo *SQLiteRepository) GetNotes(taskId int64) ([]Notes, error) {
 	return all, nil
 }
 
-func (repo *SQLiteRepository) AddFileToNote(noteId int64, filename string, filetype string) error {
+func (repo *SQLiteRepository) AddFileToNote(noteId int64, filename string, filetype string) (int64, error) {
 	query := `
 	INSERT INTO 
 		note_files
-		(note_id, filename, filetype, created_at, updated_at)
+		(note_id, name, type, created_at, updated_at)
 	VALUES 
-		(?, ?, ?, ?, ?, ?);
+		(?, ?, ?, ?, ?);
 	`
-	_, err := repo.Conn.Exec(query, noteId, filename, filetype, time.Now().Unix(), time.Now().Unix())
+	res, err := repo.Conn.Exec(query, noteId, filename, filetype, time.Now().Unix(), time.Now().Unix())
 	if err != nil {
-		return err
+		return 0, err
 	}
 
-	return nil
+	id, err := res.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+
+	return id, err
 }
 
 func (repo *SQLiteRepository) StopRunawayTimer() {
