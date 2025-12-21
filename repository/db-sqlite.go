@@ -723,15 +723,15 @@ func (repo *SQLiteRepository) GetNotes(taskId int64) ([]Notes, error) {
 	return all, nil
 }
 
-func (repo *SQLiteRepository) AddFileToNote(noteId int64, filename string, filepath string, filetype string) error {
+func (repo *SQLiteRepository) AddFileToNote(noteId int64, filename string, filetype string) error {
 	query := `
 	INSERT INTO 
 		note_files
-		(note_id, filename, filepath, filetype, created_at, updated_at)
+		(note_id, filename, filetype, created_at, updated_at)
 	VALUES 
 		(?, ?, ?, ?, ?, ?);
 	`
-	_, err := repo.Conn.Exec(query, noteId, filename, filepath, filetype, time.Now().Unix(), time.Now().Unix())
+	_, err := repo.Conn.Exec(query, noteId, filename, filetype, time.Now().Unix(), time.Now().Unix())
 	if err != nil {
 		return err
 	}

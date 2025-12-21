@@ -52,6 +52,17 @@ func (td *TODO) showNotesWindow(taskId int64, taskTitle string) {
 	})
 	saveBtn.Alignment = widget.ButtonAlign(fyne.TextAlignTrailing)
 	v.Add(saveBtn)
+
+	attachmentBtn := widget.NewButtonWithIcon("Attach File", theme.ContentAddIcon(), func() {
+		td.ShowNotesAttachmentOpenDialog()
+
+		// Then refresh the note list
+		notesContainer.RemoveAll()
+		notesContainer.Add(td.buildNotesContainer(taskId))
+
+	})
+	v.Add(attachmentBtn)
+
 	v.Add(notesContainer)
 
 	scroll := container.NewScroll(v)
@@ -140,7 +151,7 @@ func (td *TODO) ShowNotesAttachmentOpenDialog() {
 		fileExt := filepath.Ext(fileURI.String())
 
 		// Add to DB and use the id for storage
-		td.DB.AddFileToNote(1, filename, "notes/", fileExt)
+		td.DB.AddFileToNote(1, filename, fileExt)
 
 		data, err := io.ReadAll(reader)
 		if err != nil {
