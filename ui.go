@@ -48,12 +48,31 @@ type TitleEditDialog struct {
 	parent      fyne.Window
 }
 
+type NoteFileDialog struct {
+	dialog.Dialog
+	focusWidget fyne.Focusable
+	parent      fyne.Window
+}
+
 func NewTitleEditDialog(title, confirm, dismiss string, items []*widget.FormItem, callback func(bool), parent fyne.Window, focusOn fyne.Focusable) *TitleEditDialog {
 
 	bD := dialog.NewForm(title, confirm, dismiss, items, callback, parent)
 
 	d := &TitleEditDialog{
 		Dialog:      bD,
+		focusWidget: focusOn,
+		parent:      parent,
+	}
+	return d
+}
+
+func NewNoteFileDialog(callback func(reader fyne.URIReadCloser, err error), parent fyne.Window, focusOn fyne.Focusable) *NoteFileDialog {
+
+	//bD := dialog.NewForm(title, confirm, dismiss, items, callback, parent)
+	bFD := dialog.NewFileOpen(callback, parent)
+
+	d := &NoteFileDialog{
+		Dialog:      bFD,
 		focusWidget: focusOn,
 		parent:      parent,
 	}
@@ -97,6 +116,20 @@ func (td *TODO) ShowTaskTitleEditDialog(taskRow repository.Tasks, parentWindow f
 }
 
 func (d *TitleEditDialog) Show() {
+	d.Dialog.Show()
+	if d.focusWidget != nil {
+		//fyne.CurrentApp().Driver().CanvasForObject(d.FormDialog).Focus(d.focusWidget)
+		go func() {
+			time.Sleep(time.Millisecond * 50)
+			fyne.Do(
+				func() {
+					d.parent.Canvas().Focus(d.focusWidget)
+				})
+		}()
+	}
+}
+
+func (d *NoteFileDialog) Show() {
 	d.Dialog.Show()
 	if d.focusWidget != nil {
 		//fyne.CurrentApp().Driver().CanvasForObject(d.FormDialog).Focus(d.focusWidget)

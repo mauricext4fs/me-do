@@ -10,7 +10,6 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
-	"fyne.io/fyne/v2/storage"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 )
@@ -56,7 +55,9 @@ func (td *TODO) showNotesWindow(taskId int64, taskTitle string) {
 	attachmentBtn := widget.NewButtonWithIcon("Attach File", theme.ContentAddIcon(), func() {
 		// Fake note Id as the note may not be saved yet at that point
 		noteId := 1
-		td.ShowNotesAttachmentOpenDialog(int64(noteId))
+		dialog := td.GetNotesAttachmentOpenDialog(int64(noteId))
+		dialog.Show()
+		dialog.Refresh()
 
 		// Then refresh the note list
 		notesContainer.RemoveAll()
@@ -133,9 +134,10 @@ func (td *TODO) buildNotesContainer(taskId int64) *fyne.Container {
 	return v
 }
 
-func (td *TODO) ShowNotesAttachmentOpenDialog(noteId int64) {
+func (td *TODO) GetNotesAttachmentOpenDialog(noteId int64) *NoteFileDialog {
 	mainWin := td.MainWindow
-	fileDialog := dialog.NewFileOpen(func(reader fyne.URIReadCloser, err error) {
+	//fileDialog := dialog.NewFileOpen(func(reader fyne.URIReadCloser, err error) {
+	fileDialog := NewNoteFileDialog(func(reader fyne.URIReadCloser, err error) {
 		if err != nil {
 			dialog.ShowError(err, mainWin)
 			return
@@ -169,10 +171,12 @@ func (td *TODO) ShowNotesAttachmentOpenDialog(noteId int64) {
 
 		td.InfoLog.Println(len(data), " Data uploaded!")
 
-	}, mainWin)
-	fileDialog.Show()
+	}, mainWin, nil)
+	//fileDialog.Show()
 	//fileDialog.Resize(fyne.Size{Width: 900, Height: 700})
-	ext := []string{".jpg", ".png", ".pdf"}
-	filter := storage.NewExtensionFileFilter(ext)
-	fileDialog.SetFilter(filter)
+	//ext := []string{".jpg", ".png", ".pdf"}
+	//filter := storage.NewExtensionFileFilter(ext)
+	//fileDialog.SetFilter(filter)
+
+	return fileDialog
 }
