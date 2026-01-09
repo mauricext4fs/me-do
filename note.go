@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"io"
 	"log"
@@ -10,6 +11,7 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/storage"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 )
@@ -169,7 +171,31 @@ func (td *TODO) GetNotesAttachmentOpenDialog(noteId int64) *NoteFileDialog {
 			return
 		}
 
+		fyneStorage := td.App.Storage().RootURI()
+		fyneFileUri, err := storage.Child(fyneStorage, filename)
+		if err != nil {
+			td.ErrorLog.Println("Cannot create fyne URI for saving new File")
+		}
+
+		writable, err := storage.CanWrite(fyneFileUri)
+		if err != nil || !writable {
+			td.ErrorLog.Println("Cannot write to fyne Storage at: ", fyneFileUri)
+		}
+
 		td.InfoLog.Println(len(data), " Data uploaded!")
+		td.InfoLog.Println("In Local Path: ", fyneFileUri)
+
+		writer, err := storage.Writer(fyneFileUri)
+		if err != nil {
+			td.ErrorLog.Println("Fail to create storage writer: ", err)
+		}
+
+		defer writer.Close()
+
+		_, err = io.Copy(writer, bytes.NewReader(data))
+		if err != nil {
+			td.ErrorLog.Println("Could not write data to Fyne storage: ", err)
+		}
 
 	}, mainWin, nil)
 	//fileDialog.Show()
