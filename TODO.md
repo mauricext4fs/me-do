@@ -1,6 +1,7 @@
 # TODO
 
 - Rename default DB
+- BUG: clicking up / down button in "Very High, High, Medium, Low" tab switch the view to the "Critical" tab
 - BUG: Notes File dialog Window should show on top
 - Add Inline image to Notes
 - BUG: Position of CustomSelect hover goes outside the screen for task at the bottom of the List.
