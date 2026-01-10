@@ -1,5 +1,6 @@
 # TODO
 
+- Move note files storage to it's own table
 - Rename default DB
 - BUG: clicking up / down button in "Very High, High, Medium, Low" tab switch the view to the "Critical" tab
 - BUG: Notes File dialog Window should show on top
