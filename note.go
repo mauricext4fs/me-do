@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"path/filepath"
+	"strconv"
 	"time"
 
 	"fyne.io/fyne/v2"
@@ -164,6 +165,9 @@ func (td *TODO) GetNotesAttachmentOpenDialog(noteId int64) *NoteFileDialog {
 			log.Fatalln("Adding file info to the note_files table fail!  ", err)
 		}
 		log.Println("New note_files ID: ", noteFileId)
+
+		// Replace original name with DB ID of the file
+		filename = fmt.Sprintf("%s%s", strconv.Itoa(int(noteFileId)), fileExt)
 
 		data, err := io.ReadAll(reader)
 		if err != nil {
