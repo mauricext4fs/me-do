@@ -160,7 +160,7 @@ func (td *TODO) GetNotesAttachmentOpenDialog(noteId int64) *NoteFileDialog {
 		log.Println("Adding file: ", filename, " added to note id: ", 1)
 
 		// Add to DB and use the id for storage
-		noteFileId, err := td.DB.AddFileToNote(1, filename, fileExt)
+		noteFileId, err := td.DB.AddFile(filename, fileExt)
 		if err != nil {
 			log.Fatalln("Adding file info to the note_files table fail!  ", err)
 		}

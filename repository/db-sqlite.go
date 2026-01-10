@@ -3,6 +3,7 @@ package repository
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"log"
 	"time"
 )
@@ -18,77 +19,9 @@ func NewSQLiteRepository(db *sql.DB) *SQLiteRepository {
 }
 
 func (repo *SQLiteRepository) Migrate() error {
-	query := `
-	
-	CREATE TABLE IF NOT EXISTS tasks (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		position INTEGER DEFAULT 0,
-		title TEXT NOT NULL,
-		status TEXT DEFAULT 'Not started',
-		priority TEXT DEFAULT 'Low',
-		created_at INTEGER DEFAULT 0,
-		created_by INTEGER DEFAULT 1,
-		updated_at INTEGER DEFAULT 0,
-		updated_by INTEGER DEFAULT 1
-	);
 
-	CREATE TABLE IF NOT EXISTS task_positions (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		task_id INTEGER NOT NULL,
-		position INTEGER NOT NULL,
-		label TEXT DEFAULT 'TODO'
-	);
+	query := fmt.Sprintf("%s\n%s", repo.GetDBSchema(), repo.GetDefaultData())
 
-	CREATE TABLE IF NOT EXISTS task_notes (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		task_id INTEGER NOT NULL,
-		note TEXT NOT NULL,
-		created_at INTEGER DEFAULT 0,
-		created_by INTEGER DEFAULT 1,
-		updated_at INTEGER DEFAULT 0,
-		updated_by INTEGER DEFAULT 1
-	);
-
-	CREATE TABLE IF NOT EXISTS note_files (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		note_id INTEGER NOT NULL,
-		name TEXT NOT NULL,
-		type TEXT NOT NULL,
-		deleted INTEGER DEFAULT 0,
-		created_at INTEGER DEFAULT 0,
-		created_by INTEGER DEFAULT 1,
-		updated_at INTEGER DEFAULT 0,
-		updated_by INTEGER DEFAULT 1
-	);
-
-	CREATE TABLE IF NOT EXISTS task_timers (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		task_id INTEGER NOT NULL,
-		start_timestamp INTEGER DEFAULT 0,
-		end_timestamp INTEGER DEFAULT 0,
-		created_by INTEGER DEFAULT 1
-	);
-	
-
-INSERT INTO
-tasks
-	(id, position, title)
-SELECT
-	1, 1, "Sample task"
-WHERE NOT EXISTS(
-	SELECT 1 FROM tasks WHERE id = 1
-);
- 
-INSERT INTO
-task_positions
-	(id, task_id, position, label)
-SELECT
-	1, 1, 1, "TODO"
-WHERE NOT EXISTS(
-	SELECT 1 FROM task_positions WHERE id = 1
-);
-	
-`
 	_, err := repo.Conn.Exec(query)
 	return err
 }
@@ -722,15 +655,36 @@ func (repo *SQLiteRepository) GetNotes(taskId int64) ([]Notes, error) {
 	return all, nil
 }
 
-func (repo *SQLiteRepository) AddFileToNote(noteId int64, filename string, filetype string) (int64, error) {
+func (repo *SQLiteRepository) AddFile(filename string, filetype string) (int64, error) {
 	query := `
 	INSERT INTO 
-		note_files
-		(note_id, name, type, created_at, updated_at)
+		files
+		(name, filetype, created_at)
 	VALUES 
-		(?, ?, ?, ?, ?);
+		(?, ?, ?);
 	`
-	res, err := repo.Conn.Exec(query, noteId, filename, filetype, time.Now().Unix(), time.Now().Unix())
+	res, err := repo.Conn.Exec(query, filename, filetype, time.Now().Unix())
+	if err != nil {
+		return 0, err
+	}
+
+	id, err := res.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+
+	return id, err
+}
+
+func (repo *SQLiteRepository) AddFileToTaskNote(fileId int64, noteId int64) (int64, error) {
+	query := `
+	INSERT INTO 
+		task_note_files
+		(file_id, note_id)
+	VALUES 
+		(?, ?);
+	`
+	res, err := repo.Conn.Exec(query, fileId, noteId)
 	if err != nil {
 		return 0, err
 	}
