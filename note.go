@@ -38,10 +38,12 @@ func (td *TODO) showNotesWindow(taskId int64, taskTitle string) {
 	saveBtn := widget.NewButtonWithIcon("Save", theme.DocumentSaveIcon(), func() {
 		log.Println("Save button pressed")
 		log.Println(m.Text)
-		err := td.DB.AddNote(taskId, m.Text)
+		noteId, err := td.DB.AddNote(taskId, m.Text)
 		if err != nil {
 			log.Println("Error saving note: ", err)
 		}
+
+		log.Println("Note Save with ID: ", noteId)
 
 		// If all is good reset the notes text field
 		m.SetText("")

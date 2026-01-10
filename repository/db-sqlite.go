@@ -603,7 +603,7 @@ func (repo *SQLiteRepository) DeleteTask(id int64) error {
 
 }
 
-func (repo *SQLiteRepository) AddNote(taskId int64, note string) error {
+func (repo *SQLiteRepository) AddNote(taskId int64, note string) (int64, error) {
 	query := `
 	INSERT INTO 
 		task_notes
@@ -611,12 +611,18 @@ func (repo *SQLiteRepository) AddNote(taskId int64, note string) error {
 	VALUES 
 		(?, ?, ?, ?);
 	`
-	_, err := repo.Conn.Exec(query, taskId, note, time.Now().Unix(), time.Now().Unix())
+	res, err := repo.Conn.Exec(query, taskId, note, time.Now().Unix(), time.Now().Unix())
+
 	if err != nil {
-		return err
+		return 0, err
 	}
 
-	return nil
+	id, err := res.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+
+	return id, err
 }
 
 func (repo *SQLiteRepository) GetNotes(taskId int64) ([]Notes, error) {

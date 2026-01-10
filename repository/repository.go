@@ -31,7 +31,7 @@ type Repository interface {
 	UpdatePriority(id int64, status string) error
 	UpdateTitle(id int64, title string) error
 	DeleteTask(id int64) error
-	AddNote(taskId int64, note string) error
+	AddNote(taskId int64, note string) (int64, error)
 	GetNotes(taskId int64) ([]Notes, error)
 	AddFile(filename string, filetype string) (int64, error)
 	AddFileToTaskNote(fileId int64, noteId int64) (int64, error)
