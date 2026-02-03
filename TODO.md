@@ -1,7 +1,8 @@
 # TODO
 
+- ADD: Edit exiting note maybe?
 - Move note files storage to it's own table
-- Rename default DB
+- Rename default DB file
 - BUG: clicking up / down button in "Very High, High, Medium, Low" tab switch the view to the "Critical" tab
 - BUG: Notes File dialog Window should show on top
 - Add Inline image to Notes
