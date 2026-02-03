@@ -1,5 +1,6 @@
 # TODO
 
+- BUG: Uploaded Files array should be save with other notes when files is not saved!
 - ADD: Edit exiting note maybe?
 - Move note files storage to it's own table
 - Rename default DB file
