@@ -19,12 +19,13 @@ import (
 )
 
 var noteFiles []repository.File
+var noteWindow fyne.Window
 
 func (td *TODO) showNotesWindow(taskId int64, taskTitle string) {
 
 	// Create Window
 	wTitle := fmt.Sprintf("Notes for task: %s", taskTitle)
-	w := td.App.NewWindow(wTitle)
+	noteWindow = td.App.NewWindow(wTitle)
 
 	v := container.NewVBox()
 	l := widget.NewLabel("New Note: ")
@@ -92,9 +93,9 @@ func (td *TODO) showNotesWindow(taskId int64, taskTitle string) {
 
 	scroll := container.NewScroll(v)
 
-	w.SetContent(scroll)
-	w.Resize(fyne.Size{Width: 1000, Height: 700})
-	w.Show()
+	noteWindow.SetContent(scroll)
+	noteWindow.Resize(fyne.Size{Width: 1000, Height: 700})
+	noteWindow.Show()
 }
 
 func (td *TODO) buildNotesContainer(taskId int64) *fyne.Container {
@@ -157,7 +158,7 @@ func (td *TODO) buildNotesContainer(taskId int64) *fyne.Container {
 }
 
 func (td *TODO) GetNotesAttachmentOpenDialog(noteId int64) *NoteFileDialog {
-	mainWin := td.MainWindow
+	mainWin := noteWindow
 	fileDialog := NewNoteFileDialog(func(reader fyne.URIReadCloser, err error) {
 		if err != nil {
 			dialog.ShowError(err, mainWin)
