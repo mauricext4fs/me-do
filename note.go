@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"me-do/repository"
 	"path/filepath"
 	"strconv"
 	"time"
@@ -16,6 +17,8 @@ import (
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 )
+
+var noteFiles []repository.File
 
 func (td *TODO) showNotesWindow(taskId int64, taskTitle string) {
 
@@ -45,9 +48,23 @@ func (td *TODO) showNotesWindow(taskId int64, taskTitle string) {
 
 		log.Println("Note Save with ID: ", noteId)
 
+		// Save Files to Note
+		for i := range noteFiles {
+			file := noteFiles[i]
+			fileId := file.ID
+
+			td.InfoLog.Println("Adding fileId: ", fileId, " to noteId: ", noteId)
+			_, err := td.DB.AddFileToTaskNote(fileId, noteId)
+			if err != nil {
+				td.InfoLog.Println("Error linking file to Note: ", err)
+			}
+		}
+
 		// If all is good reset the notes text field
 		m.SetText("")
 		m.Refresh()
+		// And the Files array
+		noteFiles = nil
 
 		// Then refresh the note list
 		notesContainer.RemoveAll()
@@ -141,7 +158,6 @@ func (td *TODO) buildNotesContainer(taskId int64) *fyne.Container {
 
 func (td *TODO) GetNotesAttachmentOpenDialog(noteId int64) *NoteFileDialog {
 	mainWin := td.MainWindow
-	//fileDialog := dialog.NewFileOpen(func(reader fyne.URIReadCloser, err error) {
 	fileDialog := NewNoteFileDialog(func(reader fyne.URIReadCloser, err error) {
 		if err != nil {
 			dialog.ShowError(err, mainWin)
@@ -162,14 +178,14 @@ func (td *TODO) GetNotesAttachmentOpenDialog(noteId int64) *NoteFileDialog {
 		log.Println("Adding file: ", filename, " added to note id: ", 1)
 
 		// Add to DB and use the id for storage
-		noteFileId, err := td.DB.AddFile(filename, fileExt)
+		fileId, err := td.DB.AddFile(filename, fileExt)
 		if err != nil {
 			log.Fatalln("Adding file info to the note_files table fail!  ", err)
 		}
-		log.Println("New note_files ID: ", noteFileId)
+		log.Println("New note_files ID: ", fileId)
 
 		// Replace original name with DB ID of the file
-		filename = fmt.Sprintf("%s%s", strconv.Itoa(int(noteFileId)), fileExt)
+		filename = fmt.Sprintf("%s%s", strconv.Itoa(int(fileId)), fileExt)
 
 		data, err := io.ReadAll(reader)
 		if err != nil {
@@ -202,6 +218,12 @@ func (td *TODO) GetNotesAttachmentOpenDialog(noteId int64) *NoteFileDialog {
 		if err != nil {
 			td.ErrorLog.Println("Could not write data to Fyne storage: ", err)
 		}
+
+		// Add to global noteFiles
+		fileStruct := repository.File{ID: fileId}
+		noteFiles = append(noteFiles, fileStruct)
+
+		log.Println("noteFiles: ", noteFiles)
 
 	}, mainWin, nil)
 	//fileDialog.Show()

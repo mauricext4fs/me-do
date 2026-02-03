@@ -81,6 +81,10 @@ type Count struct {
 	Count int64 `json:"id"`
 }
 
+type File struct {
+	ID int64 `json:"id"`
+}
+
 type TaskLabel struct {
 	ID       int64  `json:"id"`
 	Position int64  `json:"position"`

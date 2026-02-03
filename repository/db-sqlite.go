@@ -639,6 +639,7 @@ func (repo *SQLiteRepository) GetNotes(taskId int64) ([]Notes, error) {
 	defer rows.Close()
 
 	var all []Notes
+
 	for rows.Next() {
 		var n Notes
 		var cA int64
