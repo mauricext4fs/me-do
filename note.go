@@ -228,7 +228,7 @@ func (td *TODO) GetNotesAttachmentOpenDialog(noteId int64) *NoteFileDialog {
 
 	}, mainWin, nil)
 	//fileDialog.Show()
-	//fileDialog.Resize(fyne.Size{Width: 900, Height: 700})
+	fileDialog.Resize(fyne.Size{Width: 700, Height: 900})
 	//ext := []string{".jpg", ".png", ".pdf"}
 	//filter := storage.NewExtensionFileFilter(ext)
 	//fileDialog.SetFilter(filter)
