@@ -179,6 +179,14 @@ func (td *TODO) GetNotesAttachmentOpenDialog(noteId int64) *NoteFileDialog {
 
 		log.Println("Adding file: ", filename, " added to note id: ", 1)
 
+		ext := []string{".jpg", ".jpeg", ".png", ".pdf"}
+		filter := storage.NewExtensionFileFilter(ext)
+
+		if !filter.Matches(fileURI) {
+			dialog.ShowError(errors.New("File not supported "), mainWin)
+			return
+		}
+
 		// Add to DB and use the id for storage
 		fileId, err := td.DB.AddFile(filename, fileExt)
 		if err != nil {
@@ -199,13 +207,6 @@ func (td *TODO) GetNotesAttachmentOpenDialog(noteId int64) *NoteFileDialog {
 		fyneFileUri, err := storage.Child(fyneStorage, filename)
 		if err != nil {
 			td.ErrorLog.Println("Cannot create fyne URI for saving new File")
-		}
-
-		ext := []string{".jpg", ".png", ".pdf"}
-		filter := storage.NewExtensionFileFilter(ext)
-		if !filter.Matches(fyneFileUri) {
-			dialog.ShowError(errors.New("File not supported "), mainWin)
-			return
 		}
 
 		writable, err := storage.CanWrite(fyneFileUri)
