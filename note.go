@@ -179,7 +179,7 @@ func (td *TODO) GetNotesAttachmentOpenDialog(noteId int64) *NoteFileDialog {
 
 		log.Println("Adding file: ", filename, " added to note id: ", 1)
 
-		ext := []string{".jpg", ".jpeg", ".png", ".pdf"}
+		ext := []string{".jpg", ".jpeg", ".png", ".gif", ".svg", ".heic", ".bmp", ".tiff", ".webp", ".raw", ".pdf", ".txt", ".rtf", ".doc", ".docx", ".csv", ".xls", ".xlsx", ".ppt", ".pptx", ".odt", ".ods", ".odp", ".odg"}
 		filter := storage.NewExtensionFileFilter(ext)
 
 		if !filter.Matches(fileURI) {
