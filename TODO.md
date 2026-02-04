@@ -1,11 +1,10 @@
 # TODO
 
+- IMPROVEMENT: Uploaded files for Notes should be stored in a specific namespace
 - BUG: Uploaded Files array should be save with other notes when files is not saved!
-- ADD: Edit exiting note maybe?
-- Move note files storage to it's own table
+- ADD: Edit existing note maybe?
 - Rename default DB file
 - BUG: clicking up / down button in "Very High, High, Medium, Low" tab switch the view to the "Critical" tab
-- BUG: Notes File dialog Window should show on top
 - Add Inline image to Notes
 - BUG: Position of CustomSelect hover goes outside the screen for task at the bottom of the List.
 - BUG: Very High Tab scrollbar does not work.
@@ -16,7 +15,7 @@
 - Change customSelect "hover" color to something a little nicer
 - Add refresh to Priority change as well (just like status)
 - Create a new branch for Position Drag and Drop
-- IMPROVEMENT: Need to improve the up/down position... it's hard to use and the Position Number does not adjust properly when task are set to "Done".
+- IMPROVEMENT: Need to improve the up/down position... It is currently hard to use and the Position Number does not adjust properly when task are set to "Done".
 - Auto-refresh the updated_at field
 - Split task in two rows and add timer / Total time
 - Add user info in DB for the future maybe?
@@ -30,6 +29,8 @@
 
 # DONE
 
+- (/) BUG: Notes File dialog Window should show on top
+- (/) Move note files storage to it's own table
 - (/) Add: Notes listing should be scrollable.
 - (/) Set focus to field in OnSelected Form (edit title) automatically
 - (/) Disable Up button on first row, disable down button in last row
