@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -200,6 +201,13 @@ func (td *TODO) GetNotesAttachmentOpenDialog(noteId int64) *NoteFileDialog {
 			td.ErrorLog.Println("Cannot create fyne URI for saving new File")
 		}
 
+		ext := []string{".jpg", ".png", ".pdf"}
+		filter := storage.NewExtensionFileFilter(ext)
+		if !filter.Matches(fyneFileUri) {
+			dialog.ShowError(errors.New("File not supported "), mainWin)
+			return
+		}
+
 		writable, err := storage.CanWrite(fyneFileUri)
 		if err != nil || !writable {
 			td.ErrorLog.Println("Cannot write to fyne Storage at: ", fyneFileUri)
@@ -229,8 +237,7 @@ func (td *TODO) GetNotesAttachmentOpenDialog(noteId int64) *NoteFileDialog {
 	}, mainWin, nil)
 	//fileDialog.Show()
 	fileDialog.Resize(fyne.Size{Width: 700, Height: 900})
-	//ext := []string{".jpg", ".png", ".pdf"}
-	//filter := storage.NewExtensionFileFilter(ext)
+
 	//fileDialog.SetFilter(filter)
 
 	return fileDialog
