@@ -203,8 +203,7 @@ func (td *TODO) GetNotesAttachmentOpenDialog(noteId int64) *NoteFileDialog {
 			return
 		}
 
-		fyneStorage := td.App.Storage().RootURI()
-		fyneFileUri, err := storage.Child(fyneStorage, filename)
+		fyneFileUri, err := storage.Child(td.UserFilesURI, filename)
 		if err != nil {
 			td.ErrorLog.Println("Cannot create fyne URI for saving new File")
 		}

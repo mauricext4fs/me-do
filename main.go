@@ -14,11 +14,14 @@ import (
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
+	"fyne.io/fyne/v2/storage"
 
 	_ "github.com/glebarez/go-sqlite"
 )
 
 type TODO struct {
+	UserFilesURI fyne.URI
+
 	App           fyne.App
 	InfoLog       *log.Logger
 	ErrorLog      *log.Logger
@@ -41,6 +44,8 @@ func main() {
 
 	// Setting default DB location value to Fyne default
 	td.DefaultDBPath = td.App.Storage().RootURI().Path() + "/sql.db"
+
+	td.UserFilesURI = td.setupStorage()
 
 	// Adding loggers
 	td.InfoLog = log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
@@ -97,6 +102,35 @@ func (td *TODO) connectSQL(path string) (*sql.DB, error) {
 	log.Println("DB: ", td.App.Preferences().String("currentDBPath"), " Opened!")
 
 	return db, nil
+}
+
+func (td *TODO) setupStorage() fyne.URI {
+
+	if td.UserFilesURI != nil {
+		// already setuped
+		return td.UserFilesURI
+	}
+
+	fyneStorage := td.App.Storage().RootURI()
+	uploadStorageURI, err := storage.Child(fyneStorage, "UserFiles")
+	if err != nil {
+		log.Fatalln("Cannot create fyne URI for saving User Files locally : ", err)
+	}
+	exist, err := storage.CanList(uploadStorageURI)
+	if err != nil {
+		log.Fatalln("Something went wrong accessing local storage: ", err)
+	}
+
+	// If not existing let's create it
+	if !exist {
+		err = storage.CreateListable(uploadStorageURI)
+		if err != nil {
+			log.Fatalln("Cannot create directory: ", uploadStorageURI.String(), "\n", err)
+		}
+
+	}
+
+	return uploadStorageURI
 }
 
 func (td *TODO) setupDB(sqlDB *sql.DB) {

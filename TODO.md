@@ -1,6 +1,5 @@
 # TODO
 
-- IMPROVEMENT: Uploaded files for Notes should be stored in a specific namespace
 - BUG: Uploaded Files array should be save with other notes when files is not saved!
 - ADD: Edit existing note maybe?
 - Rename default DB file
@@ -29,6 +28,7 @@
 
 # DONE
 
+- (/) IMPROVEMENT: Uploaded files for Notes should be stored in a specific namespace
 - (/) BUG: Notes File dialog Window should show on top
 - (/) Move note files storage to it's own table
 - (/) Add: Notes listing should be scrollable.
