@@ -704,6 +704,42 @@ func (repo *SQLiteRepository) AddFileToTaskNote(fileId int64, noteId int64) (int
 	return id, err
 }
 
+func (repo *SQLiteRepository) GetNoteFiles(noteId int64) ([]File, error) {
+	query := `
+	SELECT f.id, f.name, f.filetype, f.created_at, f.created_by
+	FROM files f
+	LEFT JOIN task_note_files t ON (f.id = t.file_id)
+	WHERE t.note_id = ?
+	ORDER BY f.created_at DESC
+	`
+	rows, err := repo.Conn.Query(query, noteId)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var all []File
+
+	for rows.Next() {
+		var f File
+		var cA int64
+		err := rows.Scan(
+			&f.ID,
+			&f.Name,
+			&f.FileType,
+			&cA,
+			&f.CreatedBy,
+		)
+		if err != nil {
+			return nil, err
+		}
+		f.CreatedAt = time.Unix(cA, 0)
+		all = append(all, f)
+	}
+
+	return all, nil
+}
+
 func (repo *SQLiteRepository) StopRunawayTimer() {
 
 }

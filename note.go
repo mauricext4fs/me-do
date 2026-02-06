@@ -125,6 +125,22 @@ func (td *TODO) buildNotesContainer(taskId int64) *fyne.Container {
 		confirmBtn.Importance = widget.SuccessImportance
 		confirmBtn.Hide()
 
+		// Show Attachment
+		atts, err := td.DB.GetNoteFiles(note.ID)
+		if err != nil {
+			td.ErrorLog.Println("Error: ", err)
+		}
+
+		for aIdx := range atts {
+			if aIdx == 0 {
+				fL := widget.NewLabel("Files: ")
+				v.Add(fL)
+			}
+			aT := atts[aIdx]
+			aL := widget.NewLabel(aT.Name)
+			v.Add(aL)
+		}
+
 		// Add copy button
 		cBtn := widget.NewButtonWithIcon("Copy Text", theme.ContentCopyIcon(), nil)
 		cBtn.OnTapped = func() {

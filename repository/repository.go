@@ -35,6 +35,7 @@ type Repository interface {
 	GetNotes(taskId int64) ([]Notes, error)
 	AddFile(filename string, filetype string) (int64, error)
 	AddFileToTaskNote(fileId int64, noteId int64) (int64, error)
+	GetNoteFiles(noteId int64) ([]File, error)
 	StartTimer(taskId int64) (*Timers, error)
 	StopTimer(id int64) error
 	GetActiveTimerByTaskId(id int64) (int64, error)
@@ -82,7 +83,11 @@ type Count struct {
 }
 
 type File struct {
-	ID int64 `json:"id"`
+	ID        int64     `json:"id"`
+	Name      string    `json:"name"`
+	FileType  string    `json:"filetype"`
+	CreatedAt time.Time `json:"created_at"`
+	CreatedBy int64     `json:"created_by"`
 }
 
 type TaskLabel struct {

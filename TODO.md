@@ -1,6 +1,7 @@
 # TODO
 
-- BUG: Uploaded Files array should be save with other notes when files is not saved!
+- ADD: Show attachment files in Notes
+- BUG: Uploaded Files array should not be save with other notes when files is not saved!
 - ADD: Edit existing note maybe?
 - Rename default DB file
 - BUG: clicking up / down button in "Very High, High, Medium, Low" tab switch the view to the "Critical" tab
