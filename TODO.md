@@ -1,5 +1,6 @@
 # TODO
 
+- IMPROVEMENT: File not showing up after upload on adding a new note (before saving)
 - ADD: Show attachment files in Notes
 - BUG: Uploaded Files array should not be save with other notes when files is not saved!
 - ADD: Edit existing note maybe?
