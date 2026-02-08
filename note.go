@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"image/color"
 	"io"
 	"log"
 	"me-do/repository"
@@ -12,6 +13,7 @@ import (
 	"time"
 
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/storage"
@@ -125,22 +127,6 @@ func (td *TODO) buildNotesContainer(taskId int64) *fyne.Container {
 		confirmBtn.Importance = widget.SuccessImportance
 		confirmBtn.Hide()
 
-		// Show Attachment
-		atts, err := td.DB.GetNoteFiles(note.ID)
-		if err != nil {
-			td.ErrorLog.Println("Error: ", err)
-		}
-
-		for aIdx := range atts {
-			if aIdx == 0 {
-				fL := widget.NewLabel("Files: ")
-				v.Add(fL)
-			}
-			aT := atts[aIdx]
-			aL := widget.NewLabel(aT.Name)
-			v.Add(aL)
-		}
-
 		// Add copy button
 		cBtn := widget.NewButtonWithIcon("Copy Text", theme.ContentCopyIcon(), nil)
 		cBtn.OnTapped = func() {
@@ -169,9 +155,40 @@ func (td *TODO) buildNotesContainer(taskId int64) *fyne.Container {
 
 		v.Add(bRow)
 
+		// Show Attachment
+		files, err := td.DB.GetNoteFiles(note.ID)
+		if err != nil {
+			td.ErrorLog.Println("Error: ", err)
+		}
+
+		// Show Upload Files, if any
+		if len(files) > 0 {
+			fG := td.GetFilesListContainer(files)
+			v.Add(fG)
+		}
 	}
 
 	return v
+}
+
+func (td *TODO) GetFilesListContainer(files []repository.File) *widget.Card {
+	// Files list
+	fVB := container.NewVBox()
+	fTG := widget.NewTextGrid()
+	for fIdx := range files {
+		f := files[fIdx]
+		fTG.Append(f.Name)
+	}
+	fVB.Add(container.NewPadded())
+	fVB.Add(fTG)
+	nL := container.NewStack(
+		canvas.NewRectangle(color.RGBA{R: 50, G: 164, B: 223, A: 67}),
+		container.NewPadded(fTG),
+	)
+
+	fG := widget.NewCard("", "Files", nL)
+
+	return fG
 }
 
 func (td *TODO) GetNotesAttachmentOpenDialog(noteId int64) *NoteFileDialog {
