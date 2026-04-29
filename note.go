@@ -22,6 +22,8 @@ import (
 )
 
 var noteFiles []repository.File
+var NotSavedFilesList widget.TextGrid
+var NotSavedFileBox fyne.Container
 var noteWindow fyne.Window
 
 func (td *TODO) showNotesWindow(taskId int64, taskTitle string) {
@@ -34,13 +36,38 @@ func (td *TODO) showNotesWindow(taskId int64, taskTitle string) {
 	l := widget.NewLabel("New Note: ")
 	v.Add(l)
 	m := widget.NewMultiLineEntry()
-	m.SetPlaceHolder("Write new note here")
+	m.SetPlaceHolder("Text")
 	m.SetMinRowsVisible(10)
 	v.Add(m)
 
 	// Notes container
 	notesContainer := container.NewHBox()
 	notesContainer.Add(td.buildNotesContainer(taskId))
+
+	attachmentBtn := widget.NewButtonWithIcon("Attach File", theme.ContentAddIcon(), func() {
+		// Fake note Id as the note may not be saved yet at that point
+		noteId := 1
+		dialog := td.GetNotesAttachmentOpenDialog(int64(noteId))
+		dialog.Show()
+		dialog.Refresh()
+
+		// Then refresh the note list
+		notesContainer.RemoveAll()
+		notesContainer.Add(td.buildNotesContainer(taskId))
+
+	})
+	v.Add(attachmentBtn)
+
+	NotSavedFilesList := widget.NewTextGrid()
+
+	NotSavedFileBox := container.NewStack(
+		canvas.NewRectangle(color.RGBA{R: 255, G: 1, B: 1, A: 120}),
+		NotSavedFilesList,
+	)
+	notSavedFileCard := widget.NewCard("", "Unsaved Files", NotSavedFileBox)
+	v.Add(notSavedFileCard)
+
+	NotSavedFilesList.Append("No Files uploaded")
 
 	saveBtn := widget.NewButtonWithIcon("Save", theme.DocumentSaveIcon(), func() {
 		log.Println("Save button pressed")
@@ -77,20 +104,6 @@ func (td *TODO) showNotesWindow(taskId int64, taskTitle string) {
 	})
 	saveBtn.Alignment = widget.ButtonAlign(fyne.TextAlignTrailing)
 	v.Add(saveBtn)
-
-	attachmentBtn := widget.NewButtonWithIcon("Attach File", theme.ContentAddIcon(), func() {
-		// Fake note Id as the note may not be saved yet at that point
-		noteId := 1
-		dialog := td.GetNotesAttachmentOpenDialog(int64(noteId))
-		dialog.Show()
-		dialog.Refresh()
-
-		// Then refresh the note list
-		notesContainer.RemoveAll()
-		notesContainer.Add(td.buildNotesContainer(taskId))
-
-	})
-	v.Add(attachmentBtn)
 
 	v.Add(notesContainer)
 
@@ -169,6 +182,27 @@ func (td *TODO) buildNotesContainer(taskId int64) *fyne.Container {
 	}
 
 	return v
+}
+
+func (td *TODO) GetUnsaedFilesListContainer(files []repository.File) *widget.Card {
+
+	// Files list
+	fVB := container.NewVBox()
+	fTG := widget.NewTextGrid()
+	for fIdx := range files {
+		f := files[fIdx]
+		fTG.Append(f.Name)
+	}
+	fVB.Add(container.NewPadded())
+	fVB.Add(fTG)
+	nL := container.NewStack(
+		canvas.NewRectangle(color.RGBA{R: 255, G: 1, B: 1, A: 120}),
+		container.NewPadded(fTG),
+	)
+
+	fG := widget.NewCard("", "Unsaved Files", nL)
+
+	return fG
 }
 
 func (td *TODO) GetFilesListContainer(files []repository.File) *widget.Card {
@@ -264,6 +298,13 @@ func (td *TODO) GetNotesAttachmentOpenDialog(noteId int64) *NoteFileDialog {
 		// Add to global noteFiles
 		fileStruct := repository.File{ID: fileId}
 		noteFiles = append(noteFiles, fileStruct)
+
+		// Add to list of files that are not saved yet to the note
+		NotSavedFilesList.Append(fileStruct.Name)
+		NotSavedFilesList.Append("proky doubled!\n\n")
+		NotSavedFilesList.Refresh()
+		NotSavedFilesList.BaseWidget.Hide()
+		NotSavedFileBox.Refresh()
 
 		log.Println("noteFiles: ", noteFiles)
 
