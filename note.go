@@ -21,9 +21,9 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-var noteFiles []repository.File
-var NotSavedFilesList widget.TextGrid
-var NotSavedFileBox fyne.Container
+var NoteFiles []repository.File
+var NotSavedFilesList *widget.TextGrid
+var NotSavedFileBox *fyne.Container
 var noteWindow fyne.Window
 
 func (td *TODO) showNotesWindow(taskId int64, taskTitle string) {
@@ -58,16 +58,16 @@ func (td *TODO) showNotesWindow(taskId int64, taskTitle string) {
 	})
 	v.Add(attachmentBtn)
 
-	NotSavedFilesList := widget.NewTextGrid()
+	NotSavedFilesList = widget.NewTextGrid()
 
-	NotSavedFileBox := container.NewStack(
+	NotSavedFileBox = container.NewStack(
 		canvas.NewRectangle(color.RGBA{R: 255, G: 1, B: 1, A: 120}),
 		NotSavedFilesList,
 	)
-	notSavedFileCard := widget.NewCard("", "Unsaved Files", NotSavedFileBox)
+	notSavedFileCard := widget.NewCard("", "Uploaded Files", NotSavedFileBox)
 	v.Add(notSavedFileCard)
 
-	NotSavedFilesList.Append("No Files uploaded")
+	NotSavedFilesList.Append(" ")
 
 	saveBtn := widget.NewButtonWithIcon("Save", theme.DocumentSaveIcon(), func() {
 		log.Println("Save button pressed")
@@ -80,8 +80,8 @@ func (td *TODO) showNotesWindow(taskId int64, taskTitle string) {
 		log.Println("Note Save with ID: ", noteId)
 
 		// Save Files to Note
-		for i := range noteFiles {
-			file := noteFiles[i]
+		for i := range NoteFiles {
+			file := NoteFiles[i]
 			fileId := file.ID
 
 			td.InfoLog.Println("Adding fileId: ", fileId, " to noteId: ", noteId)
@@ -95,7 +95,7 @@ func (td *TODO) showNotesWindow(taskId int64, taskTitle string) {
 		m.SetText("")
 		m.Refresh()
 		// And the Files array
-		noteFiles = nil
+		NoteFiles = nil
 
 		// Then refresh the note list
 		notesContainer.RemoveAll()
@@ -184,7 +184,7 @@ func (td *TODO) buildNotesContainer(taskId int64) *fyne.Container {
 	return v
 }
 
-func (td *TODO) GetUnsaedFilesListContainer(files []repository.File) *widget.Card {
+func (td *TODO) GetNotYetSavedFilesListContainer(files []repository.File) *widget.Card {
 
 	// Files list
 	fVB := container.NewVBox()
@@ -241,10 +241,10 @@ func (td *TODO) GetNotesAttachmentOpenDialog(noteId int64) *NoteFileDialog {
 		defer reader.Close()
 
 		fileURI := reader.URI()
-		filename := filepath.Base(fileURI.String())
+		origFilename := filepath.Base(fileURI.String())
 		fileExt := filepath.Ext(fileURI.String())
 
-		log.Println("Adding file: ", filename, " added to note id: ", 1)
+		log.Println("Adding file: ", origFilename, " added to note id: ", 1)
 
 		ext := []string{".jpg", ".jpeg", ".png", ".gif", ".svg", ".heic", ".bmp", ".tiff", ".webp", ".raw", ".pdf", ".txt", ".rtf", ".doc", ".docx", ".csv", ".xls", ".xlsx", ".ppt", ".pptx", ".odt", ".ods", ".odp", ".odg"}
 		filter := storage.NewExtensionFileFilter(ext)
@@ -255,14 +255,14 @@ func (td *TODO) GetNotesAttachmentOpenDialog(noteId int64) *NoteFileDialog {
 		}
 
 		// Add to DB and use the id for storage
-		fileId, err := td.DB.AddFile(filename, fileExt)
+		fileId, err := td.DB.AddFile(origFilename, fileExt)
 		if err != nil {
 			log.Fatalln("Adding file info to the note_files table fail!  ", err)
 		}
 		log.Println("New note_files ID: ", fileId)
 
 		// Replace original name with DB ID of the file
-		filename = fmt.Sprintf("%s%s", strconv.Itoa(int(fileId)), fileExt)
+		filename := fmt.Sprintf("%s%s", strconv.Itoa(int(fileId)), fileExt)
 
 		data, err := io.ReadAll(reader)
 		if err != nil {
@@ -297,16 +297,12 @@ func (td *TODO) GetNotesAttachmentOpenDialog(noteId int64) *NoteFileDialog {
 
 		// Add to global noteFiles
 		fileStruct := repository.File{ID: fileId}
-		noteFiles = append(noteFiles, fileStruct)
+		NoteFiles = append(NoteFiles, fileStruct)
 
 		// Add to list of files that are not saved yet to the note
-		NotSavedFilesList.Append(fileStruct.Name)
-		NotSavedFilesList.Append("proky doubled!\n\n")
-		NotSavedFilesList.Refresh()
-		NotSavedFilesList.BaseWidget.Hide()
-		NotSavedFileBox.Refresh()
+		NotSavedFilesList.Append(origFilename)
 
-		log.Println("noteFiles: ", noteFiles)
+		log.Println("noteFiles: ", NoteFiles)
 
 	}, mainWin, nil)
 	//fileDialog.Show()
