@@ -64,8 +64,9 @@ func (td *TODO) showNotesWindow(taskId int64, taskTitle string) {
 		canvas.NewRectangle(color.RGBA{R: 255, G: 1, B: 1, A: 120}),
 		NotSavedFilesList,
 	)
-	notSavedFileCard := widget.NewCard("", "Uploaded Files", NotSavedFileBox)
-	v.Add(notSavedFileCard)
+
+	notSavedFileCardLabel := widget.NewCard("", "Uploaded Files", NotSavedFileBox)
+	v.Add(notSavedFileCardLabel)
 
 	NotSavedFilesList.Append(" ")
 
@@ -96,6 +97,10 @@ func (td *TODO) showNotesWindow(taskId int64, taskTitle string) {
 		m.Refresh()
 		// And the Files array
 		NoteFiles = nil
+		NotSavedFileBox.Remove(NotSavedFilesList)
+		NotSavedFilesList = nil
+		NotSavedFilesList = widget.NewTextGrid()
+		NotSavedFileBox.Add(NotSavedFilesList)
 
 		// Then refresh the note list
 		notesContainer.RemoveAll()
