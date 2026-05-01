@@ -61,7 +61,7 @@ func (td *TODO) showNotesWindow(taskId int64, taskTitle string) {
 	NotSavedFilesList = widget.NewTextGrid()
 
 	NotSavedFileBox = container.NewStack(
-		canvas.NewRectangle(color.RGBA{R: 255, G: 1, B: 1, A: 120}),
+		canvas.NewRectangle(color.RGBA{R: 232, G: 210, B: 28, A: 64}),
 		NotSavedFilesList,
 	)
 
@@ -210,24 +210,35 @@ func (td *TODO) GetNotYetSavedFilesListContainer(files []repository.File) *widge
 	return fG
 }
 
-func (td *TODO) GetFilesListContainer(files []repository.File) *widget.Card {
+func (td *TODO) GetFilesListContainer(files []repository.File) *fyne.Container {
 	// Files list
-	fVB := container.NewVBox()
-	fTG := widget.NewTextGrid()
+	bg := canvas.NewRectangle(color.RGBA{R: 50, G: 164, B: 223, A: 67})
+	/*fileListStack := container.NewStack(
+		bg,
+	)*/
+
+	items := []fyne.CanvasObject{
+		widget.NewLabelWithStyle("Files: ", fyne.TextAlignLeading, fyne.TextStyle{Bold: true}),
+	}
+
 	for fIdx := range files {
 		f := files[fIdx]
-		fTG.Append(f.Name)
+
+		downloadLink := widget.NewHyperlink(f.Name, nil)
+		//downloadLink.Alignment = fyne.TextAlignLeading
+		//fileListVBox.Add(downloadLink)
+
+		items = append(items, downloadLink)
+		//fileListStack.Add(downloadLink)
 	}
-	fVB.Add(container.NewPadded())
-	fVB.Add(fTG)
-	nL := container.NewStack(
-		canvas.NewRectangle(color.RGBA{R: 50, G: 164, B: 223, A: 67}),
-		container.NewPadded(fTG),
+
+	fileListVBox := container.NewVBox(items...)
+	fileListStack := container.NewStack(
+		bg,
+		container.NewPadded(fileListVBox),
 	)
 
-	fG := widget.NewCard("", "Files", nL)
-
-	return fG
+	return fileListStack
 }
 
 func (td *TODO) GetNotesAttachmentOpenDialog(noteId int64) *NoteFileDialog {
