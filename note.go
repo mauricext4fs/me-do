@@ -24,13 +24,13 @@ import (
 var NoteFiles []repository.File
 var NotSavedFilesList *widget.TextGrid
 var NotSavedFileBox *fyne.Container
-var noteWindow fyne.Window
+var NoteWindow fyne.Window
 
 func (td *TODO) showNotesWindow(taskId int64, taskTitle string) {
 
 	// Create Window
 	wTitle := fmt.Sprintf("Notes for task: %s", taskTitle)
-	noteWindow = td.App.NewWindow(wTitle)
+	NoteWindow = td.App.NewWindow(wTitle)
 
 	v := container.NewVBox()
 	l := widget.NewLabel("New Note: ")
@@ -114,9 +114,9 @@ func (td *TODO) showNotesWindow(taskId int64, taskTitle string) {
 
 	scroll := container.NewScroll(v)
 
-	noteWindow.SetContent(scroll)
-	noteWindow.Resize(fyne.Size{Width: 1000, Height: 700})
-	noteWindow.Show()
+	NoteWindow.SetContent(scroll)
+	NoteWindow.Resize(fyne.Size{Width: 1000, Height: 700})
+	NoteWindow.Show()
 }
 
 func (td *TODO) buildNotesContainer(taskId int64) *fyne.Container {
@@ -222,6 +222,43 @@ func (td *TODO) GetFilesListContainer(files []repository.File) *fyne.Container {
 		f := files[fIdx]
 
 		downloadLink := widget.NewHyperlink(f.Name, nil)
+		downloadLink.OnTapped = func() {
+			saveFileDialog := dialog.NewFileSave(func(writer fyne.URIWriteCloser, err error) {
+				if err != nil {
+					dialog.ShowError(err, NoteWindow)
+					return
+				}
+				if writer == nil {
+					return
+				}
+				defer writer.Close()
+
+				fyneFileUri, err := storage.Child(td.UserFilesURI, fmt.Sprintf("%d%s", f.ID, f.FileType))
+				if err != nil {
+					td.ErrorLog.Println("Error creating fyne URI ressource for reading uploaded File: ", err)
+				}
+				readable, err := storage.CanRead(fyneFileUri)
+				if err != nil || !readable {
+					td.ErrorLog.Println("Cannot read '", f.Name, "' , ", err)
+				}
+
+				reader, err := storage.Reader(fyneFileUri)
+				if err != nil {
+					td.ErrorLog.Println("Error reading file: ", err)
+				}
+
+				defer reader.Close()
+
+				_, err = io.Copy(writer, reader)
+				if err != nil {
+					td.ErrorLog.Println("Could not save file locally: ", err)
+				}
+
+			}, NoteWindow)
+
+			saveFileDialog.SetFileName(f.Name)
+			saveFileDialog.Show()
+		}
 		items = append(items, downloadLink)
 	}
 
@@ -235,7 +272,7 @@ func (td *TODO) GetFilesListContainer(files []repository.File) *fyne.Container {
 }
 
 func (td *TODO) GetNotesAttachmentOpenDialog(noteId int64) *NoteFileDialog {
-	mainWin := noteWindow
+	mainWin := NoteWindow
 	fileDialog := NewNoteFileDialog(func(reader fyne.URIReadCloser, err error) {
 		if err != nil {
 			dialog.ShowError(err, mainWin)
