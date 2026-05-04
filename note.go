@@ -179,7 +179,7 @@ func (td *TODO) buildNotesContainer(taskId int64) *fyne.Container {
 			td.ErrorLog.Println("Error: ", err)
 		}
 
-		// Show Upload Files, if any
+		// Show Note Files, if any
 		if len(files) > 0 {
 			fG := td.GetFilesListContainer(files)
 			v.Add(fG)
@@ -213,9 +213,6 @@ func (td *TODO) GetNotYetSavedFilesListContainer(files []repository.File) *widge
 func (td *TODO) GetFilesListContainer(files []repository.File) *fyne.Container {
 	// Files list
 	bg := canvas.NewRectangle(color.RGBA{R: 50, G: 164, B: 223, A: 67})
-	/*fileListStack := container.NewStack(
-		bg,
-	)*/
 
 	items := []fyne.CanvasObject{
 		widget.NewLabelWithStyle("Files: ", fyne.TextAlignLeading, fyne.TextStyle{Bold: true}),
@@ -225,17 +222,13 @@ func (td *TODO) GetFilesListContainer(files []repository.File) *fyne.Container {
 		f := files[fIdx]
 
 		downloadLink := widget.NewHyperlink(f.Name, nil)
-		//downloadLink.Alignment = fyne.TextAlignLeading
-		//fileListVBox.Add(downloadLink)
-
 		items = append(items, downloadLink)
-		//fileListStack.Add(downloadLink)
 	}
 
 	fileListVBox := container.NewVBox(items...)
 	fileListStack := container.NewStack(
 		bg,
-		container.NewPadded(fileListVBox),
+		fileListVBox,
 	)
 
 	return fileListStack
